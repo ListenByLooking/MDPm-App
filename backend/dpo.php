@@ -40,13 +40,21 @@ $conn->close();
     </header>
     <main>
         <div class="container">
-            <button>Component</button>
-            <button>Score</button>
-            <button>Documentation</button>
-        </div>
-        <div class="container">
-            <a href="component_buttons.php?component_id=<?php echo $latestDPOId + 1; ?>">Component</a>
+            <button onclick="redirectToPage('component')">Component</button>
+            <button onclick="redirectToPage('score')">Score</button>
+            <button onclick="redirectToPage('documentation')">Documentation</button>
         </div>
     </main>
+    <script>
+        function redirectToPage(page) {
+            if (page === 'component') {
+                window.location.href = 'component_buttons.php';
+            } else if (page === 'documentation') {
+                window.location.href = 'documentation_buttons.php';
+            } else if (page === 'score') {
+                 window.location.href = 'score_info.php?id=<?php echo $dpo_id; ?>&dpo_info=<?php echo $dpo_info; ?>';
+            }
+        }
+    </script>
 </body>
 </html>
