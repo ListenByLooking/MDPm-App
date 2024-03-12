@@ -9,7 +9,7 @@ $score_info = "You have selected the Score of $dpo_info ($dpo_id)";
 // Connect to the database and insert the information
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "Database@123";
 $dbname = "multimedia_arts";
 
 $conn = new mysqli($servername, $username, $password, $dbname);

@@ -2,7 +2,7 @@
 // Connect to your database using mysqli
 $servername = "localhost";
 $username = "root";
-$password = "root";
+$password = "Database@123";
 $dbname = "multimedia_arts";
 
 // Create connection
