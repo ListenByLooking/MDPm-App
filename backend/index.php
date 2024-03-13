@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>Multimedia arts</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
-        <h1>Music</h1>
+        <h1>Multimedia arts</h1>
         <img src="banner.jpg" alt="Music Banner" class="banner">
     </header>
     <main>

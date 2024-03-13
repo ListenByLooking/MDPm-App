@@ -1,5 +1,6 @@
 <?php
 // Connect to your database using mysqli
+global $dpo_info, $dpo_id;
 $servername = "localhost";
 $username = "root";
 $password = "Database@123";
@@ -32,7 +33,7 @@ $conn->close();
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Selected DPO</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
     <header>
