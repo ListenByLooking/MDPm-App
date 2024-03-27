@@ -1,40 +1,27 @@
 <?php
-// Connect to your database using mysqli
-$servername = "localhost";
-$username = "root";
-$password = "Database@123";
-$dbname = "multimedia_arts";
+// Connect to the database (replace these variables with your actual database credentials)
+$host = 'localhost';
+$dbname = 'music';
+$username = 'root';
+$password = 'Database@123';
 
-// Create connection
-$conn = new mysqli($servername, $username, $password, $dbname);
+$conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 
-// Check connection
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
+// Insert DPO into the database
+$title = $_POST['title'];
+$description = $_POST['description'];
+$author = $_POST['author'];
 
-// Fetch the latest DPO ID
-$result = $conn->query("SELECT MAX(id) as max_id FROM dpo_data");
-$row = $result->fetch_assoc();
-$nextId = $row["max_id"] + 1;
-
-// Sample data, replace with actual data inputs
-$dpo_info = "DPO" . $nextId;
-$component = "Component data";
-$score = "Score data";
-$documentation = "Documentation data";
-
-// Insert DPO information into the database
-$sql = "INSERT INTO dpo_data (id, dpo_info, component, score, documentation) VALUES (?, ?, ?, ?, ?)";
+$sql = "INSERT INTO dpos (title, description, author) VALUES (:title, :description, :author)";
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("issss", $nextId, $dpo_info, $component, $score, $documentation);
-$stmt->execute();
+$stmt->bindParam(':title', $title);
+$stmt->bindParam(':description', $description);
+$stmt->bindParam(':author', $author);
 
-// Close prepared statement and database connection
-$stmt->close();
-$conn->close();
-
-// Redirect back to index.php with success message
-header("Location: index.php?success=1");
-exit();
+if ($stmt->execute()) {
+    echo "DPO added successfully.";
+} else {
+    echo "Error adding DPO.";
+}
+header("Location: index.php?message=success");
 ?>

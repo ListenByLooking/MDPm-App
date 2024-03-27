@@ -1,18 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/backend/add_audiocassette.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/add_component.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/add_dat.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/add_documentation.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/backend/add_dpo.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/audiovisual_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/av_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/docs_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/dpo.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/hardware_info.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/add_phonographicdisks.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/add_score.php" dialect="MySQL" />
+    <file url="file://$PROJECT_DIR$/backend/dashboard.php" dialect="MySQL" />
     <file url="file://$PROJECT_DIR$/backend/index.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/interviews_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/multimedia_arts (1).sql" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/photos_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/score_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/software_info.php" dialect="MySQL" />
-    <file url="file://$PROJECT_DIR$/backend/various_info.php" dialect="MySQL" />
   </component>
 </project>
