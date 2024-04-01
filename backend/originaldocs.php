@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Documentation</title>
-    <link rel="stylesheet" href="styles.css">
+    <title>View Added DPO</title>
+    <!-- Include your CSS file -->
     <style>
         /* Additional CSS styles */
         body {
@@ -123,11 +123,17 @@
         button:hover {
             background-color: darkorange;
         }
+        .popup-window {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
     </style>
 </head>
 <body>
 <header>
-    <!-- Header content -->
     <!-- Header content -->
     <a href="#" class="logo">
         <img src="logo.svg" alt="Logo">
@@ -137,62 +143,61 @@
     <nav>
         <ul>
             <li><a href="artworks.php">Artworks</a></li>
+            <!--<li><a href="#">Dashboard</a></li>-->
             <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
 </header>
 <main>
-    <h1>Documentation Type:</h1>
-    <form action="add_documentation.php" method="POST">
-        <input type="hidden" name="dpo_id" value="<?php echo htmlspecialchars($_GET['id']); ?>">
-        <div id="documentationDropdown">
-            <label for="documentationDestination">Select Documentation Type:</label>
-            <select name="documentationDestination" id="documentationDestination">
-                <option value="photos">Photos</option>
-                <option value="interview">Interview</option>
-                <option value="av">A/V</option>
-                <option value="docs">Docs</option>
-            </select>
-            <button type="button" onclick="showForm()">Add</button>
-        </div>
-
-        <div id="photosForm" class="form-container" style="display: none;">
-            <label for="photosUrl">Photos URL:</label>
-            <input type="url" id="photosUrl" name="photosUrl">
-            <button type="submit">Save</button>
-        </div>
-
-        <div id="interviewForm" class="form-container" style="display: none;">
-            <label for="interviewUrl">Interview URL:</label>
-            <input type="url" id="interviewUrl" name="interviewUrl">
-            <button type="submit">Save</button>
-        </div>
-
-        <div id="avForm" class="form-container" style="display: none;">
-            <label for="avUrl">A/V URL:</label>
-            <input type="url" id="avUrl" name="avUrl">
-            <button type="submit">Save</button>
-        </div>
-
-        <div id="docsForm" class="form-container" style="display: none;">
-            <label for="docsUrl">Docs URL:</label>
-            <input type="url" id="docsUrl" name="docsUrl">
-            <button type="submit">Save</button>
-        </div>
-    </form>
+    <h1>Original Docs</h1>
+    <div id="originalDocsDropdown">
+        <select name="originalDocsDestination" id="originalDocsDestination">
+            <option value="audiocassette">Audiocassette</option>
+            <option value="phonographics">Phonographics</option>
+            <option value="dat">DAT</option>
+            <option value="openReelTape">Open Reel Tape</option>
+        </select>
+        <button type="button" onclick="redirectToSelected()">Add</button>
+    </div>
 </main>
+<script>
+    function redirectToSelected() {
+        var destination = document.getElementById("originalDocsDestination").value;
+
+        if (destination === "audiocassette") {
+            var width = 800;
+            var height = 700;
+            var left = (window.innerWidth - width) / 2;
+            var top = (window.innerHeight - height) / 2;
+            var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+            window.open("audiocassette.php", "_blank", options);
+        } else if (destination === "phonographics") {
+            var width = 800;
+            var height = 700;
+            var left = (window.innerWidth - width) / 2;
+            var top = (window.innerHeight - height) / 2;
+            var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+            window.open("phonographicdisks.php", "_blank", options);
+        } else if (destination === "dat") {
+            var width = 800;
+            var height = 700;
+            var left = (window.innerWidth - width) / 2;
+            var top = (window.innerHeight - height) / 2;
+            var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+            window.open("dat.php", "_blank", options);
+        } else if (destination === "openReelTape") {
+            var width = 800;
+            var height = 700;
+            var left = (window.innerWidth - width) / 2;
+            var top = (window.innerHeight - height) / 2;
+            var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+            window.open("tape_details.php", "_blank", options);
+        }
+    }
+</script>
 <footer>
     <!-- Footer content -->
     <p>&copy; <?php echo date("Y"); ?> Multimedia Arts. All rights reserved.</p>
 </footer>
-<script>
-    function showForm() {
-        var selectedOption = document.getElementById("documentationDestination").value;
-        var form = document.getElementById(selectedOption + "Form");
-        if (form) {
-            form.style.display = "block";
-        }
-    }
-</script>
 </body>
 </html>

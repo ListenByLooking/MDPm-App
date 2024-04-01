@@ -62,7 +62,6 @@
             color: #fff;
             cursor: pointer;
             transition: background-color 0.3s;
-            margin-left: 5px;
         }
         .add-button:hover {
             background-color: #0056b3;
@@ -87,6 +86,14 @@
         .fas {
             margin-right: 5px;
         }
+        /* Styles for dropdown container */
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-container select {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
@@ -101,7 +108,7 @@
     <input type="text" id="original_signature" name="original_signature" required>
 
     <label for="brand">Brand:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="brand" name="brand" required>
             <option value="">Select...</option>
             <option value="A">A</option>
@@ -112,7 +119,7 @@
     </div>
 
     <label for="brand_of_box">Brand of the Box:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="brand_of_box" name="brand_of_box" required>
             <option value="">Select...</option>
             <option value="D">D</option>
@@ -123,7 +130,7 @@
     </div>
 
     <label for="samplerate">Samplerate:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="samplerate" name="samplerate" required>
             <option value="">Select...</option>
             <option value="24000hz">24000 Hz</option>

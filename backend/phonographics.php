@@ -87,11 +87,28 @@
         .add-button:hover {
             background-color: #0056b3;
         }
+        /* Styles for dropdown container */
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-container select {
+            flex: 1;
+        }
+        /* Styles for checkboxes */
+        .checkbox-container {
+            display: flex;
+            align-items: center;
+        }
+        .checkbox-container label {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
 <form action="add_phonographicdisks.php" method="POST">
     <h1>Phonographic Disks Form</h1>
+    <!-- Your form fields -->
     <label for="id">ID:</label>
     <input type="text" id="id" name="id" required><br>
 
@@ -102,7 +119,7 @@
     <input type="text" id="original_signature" name="original_signature" required><br>
 
     <label for="brand">Brand:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="brand" name="brand" required>
             <option value="A">A</option>
             <option value="B">B</option>
@@ -111,8 +128,9 @@
         <button type="button" class="add-button" onclick="addOption('brand')">+</button>
     </div><br>
 
+    <!-- Repeat the same structure for other dropdowns -->
     <label for="brand_of_box">Brand of the Box:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="brand_of_box" name="brand_of_box" required>
             <option value="D">D</option>
             <option value="E">E</option>
@@ -122,7 +140,7 @@
     </div><br>
 
     <label for="rpm">RPM:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="rpm" name="rpm" required>
             <option value="33rpm">33 rpm</option>
             <option value="45rpm">45 rpm</option>
@@ -133,7 +151,7 @@
     </div><br>
 
     <label for="stylus">Stylus:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="stylus" name="stylus" required>
             <option value="A">A</option>
             <option value="B">B</option>
@@ -142,7 +160,7 @@
     </div><br>
 
     <label for="eq">EQ:</label>
-    <div>
+    <div class="dropdown-container">
         <select id="eq" name="eq" required>
             <option value="RIAA">RIAA</option>
             <option value="Other">Other</option>
@@ -151,16 +169,20 @@
     </div><br>
 
     <label for="type_of_recording">Type of Recording:</label>
-    <input type="checkbox" id="mechanical" name="type_of_recording" value="mechanical">
-    <label for="mechanical">Mechanical</label>
-    <input type="checkbox" id="electrical" name="type_of_recording" value="electrical">
-    <label for="electrical">Electrical</label><br>
+    <div class="checkbox-container">
+        <input type="checkbox" id="mechanical" name="type_of_recording" value="mechanical">
+        <label for="mechanical">Mechanical</label>
+        <input type="checkbox" id="electrical" name="type_of_recording" value="electrical">
+        <label for="electrical">Electrical</label>
+    </div><br>
 
     <label for="incisions">Incisions:</label>
-    <input type="checkbox" id="horizontal" name="incisions" value="horizontal">
-    <label for="horizontal">Horizontal</label>
-    <input type="checkbox" id="vertical" name="incisions" value="vertical">
-    <label for="vertical">Vertical</label><br>
+    <div class="checkbox-container">
+        <input type="checkbox" id="horizontal" name="incisions" value="horizontal">
+        <label for="horizontal">Horizontal</label>
+        <input type="checkbox" id="vertical" name="incisions" value="vertical">
+        <label for="vertical">Vertical</label>
+    </div><br>
 
     <label for="notes">Notes:</label><br>
     <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>

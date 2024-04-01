@@ -6,7 +6,7 @@
     <title>Audiovisual</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"> <!-- Font Awesome for icons -->
-    <style>
+    <!--<style>
         body {
             font-family: Arial, sans-serif;
             background-color: #f8f9fa; /* Updated background color */
@@ -93,7 +93,7 @@
         .component-content a:hover .icon {
             transform: translate(-50%, -50%) scale(1.2); /* Scale the icon on hover */
         }
-    </style>
+    </style>-->
 </head>
 <body>
 <header>
@@ -106,37 +106,102 @@
     </nav>
 </header>
 <main>
-    <h1>Component Page</h1>
-    <div class="component-content">
-        <!-- Content related to Component -->
+    <h1>Component Audiovisual</h1>
+    <div class="audiovisual-content">
+        <form id="redirectForm" action="" method="GET">
+            <select name="destination" id="destination" onchange="showHideDropdown()">
+                <option value="video">Video</option>
+                <option value="photo">Photo</option>
+                <option value="audio">Audio</option>
+            </select>
+            <div id="audioDropdown" style="display: none;">
+                <select name="audioDestination" id="audioDestination" onchange="showHideOriginalDocsDropdown()">
+                    <option value="originalDocs">Original Docs</option>
+                    <option value="analogCopy">Digital Copy</option>
+                </select>
+                <div id="originalDocsDropdown" style="display: none;">
+                    <select name="originalDocsDestination" id="originalDocsDestination">
+                        <option value="audiocassette">Audiocassette</option>
+                        <option value="phonographics">Phonographics</option>
+                        <option value="dat">DAT</option>
+                        <option value="openReelTape">Open Reel Tape</option>
+                    </select>
+                </div>
+            </div>
+            <button type="button" onclick="redirectToSelected()">Add</button>
+        </form>
+    </div>
+
+    <script>
+        function redirectToSelected() {
+            var destination = document.getElementById("originalDocsDestination").value;
+
+            if (destination === "audiocassette") {
+                window.location.href = "audiocassette.php";
+            } else if (destination === "phonographics") {
+                window.location.href = "phonographicdisks.php";
+            } else if (destination === "dat") {
+                window.location.href = "dat.php";
+            } else if (destination === "openReelTape") {
+                window.location.href = "tape_details.php";
+            }
+        }
+
+        function showHideDropdown() {
+            var destination = document.getElementById("destination").value;
+            var audioDropdown = document.getElementById("audioDropdown");
+            if (destination === "audio") {
+                audioDropdown.style.display = "block";
+            } else {
+                audioDropdown.style.display = "none";
+            }
+        }
+
+        function showHideOriginalDocsDropdown() {
+            var audioDestination = document.getElementById("audioDestination").value;
+            var originalDocsDropdown = document.getElementById("originalDocsDropdown");
+            if (audioDestination === "originalDocs") {
+                originalDocsDropdown.style.display = "block";
+            } else {
+                originalDocsDropdown.style.display = "none";
+            }
+        }
+    </script>
+
+
+
+
+
+    <!--<div class="component-content">
+        
         <div>
             <a href="audiocassette.php">
-                <i class="fas fa-music icon"></i> <!-- Font Awesome icon -->
-                <div>AudioCassette</div> <!-- Button name -->
+                <i class="fas fa-music icon"></i> 
+                <div>AudioCassette</div>
             </a>
         </div>
 
         <div>
             <a href="phonographicdisks.php">
-                <i class="fas fa-record-vinyl icon"></i> <!-- Font Awesome icon -->
-                <div>Phonographicdisks</div> <!-- Button name -->
+                <i class="fas fa-record-vinyl icon"></i> 
+                <div>Phonographicdisks</div> 
             </a>
         </div>
 
         <div>
             <a href="audiovisual.php">
-                <i class="fas fa-tape icon"></i> <!-- Font Awesome icon -->
-                <div>Openreeltape</div> <!-- Button name -->
+                <i class="fas fa-tape icon"></i> 
+                <div>Openreeltape</div> 
             </a>
         </div>
 
         <div>
             <a href="dat.php">
-                <i class="fas fa-compact-disc icon"></i> <!-- Font Awesome icon -->
-                <div>Dat</div> <!-- Button name -->
+                <i class="fas fa-compact-disc icon"></i> 
+                <div>Dat</div> 
             </a>
         </div>
-    </div>
+    </div>-->
 </main>
 </body>
 </html>

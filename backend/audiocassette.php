@@ -83,12 +83,20 @@
         .save-icon {
             margin-left: 5px;
         }
+        /* Styles for dropdown container */
+        .dropdown-container {
+            display: flex;
+            align-items: center;
+        }
+        .dropdown-container select {
+            flex: 1;
+        }
     </style>
 </head>
 <body>
 <div class="container">
     <h1><i class="fas fa-microphone-alt background-icon"></i> Audiocassette Form</h1>
-    <form action="add_audiocassette.php" method="POST">
+    <!--<form action="add_audiocassette.php" method="POST">
         <label for="id">ID:</label>
         <input type="text" id="id" name="id" required><br>
 
@@ -132,7 +140,95 @@
         <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
 
         <input type="submit" value="Save"><i class="fas fa-check save-icon"></i>
+    </form>-->
+    <form action="add_audiocassette.php" method="POST">
+        <label for="id">ID:</label>
+        <input type="text" id="id" name="id" required><br>
+
+        <label for="preservation_signature">Preservation Signature:</label>
+        <input type="text" id="preservation_signature" name="preservation_signature" required><br>
+
+        <label for="original_signature">Original Signature:</label>
+        <input type="text" id="original_signature" name="original_signature" required><br>
+
+        <label for="brand">Brand:</label>
+        <div class="dropdown-container">
+            <select id="brand" name="brand">
+                <option value="A">A</option>
+                <option value="B">B</option>
+                <option value="C">C</option>
+            </select>
+            <button type="button" class="add-button" onclick="addOption('brand')">+</button>
+        </div>
+        <label for="brand_of_box">Brand of the Box:</label>
+        <div class="dropdown-container">
+            <select id="brand_of_box" name="brand_of_box">
+                <option value="D">D</option>
+                <option value="E">E</option>
+                <option value="F">F</option>
+            </select>
+            <button type="button" class="add-button" onclick="addOption('brand_of_box')">+</button>
+        </div>
+        <label for="cassette_type">Cassette Type:</label>
+        <div class="dropdown-container">
+            <select id="cassette_type" name="cassette_type" required>
+                <option value="IEC1">IEC1</option>
+                <option value="IEC2">IEC2</option>
+                <option value="IECIII">IECIII</option>
+                <option value="IECIV">IECIV</option>
+            </select>
+            <button type="button" class="add-button" onclick="addOption('cassette_type')">+</button>
+        </div>
+        <label for="noise_reduction">Noise Reduction:</label>
+        <input type="checkbox" id="noise_reduction" name="noise_reduction" value="yes">
+        <label for="noise_reduction">Yes</label>
+        <input type="checkbox" id="noise_reduction" name="noise_reduction" value="no">
+        <label for="noise_reduction">No</label>
+        <input type="checkbox" id="noise_reduction" name="noise_reduction" value="unknown">
+        <label for="noise_reduction">Unknown</label><br>
+
+        <label for="notes">Notes:</label><br>
+        <textarea id="notes" name="notes" rows="4" cols="50"></textarea><br>
+
+        <input type="submit" value="Save"><i class="fas fa-check save-icon"></i>
     </form>
+
+    <script>
+        // Add brand dynamically
+        //document.getElementById("addBrand").addEventListener("click", function() {
+        //var brand = prompt("Enter new brand:");
+        //if (brand) {
+        //var select = document.getElementById("brand");
+        // var option = document.createElement("option");
+        //option.text = brand;
+        //option.value = brand;
+        //select.add(option);
+        // }
+        //});
+
+        // Add brand of box dynamically
+        //document.getElementById("addBoxBrand").addEventListener("click", function() {
+        //var brand = prompt("Enter new brand of the box:");
+        //if (brand) {
+        //var select = document.getElementById("brand_of_box");
+        //var option = document.createElement("option");
+        // option.text = brand;
+        //option.value = brand;
+        // select.add(option);
+        //  }
+        // });
+        function addOption(selectId) {
+            var select = document.getElementById(selectId);
+            var option = prompt("Enter new option:");
+            if (option) {
+                var newOption = document.createElement("option");
+                newOption.text = option;
+                newOption.value = option;
+                select.add(newOption);
+                select.value = option;
+            }
+        }
+    </script>
 </div>
 </body>
 </html>

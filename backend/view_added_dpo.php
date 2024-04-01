@@ -15,7 +15,7 @@
         }
 
         header {
-            background-color: blue;
+            background-color: blue; /* Changed header background color to blue */
             color: #fff;
             padding: 20px;
             text-align: center;
@@ -58,7 +58,7 @@
             margin-right: 10px;
         }
         nav ul li a {
-            color: orange;
+            color: orange; /* Changed button color to orange */
             text-decoration: none;
             padding: 10px;
             border-radius: 5px;
@@ -78,7 +78,7 @@
         }
 
         footer {
-            position: fixed;
+            position: fixed; /* Fixed position to stick to the bottom */
             left: 0;
             bottom: 0;
             width: 100%;
@@ -88,34 +88,39 @@
             padding-bottom: inherit;
         }
 
-        .add-description {
-            margin-top: 20px;
+        @keyframes fadeInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
-        label {
-            margin-bottom: 5px;
+        .dropdown-container {
+            display: none;
+            margin-top: 10px;
         }
 
-        textarea {
-            width: 100%;
+        select {
             padding: 10px;
             border-radius: 5px;
             border: 1px solid #ccc;
-            margin-bottom: 10px;
-            box-sizing: border-box;
+            margin-right: 10px;
         }
 
-        input[type="submit"] {
-            padding: 10px 20px;
-            border: none;
+        button {
+            padding: 10px;
+            border: 5px;
             border-radius: 5px;
             background-color: orange;
             color: white;
             cursor: pointer;
-            transition: background-color 0.3s;
         }
 
-        input[type="submit"]:hover {
+        button:hover {
             background-color: darkorange;
         }
     </style>
@@ -131,18 +136,33 @@
     <nav>
         <ul>
             <li><a href="artworks.php">Artworks</a></li>
+            <!--<li><a href="#">Dashboard</a></li>-->
             <li><a href="logout.php">Logout</a></li>
         </ul>
     </nav>
 </header>
 <main>
-    <h3>Score Page</h3>
-    <div class="add-description">
-        <h4>Add Description</h4>
-        <form action="insert_score.php" method="post">
-            <label for="description">Description:</label><br>
-            <textarea id="description" name="description" rows="4" cols="50"></textarea><br>
-            <input type="submit" value="Submit">
+    <!-- Display the newly added data -->
+    <h3 style="color: red;">Artwork Added Successfully</h3>
+    <h1 style="color: darkblue;">Newly Added DPO</h1>
+    <p>Title: <?php echo htmlspecialchars($_GET['title']); ?></p>
+    <p>Description: <?php echo htmlspecialchars($_GET['description']); ?></p>
+    <p>Year: <?php echo htmlspecialchars($_GET['year']); ?></p>
+    <p>Author: <?php echo htmlspecialchars($_GET['author']); ?></p>
+
+    <!-- Add DPO button -->
+    <button id="addDPOButton" onclick="toggleDropdown()">Add DPO</button>
+
+    <!-- Dropdown for adding DPO -->
+    <div class="dropdown-container" id="dropdownContainer">
+        <h3>DPO Type:</h3>
+        <form action="#" method="GET"> <!-- Update the action attribute accordingly -->
+            <select name="destination" id="destination">
+                <option value="component">Component</option>
+                <option value="score">Score</option>
+                <option value="documentation">Documentation</option>
+            </select>
+            <button type="button" onclick="redirectToSelected()">Add</button>
         </form>
     </div>
 </main>
@@ -150,5 +170,31 @@
     <!-- Footer content -->
     <p>&copy; <?php echo date("Y"); ?> Multimedia Arts. All rights reserved.</p>
 </footer>
+<script>
+    function toggleDropdown() {
+        var dropdownContainer = document.getElementById("dropdownContainer");
+        if (dropdownContainer.style.display === "none") {
+            dropdownContainer.style.display = "block";
+        } else {
+            dropdownContainer.style.display = "none";
+        }
+    }
+
+    function redirectToSelected() {
+        var destination = document.getElementById("destination").value;
+        if (destination === "component") {
+            window.location.href = "component.php";
+        } else if (destination === "score") {
+            window.location.href = "score.php";
+        } else if (destination === "documentation") {
+            var width = 800;
+            var height = 700;
+            var left = (window.innerWidth - width) / 2; 
+            var top = (window.innerHeight - height) / 2;
+            var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
+            window.open("documentation.php", "_blank", options);
+        }
+    }
+</script>
 </body>
 </html>

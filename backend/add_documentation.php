@@ -1,30 +1,51 @@
 <?php
-// Connect to the database (replace these variables with your actual database credentials)
-$host = 'localhost';
-$dbname = 'music';
-$username = 'root';
-$password = 'Database@123';
+// Establish database connection
+$db_host = 'localhost';
+$db_name = 'music';
+$db_user = 'root';
+$db_pass = 'Database@123';
 
-$conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+try {
+    $pdo = new PDO("mysql:host=$db_host;dbname=$db_name", $db_user, $db_pass);
+    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-// Insert Documentation into the database
-$dpo_id = $_POST['dpo_id'];
-$photos = $_POST['photos'];
-$audio_visual = $_POST['audio_visual'];
-$interviews = $_POST['interviews'];
-$docs = $_POST['docs'];
+    // Fetch the most recent dpo_id from the dpos table
+    $stmt = $pdo->query("SELECT MAX(id) as max_id FROM dpos");
+    $result = $stmt->fetch(PDO::FETCH_ASSOC);
+    $dpo_id = $result['max_id'];
 
-$sql = "INSERT INTO documentation (dpo_id, photos, audio_visual, interviews, docs) VALUES (:dpo_id, :photos, :audio_visual, :interviews, :docs)";
-$stmt = $conn->prepare($sql);
-$stmt->bindParam(':dpo_id', $dpo_id);
-$stmt->bindParam(':photos', $photos);
-$stmt->bindParam(':audio_visual', $audio_visual);
-$stmt->bindParam(':interviews', $interviews);
-$stmt->bindParam(':docs', $docs);
+    // Retrieve form data
+    $documentationDestination = $_POST['documentationDestination'];
+    $url = $_POST[$documentationDestination . 'Url']; // Get URL based on the selected documentation type
 
-if ($stmt->execute()) {
-    echo "Documentation added successfully.";
-} else {
-    echo "Error adding documentation.";
+    // Prepare the SQL statement based on the selected documentation type
+    switch ($documentationDestination) {
+        case 'photos':
+            $stmt = $pdo->prepare("INSERT INTO documentation (dpo_id, photos_url) VALUES (:dpo_id, :url)");
+            break;
+        case 'interview':
+            $stmt = $pdo->prepare("INSERT INTO documentation (dpo_id, interview_url) VALUES (:dpo_id, :url)");
+            break;
+        case 'av':
+            $stmt = $pdo->prepare("INSERT INTO documentation (dpo_id, av_url) VALUES (:dpo_id, :url)");
+            break;
+        case 'docs':
+            $stmt = $pdo->prepare("INSERT INTO documentation (dpo_id, docs_url) VALUES (:dpo_id, :url)");
+            break;
+        default:
+            // Handle invalid documentation type
+            break;
+    }
+
+    // Execute the SQL statement
+    $stmt->execute(['dpo_id' => $dpo_id, 'url' => $url]);
+
+    // Redirect to the previous page or wherever you want after successful insertion
+    header("Location: documentation.php");
+    exit();
+} catch(PDOException $e) {
+    // Handle database errors
+    echo "Error: " . $e->getMessage();
+    exit();
 }
 ?>

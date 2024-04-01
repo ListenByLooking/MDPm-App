@@ -10,12 +10,15 @@ $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
 // Insert DPO into the database
 $title = $_POST['title'];
 $description = $_POST['description'];
+$year = $_POST['year'];
 $author = $_POST['author'];
 
-$sql = "INSERT INTO dpos (title, description, author) VALUES (:title, :description, :author)";
+// Prepare SQL statement with correct number of placeholders
+$sql = "INSERT INTO dpos (title, description, year, author) VALUES (:title, :description, :year, :author)";
 $stmt = $conn->prepare($sql);
 $stmt->bindParam(':title', $title);
 $stmt->bindParam(':description', $description);
+$stmt->bindParam(':year', $year);
 $stmt->bindParam(':author', $author);
 
 if ($stmt->execute()) {
@@ -23,5 +26,8 @@ if ($stmt->execute()) {
 } else {
     echo "Error adding DPO.";
 }
-header("Location: index.php?message=success");
+
+// Redirect to view_added_dpo.php after successful insertion
+header("Location: view_added_dpo.php?title=" . urlencode($_POST['title']) . "&description=" . urlencode($_POST['description']) . "&year=" . urlencode($_POST['year']) . "&author=" . urlencode($_POST['author']));
+exit();
 ?>
