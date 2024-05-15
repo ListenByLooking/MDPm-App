@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -87,8 +88,9 @@
             padding-top: inherit;
             padding-bottom: inherit;
         }
-       button {
-            width: 20%; /* Change width to auto to adjust based on content */
+
+        button {
+            width: auto; /* Change width to auto to adjust based on content */
             padding: 10px 20px;
             border: none;
             border-radius: 5px;
@@ -121,7 +123,7 @@
         <img src="logo.svg" alt="Logo">
         <span class="logo-text">Multimedia Arts</span>
     </a>
-    <p><?php echo htmlspecialchars($_GET['title']); ?></p>
+    <p><?php echo htmlspecialchars($_GET[title]); ?></p>
     <nav>
         <ul>
             <li><a href="artworks.php">Artworks</a></li>
@@ -131,80 +133,87 @@
     </nav>
 </header>
 <main>
-<?php
-// Check if the ID parameter is set in the URL
-if(isset($_GET['id'])) {
-    $dpo_id = $_GET['id'];
+    <?php
+    // Check if the ID parameter is set in the URL
+    if (isset($_GET['id'])) {
+        $dpo_id = $_GET['id'];
 
-    // Database connection details
-    $host = 'localhost';
-    $dbname = 'music';
-    $username = 'root';
-    $password = 'Database@123';
+        // Database connection details
+        $host = 'localhost';
+        $dbname = 'music';
+        $username = 'root';
+        $password = 'Database@123';
 
-    try {
-        // Connect to the database
-        $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
-        $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
+        try {
+            // Connect to the database
+            $conn = new PDO("mysql:host=$host;dbname=$dbname", $username, $password);
+            $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
 
-        // Prepare and execute the SQL query to fetch DPO details by ID
-        $stmt = $conn->prepare("SELECT title, description, author, created_at FROM dpos WHERE id = :id");
-        $stmt->bindParam(':id', $dpo_id);
-        $stmt->execute();
+            // Prepare and execute the SQL query to fetch DPO details by ID
+            $stmt = $conn->prepare("SELECT title, description, author, created_at FROM dpos WHERE id = :id");
+            $stmt->bindParam(':id', $dpo_id);
+            $stmt->execute();
 
-        // Fetch the result
-        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+            // Fetch the result
+            $result = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        // Check if a record was found
-        if($result) {
-            // Display DPO details
-            echo "<h1>DPO Details</h1>";
-            echo "<p>Title: " . htmlspecialchars($result['title']) . "</p>";
-            echo "<p>Description: " . htmlspecialchars($result['description']) . "</p>";
-            echo "<p>Author: " . htmlspecialchars($result['author']) . "</p>";
-            echo "<p>Created Date: " . htmlspecialchars($result['created_at']) . "</p>";
-
-            // Display buttons for component, score, and documentation
-            echo "<button id='componentBtn'>Component</button>";
-            echo "<button id='scoreBtn'>Score</button>";
-            echo "<button id='documentationBtn'>Documentation</button>";
-
-            // Additional buttons functionality
-            echo "<div id='subButtons'></div>";
-
-            // JavaScript for button functionality
-            echo "<script>";
-            echo "document.addEventListener('click', function(event) {";
-            echo "var target = event.target;";
-            echo "if (target.matches('#componentBtn')) {";
-            echo "document.getElementById('subButtons').innerHTML = '<button id=\"hardwareBtn\">Hardware</button> <button id=\"softwareBtn\">Software</button> <button id=\"audiovisualBtn\">Audiovisual</button> <button id=\"variousBtn\">Various</button>';";
-            echo "} else if (target.matches('#audiovisualBtn')) {";
-            echo "document.getElementById('subButtons').innerHTML = '<button id=\"audiocassetteBtn\">Audiocassette</button> <button id=\"phonographicdisksBtn\">Phonographicdisks</button> <button id=\"datBtn\">Dat</button> <button id=\"openreeltapeBtn\">Openreeltape</button>';";
-            echo "} else if (target.matches('#audiocassetteBtn')) {";
-            echo "window.location.href = 'audiocassette_details.php?id=$dpo_id';";
-            echo "} else if (target.matches('#phonographicdisksBtn')) {";
-            echo "window.location.href = 'phonographicdisks_details.php?id=$dpo_id';";
-            echo "} else if (target.matches('#datBtn')) {";
-            echo "window.location.href = 'dat_details.php?id=$dpo_id';";
-            echo "} else if (target.matches('#openreeltapeBtn')) {";
-            echo "window.location.href = 'openreeltape_details.php?id=$dpo_id';";
-            echo "}";
-            echo "});";
-            echo "</script>";
-        } else {
-            echo "DPO not found.";
+            // Check if a record was found
+            if ($result) {
+                // Display DPO details
+                echo "<h1>DPO Details</h1>";
+                echo "<p>Title: " . htmlspecialchars($result['title']) . "</p>";
+                echo "<p>Description: " . htmlspecialchars($result['description']) . "</p>";
+                echo "<p>Author: " . htmlspecialchars($result['author']) . "</p>";
+                echo "<p>Created Date: " . htmlspecialchars($result['created_at']) . "</p>";
+            } else {
+                //echo "DPO not found.";
+            }
+        } catch (PDOException $e) {
+            //echo "Error: " . $e->getMessage();
         }
-    } catch(PDOException $e) {
-        echo "Error: " . $e->getMessage();
+    } else {
+        //echo "Invalid request.";
     }
-} else {
-    echo "Invalid request.";
-}
-?>
-    </main>
-    <footer>
+    ?>
+    <div class="button-container">
+        <button id="dpo1">DPO1</button>
+        <button id="addDPO" onclick="window.location.href='add_dpo.php';">+</button>
+    </div>
+    <div id="detailsForm"></div>
+</main>
+<footer>
     <!-- Footer content -->
     <p>&copy; <?php echo date("Y"); ?> Multimedia Arts. All rights reserved.</p>
 </footer>
-    </body>
+
+<script>
+    document.getElementById("dpo1").addEventListener("click", function() {
+        var dpo_id = "<?php echo $dpo_id; ?>";
+
+        fetch("fetch_dpo_details.php?id=" + dpo_id)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    var form = "<h2>Fetched Data</h2>";
+                    form += "<form>";
+
+                    // Assuming data.items is an array of objects
+                    data.items.forEach(item => {
+                        form += "<h3>Table: " + item.table + "</h3>";
+                        for (var key in item.data) {
+                            form += "<label>" + key + ": </label>";
+                            form += "<input type='text' value='" + item.data[key] + "' readonly><br>";
+                        }
+                    });
+
+                    form += "</form>";
+                    document.getElementById("detailsForm").innerHTML = form;
+                } else {
+                    document.getElementById("detailsForm").innerHTML = "<p>No matching records found.</p>";
+                }
+            })
+            .catch(error => console.error('Error fetching DPO details:', error));
+    });
+</script>
+</body>
 </html>

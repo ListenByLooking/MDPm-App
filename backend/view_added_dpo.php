@@ -144,7 +144,7 @@
 <main>
     <!-- Display the newly added data -->
     <h3 style="color: red;">Artwork Added Successfully</h3>
-    <h1 style="color: darkblue;">Newly Added DPO</h1>
+    <!--<h1 style="color: darkblue;">Newly Added DPO</h1>-->
     <p>Title: <?php echo htmlspecialchars($_GET['title']); ?></p>
     <p>Description: <?php echo htmlspecialchars($_GET['description']); ?></p>
     <p>Year: <?php echo htmlspecialchars($_GET['year']); ?></p>
@@ -189,7 +189,7 @@
         } else if (destination === "documentation") {
             var width = 800;
             var height = 700;
-            var left = (window.innerWidth - width) / 2; 
+            var left = (window.innerWidth - width) / 2;
             var top = (window.innerHeight - height) / 2;
             var options = "width=" + width + ",height=" + height + ",top=" + top + ",left=" + left;
             window.open("documentation.php", "_blank", options);
