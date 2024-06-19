@@ -27,7 +27,7 @@ $user = Auth::user();
                 <div class="container-fluid"> 
                         <!--end col-->
                         <div class="row">
-                            <div class="col-5"> 
+                            <div class="col-7"> 
                                 <div class="card card-body bg-danger-subtle">
                                     <div class="d-flex mb-4 align-items-center">
                                         <div class="flex-shrink-0">
@@ -40,7 +40,9 @@ $user = Auth::user();
                                     </div>
                                     <h6 class="mb-1">Year : {{ $dpo->year }}</h6>
                                     <p class="card-text text-muted">Description : {{ $dpo->description }}</p> 
-                                </div> 
+                                </div>
+                            </div>
+                            <div class="col-5"> 
                                 <div class="card ">
                                     <div class="card-header bg-secondary-subtle" >
                                         <h5 class="card-title mb-0 ">Add DPO</h5>
@@ -71,15 +73,18 @@ $user = Auth::user();
                                     </div> 
                                 </div> 
                             </div>
-                            <div class="col-7"> 
+                            <div class="col-12"> 
                                 <div class="card"> 
-                                    <div class="card-body">
-                                        <table id="dop-table" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
+                                    <div class="card-body table-responsive">
+                                        <table id="dpo-table" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
                                             <thead>
                                                 <tr>
                                                     <th>Id</th>
                                                     <th>DPO Type</th>
-                                                    <th>Date</th> 
+                                                    <th>Component</th> 
+                                                    <th>Audio Visual</th> 
+                                                    <th>Original Docs</th> 
+                                                    <th>Original</th> 
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
@@ -151,6 +156,7 @@ $user = Auth::user();
             if(input.value == 'Digital' && audio_visual == 'Film') 
             {
                 $('#append_response_form').html($('#digital_copy').html());
+                 
             }else if(input.value == 'Original' && audio_visual == 'Film') { 
                 $('#append_response_form').html($('#original_docs').html());
             }else if(input.value == 'Digital' && audio_visual == 'Audio')
@@ -160,6 +166,11 @@ $user = Auth::user();
             {  
                 $('#originaldocs_sub_parent').show()
             }
+
+            $('#Component_modal > .select3').select2({
+                        dropdownParent: $(`#Component_modal`)
+                    }); 
+           
        },
        originaldocs_sub:function(input){ 
             $('.components_div_right').hide();
@@ -176,6 +187,7 @@ $user = Auth::user();
             {
                 $('#append_response_form').html($('#phonographic').html());  
             }
+            
        },
 
        //component section Start
@@ -183,44 +195,36 @@ $user = Auth::user();
             const doc = document.getElementById('Documentation').value; 
             if(doc !="")
             {
-                console.log(doc_arr.includes(doc))
+                 console.log(doc_arr,doc_arr.includes(doc))
                 if(!doc_arr.includes(doc))
                 {  
-                    doc_arr.push(doc) 
-                }
-                activity.list();            
-            }
-       },
-       remove:function(element)
-       {
-        var index = doc_arr.indexOf(element);
-        delete doc_arr.splice(index, 1)
-        activity.list();     
-       },
-       list:function()
-       {
-        var html ='<table class="table table-bordered">';
-        doc_arr.forEach(element => {
-                    html +=`<tr><td>${element}</td>
+                    doc_arr.push(doc)
+                    html =`<tr><td>${doc}</td>
                                 <td>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1"><i class="fs-4 bx bx-link"></i></span>
                                         </div>
-                                        <input type="hidden" name="document_name[]" value="${element}">
-                                        <input type="url" class="form-control" placeholder="${element}" name="document_links[]">
+                                        <input type="hidden" name="document_name[]" value="${doc}">
+                                        <input type="url" class="form-control" placeholder="${doc}" name="document_links[]">
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="activity.remove('${element}')"><i class=" bx bx-trash"></i></button>
+                                    <button type="button" class="btn btn-sm btn-danger" onclick="activity.remove('${doc}',$(this))"><i class=" bx bx-trash"></i></button>
                                 </td>
                             </tr>`;
-                });
-        $('#Documentation_response').html(html)
-       }
-       //component section end
+                            $('#Documentation_response').append(html)
+                }            
+            }
+       },
+       remove:function(element,input)
+       {
+        var index = doc_arr.indexOf(element);
+        delete doc_arr.splice(index, 1)  
+        console.log(input.parents('tr').remove())
+       }        
     } 
-
+   
     const dpo = {
         documentation:function()
         {
@@ -239,6 +243,7 @@ $user = Auth::user();
                             $('#Documentation_response').html('');
                             $('#Documentation').val(null).change();
                             Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
+                            dpo.list();
                         }else{
                             Swal.fire({icon:"error",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
                         }
@@ -261,6 +266,7 @@ $user = Auth::user();
                         if(response.status)
                         { 
                             Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
+                            dpo.list();
                         }else{
                             Swal.fire({icon:"error",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
                         }
@@ -273,14 +279,42 @@ $user = Auth::user();
                 url:'{{ route("dpo.component") }}',
                 method:"post",
                 data:component_form,
-                datatype:"",
-                success:function(res)
-                {
-                    console.log($res)
+                datatype:"json",
+                success:function(response)
+                {  
+                    Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
+                    $('#Component').val(null).change()
+                    dpo.list();
                 }
             })
+        },
+        list:function()
+        {
+            if ($.fn.DataTable.isDataTable("#dpo-table")) {
+                $('#dpo-table').DataTable().clear().destroy();
+            }           
+            $('#dpo-table').DataTable({
+                processing: true,
+                serverSide: true,
+                ajax: {
+                    url: "{{ route('dpo.search') }}",
+                    type: 'POST',
+                    data:{ _token:'{{ csrf_token() }}'}
+                },     
+                order: [[0, 'desc']],    
+                columns: [
+                    { data: 'id' },
+                    { data: 'dpo_type' },
+                    { data: 'component' },
+                    { data: 'audio_visual' },
+                    { data: 'original_docs' },
+                    { data: 'original_docs_sub' },
+                    { data: 'action' },
+                ]
+            });
         }
     }
+    dpo.list();
 
     $(document).ready(function(){
         $('#documentation_form').validate({
@@ -291,8 +325,11 @@ $user = Auth::user();
                 documentation:{ required:"Please add any one" } 
             }
         })
+
+        
     })
- 
+
+    
 </script>
 @endsection
 

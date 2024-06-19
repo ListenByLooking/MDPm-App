@@ -15,7 +15,7 @@
                                 <div class="form-group mb-2">
                                     <label for="title" class="form-label">Documentation</label>
                                     <div class="input-group">
-                                    <select class="form-control select2" name="documentation" id="Documentation" >
+                                    <select class="form-control select4" name="documentation" id="Documentation" >
                                         <option value="">Select</option>
                                         <option value="Photos">Photos</option>
                                         <option value="A/V">A/V</option>
@@ -28,7 +28,9 @@
                                 </div>
                                 </div>
                             </div>
-                            <div class="col-8" id="Documentation_response"> 
+                            <div class="col-8" > 
+                                <table class="table table-bordered" id="Documentation_response">
+                                </table>
                             </div>
                         </div>
                     </div> 

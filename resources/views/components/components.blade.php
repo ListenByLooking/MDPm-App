@@ -1,4 +1,4 @@
-<div id="Component_modal" class="modal fade flip" tabindex="-1" role="dialog" aria-hidden="true">
+<div id="Component_modal" class="modal fade flip"  role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-xl">
         <div class="modal-content">
             <form method="POST" id="component_form">
@@ -13,7 +13,7 @@
                             <div class="col-3 bg-success-subtle">
                                 <div class="form-group mb-2">
                                     <label for="title" class="form-label">Components</label>
-                                    <select class="form-control select2" name="component" id="Component" onchange="activity.component(this)" >
+                                    <select class="form-control select4" name="component" id="Component" onchange="activity.component(this)" >
                                         <option value="">Select</option>
                                         <option value="Hardware">Hardware</option>
                                         <option value="Software">Software</option>
@@ -24,7 +24,7 @@
                                 <div class="components_div" id="AudioVisual_parent">
                                     <div class="form-group mb-2">
                                         <label for="title" class="form-label">Audiovisual Types</label>
-                                        <select class="form-control select2" name="audiovisual" id="Audiovisual" onchange="activity.audiovisual(this)" >
+                                        <select class="form-control select4" name="audiovisual" id="Audiovisual" onchange="activity.audiovisual(this)" >
                                             <option value="">Select</option>
                                             <option value="Video">Video</option>
                                             <option value="Photo">Photo</option>
@@ -36,7 +36,7 @@
                                 <div class="components_div" id="originaldocs_parent">
                                     <div class="form-group mb-2">
                                         <label for="title" class="form-label">Original Docs</label>
-                                        <select class="form-control select2" id="originaldocs" name="originaldocs" onchange="activity.originaldocs(this)" >
+                                        <select class="form-control select4" id="originaldocs" name="originaldocs" onchange="activity.originaldocs(this)" >
                                             <option value="">Select</option>
                                             <option value="Original">Original Docs</option>
                                             <option value="Digital">Digital Copy</option> 
@@ -46,7 +46,7 @@
                                 <div class="components_div" id="originaldocs_sub_parent">
                                     <div class="form-group mb-2">
                                         <label for="title" class="form-label">Original Docs</label>
-                                        <select class="form-control select2" id="originaldocs1" name="originaldocs1" onchange="activity.originaldocs_sub(this)"> 
+                                        <select class="form-control select4" id="originaldocs1" name="originaldocs1" onchange="activity.originaldocs_sub(this)"> 
                                                 <option value="">Select</option> 
                                                 <option value="audiocassette">Audiocassette</option>
                                                 <option value="dat">DAT</option>

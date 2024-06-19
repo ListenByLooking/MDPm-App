@@ -12,7 +12,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Format</label>
-                    <select class="form-control select2" name="format">
+                    <select class="form-control select3" name="format">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -22,7 +22,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Original Item</label>
-                    <select class="form-control select2" name="originam_item">
+                    <select class="form-control select3" name="originam_item">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -32,7 +32,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Codec</label>
-                    <select class="form-control select2" class="codec">
+                    <select class="form-control select3" class="codec" name="codec">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -48,7 +48,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Bitdepth (Audio)</label>
-                    <select class="form-control select2" name="bitdepth_audio">
+                    <select class="form-control select3" name="bitdepth_audio">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -58,7 +58,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Bitdepth (Video)</label>
-                    <select class="form-control select2" name="bitdep_video">
+                    <select class="form-control select3" name="bitdep_video">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -68,7 +68,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Resolution</label>
-                    <select class="form-control select2" name="resolution">
+                    <select class="form-control select3" name="resolution">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -78,7 +78,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Aspect Ratio</label>
-                    <select class="form-control select2" name="aspect_ratio">
+                    <select class="form-control select3" name="aspect_ratio">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -88,7 +88,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Frame Rate</label>
-                    <select class="form-control select2" name="frame_ratio">
+                    <select class="form-control select3" name="frame_ratio">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 
@@ -98,7 +98,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>Sample Frequency</label>
-                    <select class="form-control select2" name="sample_frequency">
+                    <select class="form-control select3" name="sample_frequency">
                         <option value="option 1">Option 1</option> 
                         <option value="option 2">Option 2</option> 
                         <option value="option 3">Option 3</option> 

@@ -26,9 +26,11 @@ Route::post('/artwork', [App\Http\Controllers\ArtworkController::class, 'store']
 Route::post('/artwork/search', [App\Http\Controllers\ArtworkController::class, 'search'])->name('artwork.search');
 Route::get('/artwork-add/{id}', [App\Http\Controllers\ArtworkController::class, 'add'])->name('artwork.add');
 Route::get('/artwork-view/{id}', [App\Http\Controllers\ArtworkController::class, 'view'])->name('artwork.view');
-Route::post('/dop/documentation', [App\Http\Controllers\DPOController::class, 'documentation'])->name('dpo.documentation');
-Route::post('/dop/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
-Route::post('/dop/component', [App\Http\Controllers\DPOController::class, 'component'])->name('dpo.component');
-Route::post('/dop/search', [App\Http\Controllers\DPOController::class, 'search'])->name('dpo.search');
+Route::post('/dpo/documentation', [App\Http\Controllers\DPOController::class, 'documentation'])->name('dpo.documentation');
+Route::post('/dpo/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
+Route::post('/dpo/component', [App\Http\Controllers\DPOController::class, 'component'])->name('dpo.component');
+Route::post('/dpo/search', [App\Http\Controllers\DPOController::class, 'search'])->name('dpo.search');
+Route::get('/dpo/view/{component_id}', [App\Http\Controllers\DPOController::class, 'view'])->name('dpo.view');
+Route::get('/dpo/pdf/{component_id}', [App\Http\Controllers\DPOController::class, 'pdf'])->name('dpo.pdf');
 
 //Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');

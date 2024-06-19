@@ -19,7 +19,7 @@
                 <div class="form-group">
                     <label for="brand_of_tape">Brand of Tape</label>
                     <div class="input-group">
-                        <select id="brand_of_tape" name="brand_of_tape"  class="form-control select2" required="">
+                        <select id="brand_of_tape" name="brand_of_tape"  class="form-control select4" required="">
                             <option value="Brand1">Brand 1</option>
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
@@ -32,7 +32,7 @@
                 <div class="form-group">
                     <label for="brand_of_box">Brand of Box</label>
                     <div class="input-group">
-                        <select id="brand_of_box" name="brand_of_box"  class="form-control select2" required="">
+                        <select id="brand_of_box" name="brand_of_box"  class="form-control select4" required="">
                             <option value="Brand1">Brand 1</option>
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
@@ -45,7 +45,7 @@
                 <div class="form-group">
                     <label for="brand_of_carter">Brand of Carter</label>
                     <div class="input-group">
-                        <select id="brand_of_carter" name="brand_of_carter"  class="form-control select2" required="">
+                        <select id="brand_of_carter" name="brand_of_carter"  class="form-control select4" required="">
                             <option value="Brand1">Brand 1</option>
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
@@ -58,7 +58,7 @@
                 <div class="form-group">
                     <label for="material_of_carter">Material of Carter</label>
                     <div class="input-group">
-                        <select id="material_of_carter" name="material_of_carter"  class="form-control select2" required="">
+                        <select id="material_of_carter" name="material_of_carter"  class="form-control select4" required="">
                             <option value="Material1">Material 1</option>
                             <option value="Material2">Material 2</option>
                             <option value="Material3">Material 3</option>
@@ -71,7 +71,7 @@
                 <div class="form-group">
                     <label for="diameter_of_carter">Diameter of Carter</label>
                     <div class="input-group">
-                        <select id="diameter_of_carter" name="diameter_of_carter"  class="form-control select2" required="">
+                        <select id="diameter_of_carter" name="diameter_of_carter"  class="form-control select4" required="">
                             <option value="Diameter1">Diameter 1</option>
                             <option value="Diameter2">Diameter 2</option>
                             <option value="Diameter3">Diameter 3</option>
@@ -84,7 +84,7 @@
                 <div class="form-group">
                     <label for="tape_width">Tape Width</label>
                     <div class="input-group">
-                        <select id="tape_width" name="tape_width" required=""  class="form-control select2">
+                        <select id="tape_width" name="tape_width" required=""  class="form-control select4">
                             <option value="2 inch">2 inch</option>
                             <option value="1 inch">1 inch</option>
                             <option value="½ inch">½ inch</option>
@@ -110,7 +110,7 @@
                 <div class="form-group">
                     <label for="channels_config_sideA">Channels Configuration (SideA)</label>
                     <div class="input-group">
-                        <select id="channels_config_sideA" name="channels_config_sideA"  class="form-control select2" required="">
+                        <select id="channels_config_sideA" name="channels_config_sideA"  class="form-control select4" required="">
                             <option value="Mono">Mono</option>
                             <option value="Stereo">Stereo</option>
                             <option value="Dual Mono">Dual Mono</option>
@@ -124,7 +124,7 @@
                 <div class="form-group">
                     <label for="speed_sideA">Speed (SideA)</label>
                     <div class="input-group">
-                        <select id="speed_sideA" name="speed_sideA"  class="form-control select2" required="">
+                        <select id="speed_sideA" name="speed_sideA"  class="form-control select4" required="">
                             <option value="2,38 cm/s">2,38 cm/s</option>
                             <option value="4,75 cm/s">4,75 cm/s</option>
                             <option value="9,5 cm/s">9,5 cm/s</option>
@@ -146,7 +146,7 @@
                 <div class="form-group">
                     <label for="channels_config_sideB">Channels Configuration (SideB)</label>
                     <div class="input-group">
-                        <select id="channels_config_sideB" name="channels_config_sideB"  class="form-control select2" required="">
+                        <select id="channels_config_sideB" name="channels_config_sideB"  class="form-control select4" required="">
                             <option value="Mono">Mono</option>
                             <option value="Stereo">Stereo</option>
                             <option value="Dual Mono">Dual Mono</option>
@@ -160,7 +160,7 @@
                 <div class="form-group">
                     <label for="speed_sideB">Speed (SideB)</label>
                     <div class="input-group">
-                        <select id="speed_sideB" name="speed_sideB" required=""  class="form-control select2">
+                        <select id="speed_sideB" name="speed_sideB" required=""  class="form-control select4">
                             <option value="2,38 cm/s">2,38 cm/s</option>
                             <option value="4,75 cm/s">4,75 cm/s</option>
                             <option value="9,5 cm/s">9,5 cm/s</option>
@@ -176,7 +176,7 @@
                 <div class="form-group">
                     <label for="eq">EQ</label>
                     <div class="input-group">
-                        <select id="eq" name="eq" required=""  class="form-control select2">
+                        <select id="eq" name="eq" required=""  class="form-control select4">
                             <option value="IEC1">IEC1</option>
                             <option value="IEC2">IEC2</option>
                             <option value="CCIR">CCIR</option>

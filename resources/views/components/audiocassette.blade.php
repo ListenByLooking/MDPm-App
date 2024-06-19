@@ -64,11 +64,11 @@
         <div class="col-4">
             <div class="form-group">
                 <label for="noise_reduction">Noise Reduction</label><br>
-                <input type="checkbox" id="noise_reduction1" name="noise_reduction[]" value="yes">
+                <input type="radio" id="noise_reduction1" name="noise_reduction" value="yes">
                 <label for="noise_reduction1" class="mx-2">Yes</label>
-                <input type="checkbox" id="noise_reduction2" name="noise_reduction[]" value="no">
+                <input type="radio" id="noise_reduction2" name="noise_reduction" value="no">
                 <label for="noise_reduction2" class="mx-2">No</label>
-                <input type="checkbox" id="noise_reduction3" name="noise_reduction[]" value="unknown">
+                <input type="radio" id="noise_reduction3" name="noise_reduction" value="unknown">
                 <label for="noise_reduction3" class="mx-2">Unknown</label>
             </div>
         </div>

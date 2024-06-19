@@ -90,9 +90,9 @@
                 <div class="form-group">
                     <label for="type_of_recording">Type of Recording</label>
                     <div class="checkbox-container">
-                        <input type="checkbox" id="mechanical" name="type_of_recording" value="mechanical">
+                        <input type="radio" id="mechanical" name="type_of_recording" value="mechanical">
                         <label for="mechanical">Mechanical</label>
-                        <input type="checkbox" id="electrical" name="type_of_recording" value="electrical">
+                        <input type="radio" id="electrical" name="type_of_recording" value="electrical">
                         <label for="electrical">Electrical</label>
                     </div>
                 </div>
@@ -101,9 +101,9 @@
                 <div class="form-group">
                     <label for="incisions">Incisions</label>
                     <div class="checkbox-container">
-                        <input type="checkbox" id="horizontal" name="incisions" value="horizontal">
+                        <input type="radio" id="horizontal" name="incisions" value="horizontal">
                         <label for="horizontal">Horizontal</label>
-                        <input type="checkbox" id="vertical" name="incisions" value="vertical">
+                        <input type="radio" id="vertical" name="incisions" value="vertical">
                         <label for="vertical">Vertical</label>
                     </div>
                 </div>
