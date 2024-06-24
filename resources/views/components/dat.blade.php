@@ -25,13 +25,13 @@
             <div class="form-group">
                 <label for="brand">Brand</label>
                 <div class="input-group">
-                    <select id="brand" name="brand" required="" class="form-control">
+                    <select id="dat_brand" name="brand" required="" class="form-control">
                         <option value="">Select...</option>
                         <option value="A">A</option>
                         <option value="B">B</option>
                         <option value="C">C</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('dat_brand')">+</button>
                 </div>
             </div>
         </div>
@@ -39,13 +39,13 @@
             <div class="form-group">
                 <label for="brand_of_box">Brand of the Box</label>
                 <div class="input-group">
-                    <select id="brand_of_box" name="brand_of_box" required="" class="form-control">
+                    <select id="dat_brand_of_box" name="brand_of_box" required="" class="form-control">
                         <option value="">Select...</option>
                         <option value="D">D</option>
                         <option value="E">E</option>
                         <option value="F">F</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_box')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('dat_brand_of_box')">+</button>
                 </div>
             </div>
         </div>
@@ -62,7 +62,7 @@
                         <option value="96000hz">96000 Hz</option>
                         <option value="192000hz">192000 Hz</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('samplerate')" class="form-control">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('samplerate')" class="form-control">+</button>
                 </div>
             </div>
         </div>

@@ -24,7 +24,7 @@
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_tape')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand_of_tape')">+</button>
                     </div>
                 </div>
             </div>
@@ -32,12 +32,12 @@
                 <div class="form-group">
                     <label for="brand_of_box">Brand of Box</label>
                     <div class="input-group">
-                        <select id="brand_of_box" name="brand_of_box"  class="form-control select4" required="">
+                        <select id="tape_brand_of_box" name="brand_of_box"  class="form-control select4" required="">
                             <option value="Brand1">Brand 1</option>
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_box')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('tape_brand_of_box')">+</button>
                     </div>
                 </div>
             </div>
@@ -50,7 +50,7 @@
                             <option value="Brand2">Brand 2</option>
                             <option value="Brand3">Brand 3</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_carter')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand_of_carter')">+</button>
                     </div>
                 </div>
             </div>
@@ -63,7 +63,7 @@
                             <option value="Material2">Material 2</option>
                             <option value="Material3">Material 3</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('material_of_carter')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('material_of_carter')">+</button>
                     </div>
                 </div>
             </div>
@@ -76,7 +76,7 @@
                             <option value="Diameter2">Diameter 2</option>
                             <option value="Diameter3">Diameter 3</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('diameter_of_carter')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('diameter_of_carter')">+</button>
                     </div>
                 </div>
             </div>
@@ -90,7 +90,7 @@
                             <option value="½ inch">½ inch</option>
                             <option value="¼ inch">¼ inch</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('tape_width')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('tape_width')">+</button>
                     </div>
                 </div>
             </div>
@@ -116,7 +116,7 @@
                             <option value="Dual Mono">Dual Mono</option>
                             <option value="Quadriphonic">Quadriphonic</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('channels_config_sideA')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('channels_config_sideA')">+</button>
                     </div>
                 </div>
             </div>
@@ -132,7 +132,7 @@
                             <option value="38 cm/s">38 cm/s</option>
                             <option value="76 cm/s">76 cm/s</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('speed_sideA')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('speed_sideA')">+</button>
                     </div>
                 </div>
             </div>
@@ -152,7 +152,7 @@
                             <option value="Dual Mono">Dual Mono</option>
                             <option value="Quadriphonic">Quadriphonic</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('channels_config_sideB')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('channels_config_sideB')">+</button>
                     </div>
                 </div>
             </div>
@@ -168,7 +168,7 @@
                             <option value="38 cm/s">38 cm/s</option>
                             <option value="76 cm/s">76 cm/s</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('speed_sideB')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('speed_sideB')">+</button>
                     </div>
                 </div>
             </div>
@@ -184,7 +184,7 @@
                             <option value="AES">AES</option>
                             <option value="DIN">DIN</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('eq')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('eq')">+</button>
                     </div>
                 </div>
             </div>

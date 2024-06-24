@@ -13,19 +13,16 @@
                         <div class="row">
                             <div class="col-4">                                                                
                                 <div class="form-group mb-2">
-                                    <label for="title" class="form-label">Documentation</label>
-                                    <div class="input-group">
-                                    <select class="form-control select4" name="documentation" id="Documentation" >
-                                        <option value="">Select</option>
-                                        <option value="Photos">Photos</option>
-                                        <option value="A/V">A/V</option>
-                                        <option value="Interviews">Interviews</option>
-                                        <option value="Docs">Docs</option>
-                                    </select>
-                                    <div class="input-group-append">
-                                        <button class="btn btn-success" type="button" onclick="activity.documentation()">Add</button>
-                                    </div>
+                                    <button class="btn btn-success" type="button" onclick="activity.documentation(1)">Photos</button>
                                 </div>
+                                <div class="form-group mb-2">
+                                    <button class="btn btn-success" type="button" onclick="activity.documentation(2)">A/V</button>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <button class="btn btn-success" type="button" onclick="activity.documentation(3)">Interviews</button>
+                                </div>
+                                <div class="form-group mb-2">
+                                    <button class="btn btn-success" type="button" onclick="activity.documentation(4)">Docs</button>  
                                 </div>
                             </div>
                             <div class="col-8" > 

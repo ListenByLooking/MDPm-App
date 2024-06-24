@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="audiocassette"> 
-    <h2 class="text-center">Audiocassette Form</h2>
+    <h2 class="text-center">Audiocassette Form</h2> 
     <input type="hidden" name="form_name" value="audiocassette">
     <input type="hidden" name="dpo_id" value="{{$id}}">
             <div class="row">
@@ -30,7 +30,7 @@
                         <option value="B">B</option>
                         <option value="C">C</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand')">+</button>
                 </div>
             </div>
         </div>
@@ -43,7 +43,7 @@
                         <option value="E">E</option>
                         <option value="F">F</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_box')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand_of_box')">+</button>
                 </div>
             </div>
         </div>
@@ -57,7 +57,7 @@
                         <option value="IECIII">IECIII</option>
                         <option value="IECIV">IECIV</option>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="addOption('cassette_type')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('cassette_type')">+</button>
                 </div>
             </div>
         </div>

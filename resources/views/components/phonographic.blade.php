@@ -25,12 +25,12 @@
                 <div class="form-group">
                     <label for="brand">Brand</label>
                     <div class="input-group">
-                        <select id="brand" name="brand" required="" class="form-control">
+                        <select id="phone_brand" name="brand" required="" class="form-control">
                             <option value="A">A</option>
                             <option value="B">B</option>
                             <option value="C">C</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('brand')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
                     </div>
                 </div>
             </div>
@@ -39,12 +39,12 @@
                     <!-- Repeat the same structure for other dropdowns -->
                     <label for="brand_of_box">Brand of the Box</label>
                     <div class="input-group">
-                        <select id="brand_of_box" name="brand_of_box" required="" class="form-control">
+                        <select id="phone_brand_of_box" name="brand_of_box" required="" class="form-control">
                             <option value="D">D</option>
                             <option value="E">E</option>
                             <option value="F">F</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('brand_of_box')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand_of_box')">+</button>
                     </div>
                 </div>
             </div>
@@ -58,7 +58,7 @@
                             <option value="78rpm">78 rpm</option>
                             <option value="80rpm">80 rpm</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('rpm')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('rpm')">+</button>
                     </div>
                 </div>
             </div>
@@ -70,7 +70,7 @@
                             <option value="A">A</option>
                             <option value="B">B</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('stylus')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('stylus')">+</button>
                     </div>
                 </div>
             </div>
@@ -82,7 +82,7 @@
                             <option value="RIAA">RIAA</option>
                             <option value="Other">Other</option>
                         </select>
-                        <button type="button" class="add-button btn btn-success" onclick="addOption('eq')">+</button>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('eq')">+</button>
                     </div>
                 </div>
             </div>

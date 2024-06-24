@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
@@ -17,7 +18,7 @@ class ArtworkController extends Controller
     return view('artwork');
    }
    public function store(Request $request)
-   { 
+   {
       try {
          
          $dpo = DB::table('dpos')->insertGetId([
@@ -31,20 +32,30 @@ class ArtworkController extends Controller
                                     ]);
          if($dpo)
          {
-            return redirect()->route('artwork.add',encrypt($dpo))->with(['status'=>true , 'message'=>'DPO Added successfully']);
+            return redirect()->route('artwork.view',encrypt($dpo))->with(['status'=>true , 'message'=>'DPO Added successfully']);
          }else{
             return redirect()->back()->with(['status'=>false , 'message'=>'You have some error. please try later']);
          } 
-      } catch (\Throwable $th) {
-         dd($th->getMessage().$th->getLine());
+      } catch (\Throwable $th) { 
          return redirect()->back()->with(['status'=>false , 'message'=>'You have some error. please try later']);
       }
    }
-   public function add($id)
+   public function view($id)
    {
       $id = decrypt($id);
-      $dpo = DB::table('dpos')->where('id',$id)->first();
+      $dpo = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
       return view('artwork-add',compact('dpo','id'));
+   }
+   public function pdf($id)
+   { 
+      $id         = decrypt($id);
+      $dpo        = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
+      $components = DB::table('components')->select('id')->where('dpo_id',$id)->where('user_id',Auth::user()->id)->get(); 
+        //return view('pdf',compact('components','id'));
+
+         $pdf = PDF::loadView('pdf', compact('components','id'));
+        
+         return $pdf->download('disney.pdf');
    }
    public function search(Request $request){
         $draw           = $request->draw;
@@ -83,8 +94,9 @@ class ArtworkController extends Controller
                 "title" => $record->title,
                 "year"  => $record->year,
                 "author"=> $record->author,
-                "action"=> '<a href="'.route('artwork.add',encrypt($record->id)).'" class="btn btn-sm btn-success" title="Add DPO"><i class="bx bx-duplicate"></i></a>
-                            <a href="'.route('artwork.view',encrypt($record->id)).'" class="btn btn-sm btn-danger" title="View DPO"><i class=" bx bx-list-ul"></i></a>',
+                "action"=> '<a href="'.route('artwork.view',encrypt($record->id)).'" class="btn btn-sm btn-success" title="View Artworks"><i class="bx fs-5 bxs-book-open"></i></a>
+                            <a href="javascript:;" onclick="remove(\''.encrypt($record->id).'\')" class="btn btn-sm btn-danger" title="Delete Artworks"><i class="fs-5 bx bx-trash"></i></a>
+                            <a href="'.route('artwork.pdf',encrypt($record->id)).'" class="btn btn-primary btn-sm" title="View PDF"><i class="fs-5 bx bxs-file-pdf"></i></a>',
             );
         }
 
@@ -95,9 +107,21 @@ class ArtworkController extends Controller
             "aaData" => $data_arr,
         );
         echo json_encode($response);
-   }
-   public function view()
-   {
+   } 
 
-   }
+   public function delete(Request $request)
+   { 
+      $id            = $request->id; 
+      $dpo           = DB::table('dpos')->where('id',decrypt($id))->delete();
+      $components    = DB::table('components')->where('dpo_id',decrypt($id))->first();
+      $componemt_id  = $components->id;
+                     DB::table('audiocassette')->where('component_id',$componemt_id)->delete();
+                     DB::table('dat')->where('component_id',$componemt_id)->delete();
+                     DB::table('digital_copy')->where('component_id',$componemt_id)->delete();
+                     DB::table('documentation')->where('component_id',$componemt_id)->delete();
+                     DB::table('original_docs')->where('component_id',$componemt_id)->delete();
+                     DB::table('phonographicdisks')->where('component_id',$componemt_id)->delete();
+                     DB::table('score')->where('component_id',$componemt_id)->delete();
+                     DB::table('tape_details')->where('component_id',$componemt_id)->delete(); 
+   } 
 }

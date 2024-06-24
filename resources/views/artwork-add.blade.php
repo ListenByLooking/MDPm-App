@@ -105,13 +105,33 @@ $user = Auth::user();
 <script> 
     let editorValue;
     ClassicEditor
-            .create( document.querySelector( '#ckeditor-classic' ) )
-            .then( editor => {
+            .create( document.querySelector( '#ckeditor-classic' ), {
+        toolbar: {
+            items: [
+                'heading', 
+                '|',
+                'bold', 
+                'italic', 
+                'link', 
+                'bulletedList', 
+                'numberedList', 
+                'blockQuote',
+                '|',
+                'insertTable',
+                'undo', 
+                'redo'
+            ]
+        },
+        // Remove the plugins related to image and video if you don't want them to be loaded at all.
+       // removePlugins: ['Image', 'ImageToolbar', 'ImageCaption', 'ImageStyle', 'ImageResize', 'ImageUpload', 'MediaEmbed'] 
+    })
+        
+            .then(editor => {
                 editorValue = editor;
-            } )
-            .catch( error => {
-                    console.error( error );
-            } );
+            })
+            .catch(error => {
+                    console.error(error);
+            });
    
     const doc_arr = [];
     const activity = {
@@ -188,33 +208,30 @@ $user = Auth::user();
                 $('#append_response_form').html($('#phonographic').html());  
             }
             
+            dpo.getOption();
        },
 
        //component section Start
-       documentation:function(){
-            const doc = document.getElementById('Documentation').value; 
-            if(doc !="")
-            {
-                 console.log(doc_arr,doc_arr.includes(doc))
-                if(!doc_arr.includes(doc))
-                {  
-                    doc_arr.push(doc)
-                    html =`<tr><td>${doc}</td>
+       documentation:function(id){             
+            if(id !="")
+            { 
+                var doc = ['','Photos','A/V','Interviews','Docs'];
+                    
+                    html =`<tr><td>${doc[id]}</td>
                                 <td>
                                     <div class="input-group">
                                         <div class="input-group-prepend">
                                             <span class="input-group-text" id="basic-addon1"><i class="fs-4 bx bx-link"></i></span>
                                         </div>
-                                        <input type="hidden" name="document_name[]" value="${doc}">
-                                        <input type="url" class="form-control" placeholder="${doc}" name="document_links[]">
+                                        <input type="hidden" name="document_name[]" value="${doc[id]}">
+                                        <input type="url" class="form-control" placeholder="${doc[id]}" name="document_links[]">
                                     </div>
                                 </td>
                                 <td>
-                                    <button type="button" class="btn btn-sm btn-danger" onclick="activity.remove('${doc}',$(this))"><i class=" bx bx-trash"></i></button>
+                                    <a href="javascript:;" class="btn btn-sm btn-danger" onclick="activity.remove('${doc[id]}',$(this))"><i class=" bx bx-trash"></i></a>
                                 </td>
                             </tr>`;
-                            $('#Documentation_response').append(html)
-                }            
+                            $('#Documentation_response').append(html) 
             }
        },
        remove:function(element,input)
@@ -299,7 +316,7 @@ $user = Auth::user();
                 ajax: {
                     url: "{{ route('dpo.search') }}",
                     type: 'POST',
-                    data:{ _token:'{{ csrf_token() }}'}
+                    data:{ _token:'{{ csrf_token() }}' , dpo_id:'{{ $id}}' }
                 },     
                 order: [[0, 'desc']],    
                 columns: [
@@ -312,6 +329,40 @@ $user = Auth::user();
                     { data: 'action' },
                 ]
             });
+        },
+        addOption:function(option){           
+            const userInput = prompt('Please enter option:', '');
+            if (userInput !== null) {
+                $.ajax({
+                    url:'{{ route("dpo.option") }}',
+                    method:"post",
+                    data:{_token:'{{ csrf_token() }}' , option:option , value:userInput},
+                    datatype:"json",
+                    success:function(response)
+                    {   
+                        if(response.status)
+                        {
+                            $(`#${option}`).append(`<option value="${userInput}">${userInput}</option>`)
+                            Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
+                        }else{
+                            Swal.fire({icon:"error",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
+                        }
+                    }
+                })
+            }  
+        },
+        getOption:function(){
+            $.ajax({
+                    url:'{{ route("dpo.listOption") }}',
+                    method:"get", 
+                    datatype:"json",
+                    success:function(response)
+                    {   
+                         $.each(response,function(key,value){
+                            $(`#component_form #${key}`).append(`<option value="${value}">${value}</option>`)
+                         })
+                    }
+                })
         }
     }
     dpo.list();
@@ -328,6 +379,8 @@ $user = Auth::user();
 
         
     })
+
+    
 
     
 </script>

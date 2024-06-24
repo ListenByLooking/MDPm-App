@@ -25,6 +25,7 @@ class DPOController extends Controller
                                                                     'audio_visual'  => '',
                                                                     'original_docs' => '',
                                                                     'original_docs_sub' => '',
+                                                                    'form_name'     => 'documentation',
                                                                     'status'        => 1,
                                                                     'created_at'    => date('Y-m-d'),
                                                                 ]);
@@ -61,6 +62,7 @@ class DPOController extends Controller
                                                                 'audio_visual'  => '',
                                                                 'original_docs' => '',
                                                                 'original_docs_sub' => '',
+                                                                'form_name'     => 'score',
                                                                 'status'        => 1,
                                                                 'created_at'    => date('Y-m-d'),
                                                             ]);
@@ -96,6 +98,7 @@ class DPOController extends Controller
                                                                         'audio_visual'  => $request->audiovisual,
                                                                         'original_docs' => $request->originaldocs,
                                                                         'original_docs_sub' => $request->originaldocs1,
+                                                                        'form_name'     => $request->form_name,
                                                                         'status'        => 1,
                                                                         'created_at'    => date('Y-m-d'),
                                                                     ]);
@@ -127,7 +130,7 @@ class DPOController extends Controller
                     $data = [  
                         'dpo_id'                => $request->dpo_id,
                         'user_id'               => Auth::user()->id,
-                        'comonent_id'           => $component_id,
+                        'component_id'           => $component_id,
                         'preservation_signature'=> $request->preservation_signature,
                         'original_signature'    => $request->original_signature,
                         'type'                  => $request->type,
@@ -191,7 +194,7 @@ class DPOController extends Controller
                     $data = [
                             'dpo_id'                => $request->dpo_id, 
                             'user_id'               => Auth::user()->id, 
-                            'comonent_id'           => $component_id, 
+                            'component_id'           => $component_id, 
                             'preservation_signature'=> $request->preservation_signature, 
                             'original_signature'    => $request->original_signature, 
                             'brand_of_tape'         => $request->brand_of_tape, 
@@ -217,6 +220,8 @@ class DPOController extends Controller
                 case 'phonographicdisks':
                         $data = [
                                     'dpo_id'                => $request->dpo_id,
+                                    'user_id'               => Auth::user()->id,
+                                    'component_id'          => $component_id,
                                     'preservation_signature'=> $request->preservation_signature,
                                     'original_signature'    => $request->original_signature,
                                     'brand'                 => $request->brand,
@@ -257,14 +262,16 @@ class DPOController extends Controller
         $searchValue    = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = DB::table('components')->where('user_id',Auth::user()->id)->count(); 
+        $totalRecords = DB::table('components')->where('user_id',Auth::user()->id)->where('dpo_id',$request->dpo_id)->count(); 
         $totalRecordswithFilter = DB::table('components')->where('user_id',Auth::user()->id)
+        ->where('dpo_id',$request->dpo_id)
         ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
         ->count();
  
 
         // Get records, also we have included search filter as well
-        $records = DB::table('components')->where('user_id',Auth::user()->id)                     
+        $records = DB::table('components')->where('user_id',Auth::user()->id)    
+            ->where('dpo_id',$request->dpo_id)                 
             ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
             ->orderBy($columnName, $columnSortOrder??'desc') 
             ->skip($start)
@@ -273,17 +280,16 @@ class DPOController extends Controller
 
         $data_arr = array();
 
-        foreach ($records as $record) {
+        foreach ($records as $key=> $record) {
 
             $data_arr[] = array(
-                "id"            => $record->id,
+                "id"            => 'DPO'.str_pad($key + 1, 10, "0",STR_PAD_LEFT),
                 "dpo_type"      => $record->dpo_type,
                 "component"     => $record->component??'-',
                 "audio_visual"  => $record->audio_visual??'-',
                 "original_docs" => $record->original_docs??'-',
                 "original_docs_sub"  => $record->original_docs_sub??'-',
-                "action"        => '<a href="'.route('dpo.view',encrypt($record->id)).'" class="btn btn-danger btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View</a>
-                                    <a href="'.route('dpo.pdf',encrypt($record->id)).'" class="btn btn-success btn-sm" title="View PDF"><i class="fs-5 bx bxs-file-pdf"></i>&nbsp;View PDF</a>',
+                "action"        => '<a href="'.route('dpo.view',encrypt($record->id)).'" class="btn btn-danger btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View</a>',
             );
         }
 
@@ -297,13 +303,69 @@ class DPOController extends Controller
    }
    public function view(Request $request , $component_id){
         $component_id = decrypt($component_id);
-        $result = DB::table('components')->where('id',$component_id)->first();
+        $result = DB::table('components')->where('id',$component_id)->first();  
+        // dd($result->form_name);
+        switch ($result->form_name) {
+                case 'tape_details':
+                    $tapedetails = DB::table('tape_details')->where('component_id',$component_id)->first();
+                    return view('pdf.tapedetails',compact('result','tapedetails'));
+                break;
+                case 'original_docs':
+                    $original_docs = DB::table('original_docs')->where('component_id',$component_id)->first();
+                    return view('pdf.originaldocs',compact('result','original_docs'));
+                break;
+                case 'digital_copy':
+                    $digital_copy = DB::table('digital_copy')->where('component_id',$component_id)->first();
+                    return view('pdf.digitalcopy',compact('result','digital_copy'));
+                break;
+                case 'score':
+                    $score = DB::table('score')->where('component_id',$component_id)->first();
+                    return view('pdf.score',compact('result','score'));
+                break;
+                case 'documentation':
+                    $documentation = DB::table('documentation')->where('component_id',$component_id)->get();
 
-        return view('pdf.tapedetails');
+                    return view('pdf.documentation',compact('result','documentation'));
+                break;
+                case 'dat':
+                    $dat = DB::table('dat')->where('component_id',$component_id)->first();
+                    return view('pdf.dat',compact('result','dat'));
+                break;
+                case 'phonographicdisks':
+                    $phonographicdisks = DB::table('phonographicdisks')->where('component_id',$component_id)->first();
+                    return view('pdf.phonographic',compact('result','phonographicdisks'));
+                case 'audiocassette':
+                    $audiocassette = DB::table('audiocassette')->where('component_id',$component_id)->first();
+                    return view('pdf.audiocassette',compact('result','audiocassette'));
+                break;  
+        }
+ 
 
 
    }
+   public function option(Request $request)
+   {
+        $result = DB::table('component_config')->where(['key_name' => $request->option, 'key_value' => $request->value, 'user_id' => Auth::user()->id])->first();
+        if($result)
+        {
+            return ['status'=>false , 'message' => 'Given Name Already exists'];
+        }else{
+            DB::table('component_config')->insert([
+                'user_id' => Auth::user()->id ,
+                'key_name' => $request->option,
+                'key_value' => $request->value            
+            ]);
+            return ['status'=>true , 'message' => 'insert Successfully'];
+        }
+   }
+
+   public function listOption()
+   {
+     $response =  DB::table('component_config')->where('user_id',Auth::user()->id)->pluck('key_value','key_name');
+     return response()->json($response);
+   }
    public function pdf(Request $request ,$component_id){
+    header("Content-type:application/pdf");
     $result = DB::table('components')->where('id',$component_id)->first();
     return view('pdf.tapedetails');
    }
