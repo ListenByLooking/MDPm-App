@@ -283,13 +283,14 @@ class DPOController extends Controller
         foreach ($records as $key=> $record) {
 
             $data_arr[] = array(
-                "id"            => 'DPO'.str_pad($key + 1, 10, "0",STR_PAD_LEFT),
+                "id"            => 'DPO'.str_pad($key + 1, 2, "0",STR_PAD_LEFT),
                 "dpo_type"      => $record->dpo_type,
                 "component"     => $record->component??'-',
                 "audio_visual"  => $record->audio_visual??'-',
                 "original_docs" => $record->original_docs??'-',
                 "original_docs_sub"  => $record->original_docs_sub??'-',
-                "action"        => '<a href="'.route('dpo.view',encrypt($record->id)).'" class="btn btn-danger btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View</a>',
+                "action"        => '<a href="'.route('dpo.view',encrypt($record->id)).'" class="btn btn-success btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View</a>
+                                    <a href="javascript:;" onclick="remove(\''.encrypt($record->id).'\')" class="btn btn-sm btn-danger" title="Delete DPO"><i class="fs-5 bx bx-trash"></i></a>',
             );
         }
 
@@ -343,6 +344,7 @@ class DPOController extends Controller
 
 
    }
+ 
    public function option(Request $request)
    {
         $result = DB::table('component_config')->where(['key_name' => $request->option, 'key_value' => $request->value, 'user_id' => Auth::user()->id])->first();
@@ -369,4 +371,38 @@ class DPOController extends Controller
     $result = DB::table('components')->where('id',$component_id)->first();
     return view('pdf.tapedetails');
    }
+   public function delete(Request $request)
+   { 
+    $id            = $request->id;  
+    $components    = DB::table('components')->where('id',decrypt($id))->first();
+    $componemt_id  = $components->id; 
+    switch ($components->form_name) {
+        case 'audiocassette': 
+            DB::table('audiocassette')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'dat': 
+            DB::table('dat')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'digital_copy': 
+            DB::table('digital_copy')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'documentation': 
+            DB::table('documentation')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'original_docs': 
+            DB::table('original_docs')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'phonographicdisks': 
+            DB::table('phonographicdisks')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'score': 
+            DB::table('score')->where('component_id',$componemt_id)->delete();
+        break;
+        case 'tape_details': 
+            DB::table('tape_details')->where('component_id',$componemt_id)->delete();
+        break; 
+        
+    }
+    DB::table('components')->where('id',$componemt_id)->delete();         
+   } 
 }

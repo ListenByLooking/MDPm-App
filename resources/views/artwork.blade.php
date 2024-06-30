@@ -187,9 +187,7 @@ function remove(id)
                             showCloseButton:!0})                     
                 }
             })
-        } else if (result.isDenied) {
-             
-        }
+        } 
         })
 }
 

@@ -46,6 +46,13 @@ class ArtworkController extends Controller
       $dpo = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
       return view('artwork-add',compact('dpo','id'));
    }
+
+   public function add($id)
+   {
+      $id = decrypt($id);
+      $dpo = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
+      return view('add-artwork',compact('dpo','id'));
+   }
    public function pdf($id)
    { 
       $id         = decrypt($id);
@@ -55,7 +62,7 @@ class ArtworkController extends Controller
 
          $pdf = PDF::loadView('pdf', compact('components','id'));
         
-         return $pdf->download('disney.pdf');
+         return $pdf->download(str_replace([',','_','-',''],'-',$dpo->title??'Sample').'.pdf');
    }
    public function search(Request $request){
         $draw           = $request->draw;

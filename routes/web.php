@@ -32,11 +32,13 @@ Route::post('/artwork', [App\Http\Controllers\ArtworkController::class, 'store']
 Route::post('/artwork/search', [App\Http\Controllers\ArtworkController::class, 'search'])->name('artwork.search');
 Route::post('/artwork-delete', [App\Http\Controllers\ArtworkController::class, 'delete'])->name('artwork.delete');
 Route::get('/artwork-view/{id}', [App\Http\Controllers\ArtworkController::class, 'view'])->name('artwork.view');
+Route::get('/artwork-add/{id}', [App\Http\Controllers\ArtworkController::class, 'add'])->name('artwork.add');
 Route::get('/artwork-pdf/{id}', [App\Http\Controllers\ArtworkController::class, 'pdf'])->name('artwork.pdf');
 Route::post('/dpo/documentation', [App\Http\Controllers\DPOController::class, 'documentation'])->name('dpo.documentation');
-Route::post('/dpo/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
+ Route::post('/dpo/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
 Route::post('/dpo/option', [App\Http\Controllers\DPOController::class, 'option'])->name('dpo.option');
 Route::get('/dpo/listOption', [App\Http\Controllers\DPOController::class, 'listOption'])->name('dpo.listOption');
+Route::post('/dpo/delete', [App\Http\Controllers\DPOController::class, 'delete'])->name('dpo.delete');
 Route::post('/dpo/component', [App\Http\Controllers\DPOController::class, 'component'])->name('dpo.component');
 Route::post('/dpo/search', [App\Http\Controllers\DPOController::class, 'search'])->name('dpo.search');
 Route::get('/dpo/view/{component_id}', [App\Http\Controllers\DPOController::class, 'view'])->name('dpo.view');
