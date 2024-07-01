@@ -1,7 +1,7 @@
 <div class="col-12 components_div_right" id="tape_details">
     <h2 class="text-center">Open Reel Tape Form</h2> 
     <input type="hidden" name="form_name" value="tape_details">
-    <input type="hidden" name="dpo_id" value="{{$id}}">
+    <input type="hidden" name="artwork_id" value="{{$id}}"> 
         <div class="row">
             <div class="col-4"> 
                 <div class="form-group">

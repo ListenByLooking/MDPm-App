@@ -10,7 +10,7 @@
     <!-- App favicon -->
     {{-- <link rel="shortcut icon" href="{{ asset('assets/images/favicon.ico') }}"> --}}
  
-    <link rel="stylesheet" type="text/css" href="{{ asset('public/css/dataTables.dataTables.min.css') }}">
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.7/css/jquery.dataTables.min.css">
     <!-- Layout config Js -->
     <script src="{{ asset('js/layout.js') }}"></script>
     <!-- Bootstrap Css -->
@@ -27,7 +27,9 @@
    
     
     <link href="{{ asset('public/css/select2.min.css') }}" rel="stylesheet" />
-
+    <style>
+        .table td{ border:1px solid #CCC;  border-collapse: collapse;} 
+        </style>
 </head>
 
 <body>
@@ -69,7 +71,8 @@
     <!-- App js -->
     <script src="{{ asset('assets/js/app.js') }}"></script> 
     <script src="{{ asset('public/js/jquery.validate.min.js') }}"></script>
-    <script src="{{ asset('public/js/dataTables.min.js') }}"></script>
+    <script src="http://cdn.datatables.net/1.10.7/js/jquery.dataTables.js"></script>
+    <script src="{{ asset('public/js/dataTables.rowGroup.min.js') }}"></script>
     @yield('script')
 </body>
 </html>

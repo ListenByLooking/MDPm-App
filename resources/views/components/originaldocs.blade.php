@@ -1,7 +1,7 @@
 <div class="col-12 components_div_right" id="original_docs"> 
     <h2 class="text-center p-2 boder-bottom">Preservation Form</h2> 
     <input type="hidden" name="form_name" value="original_docs">
-    <input type="hidden" name="dpo_id" value="{{$id}}">
+    <input type="hidden" name="artwork_id" value="{{$id}}"> 
         <div class="row">
             <div class="col-4">
                 <div class="form-group">

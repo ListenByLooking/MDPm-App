@@ -82,9 +82,8 @@ $user = Auth::user();
                                         </table>
                                     </div>
                                 </div>
-                            </div>
-                        </div>
-                       
+                            </div> 
+                        </div>                       
                         <!--end col-->
                     </div>
                 </div>
@@ -95,14 +94,12 @@ $user = Auth::user();
                 <p id="demo1"></p>
             </div>
             <div id="
-            Documentation">
-        
+            Documentation">        
                 <p id="demo2"></p>
             </div>
             <div id="Score">
                 <p id="demo3"></p>
             </div>
-
             </div>
 <script>
     document.getElementById('image').addEventListener('change', function(event) {

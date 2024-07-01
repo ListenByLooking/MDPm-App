@@ -21,7 +21,7 @@ class ArtworkController extends Controller
    {
       try {
          
-         $dpo = DB::table('dpos')->insertGetId([
+         $dpo = DB::table('artwork')->insertGetId([
                                     'user_id'      =>Auth::user()->id,
                                     'title'        => $request->title,
                                     'description'  =>$request->description,
@@ -43,26 +43,34 @@ class ArtworkController extends Controller
    public function view($id)
    {
       $id = decrypt($id);
-      $dpo = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
-      return view('artwork-add',compact('dpo','id'));
+      $artwork = DB::table('artwork')->where('id',$id)->where('user_id',Auth::user()->id)->first();
+      $dpos    = DB::table('dpos')->where(['user_id' => Auth::user()->id ,'artwork_id' => $id ])->orderBy('id','DESC')->first();
+      if(!$dpos)
+      {
+         $dpo_id = 1;
+      }else{
+         $dpo_id =  $dpos->dpo_id+1;
+      }
+      return view('artwork-add',compact('artwork','id','dpo_id'));
    }
 
-   public function add($id)
-   {
-      $id = decrypt($id);
-      $dpo = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
-      return view('add-artwork',compact('dpo','id'));
+   public function add($id,$dpo_id)
+   { 
+      $id      = decrypt($id);
+      $dpo_id  = decrypt($dpo_id); 
+      $artwork = DB::table('artwork')->where('id',$id)->where('user_id',Auth::user()->id)->first(); 
+      return view('add-artwork',compact('artwork','id','dpo_id'));
    }
    public function pdf($id)
    { 
       $id         = decrypt($id);
-      $dpo        = DB::table('dpos')->where('id',$id)->where('user_id',Auth::user()->id)->first();
-      $components = DB::table('components')->select('id')->where('dpo_id',$id)->where('user_id',Auth::user()->id)->get(); 
+      $artwork        = DB::table('artwork')->where('id',$id)->where('user_id',Auth::user()->id)->first();
+      $components = DB::table('components')->select('id')->where('artwork_id',$id)->where('user_id',Auth::user()->id)->get(); 
         //return view('pdf',compact('components','id'));
 
          $pdf = PDF::loadView('pdf', compact('components','id'));
         
-         return $pdf->download(str_replace([',','_','-',''],'-',$dpo->title??'Sample').'.pdf');
+         return $pdf->download(str_replace([',','_','-',''],'-',$artwork->title??'Sample').'.pdf');
    }
    public function search(Request $request){
         $draw           = $request->draw;
@@ -78,14 +86,14 @@ class ArtworkController extends Controller
         $searchValue    = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = DB::table('dpos')->where('user_id',Auth::user()->id)->count(); 
-        $totalRecordswithFilter = DB::table('dpos')->where('user_id',Auth::user()->id)
+        $totalRecords = DB::table('artwork')->where('user_id',Auth::user()->id)->count(); 
+        $totalRecordswithFilter = DB::table('artwork')->where('user_id',Auth::user()->id)
         ->whereRaw("CONCAT_WS(' ', title, author) LIKE ?", ["%{$searchValue}%"])
         ->count();
  
 
         // Get records, also we have included search filter as well
-        $records = DB::table('dpos')->where('user_id',Auth::user()->id)                     
+        $records = DB::table('artwork')->where('user_id',Auth::user()->id)                     
             ->whereRaw("CONCAT_WS(' ', title, author) LIKE ?", ["%{$searchValue}%"])
             ->orderBy($columnName, $columnSortOrder) 
             ->skip($start)
@@ -119,8 +127,8 @@ class ArtworkController extends Controller
    public function delete(Request $request)
    { 
       $id            = $request->id; 
-      $dpo           = DB::table('dpos')->where('id',decrypt($id))->delete();
-      $components    = DB::table('components')->where('dpo_id',decrypt($id))->first();
+      $dpo           = DB::table('artwork')->where('id',decrypt($id))->delete();
+      $components    = DB::table('components')->where('artwork_id',decrypt($id))->first();
       $componemt_id  = $components->id;
                      DB::table('audiocassette')->where('component_id',$componemt_id)->delete();
                      DB::table('dat')->where('component_id',$componemt_id)->delete();

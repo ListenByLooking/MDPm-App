@@ -1,7 +1,7 @@
 <div class="col-12 components_div_right" id="digital_copy">
     <h2 class="text-center">Digital Copy</h2> 
     <input type="hidden" name="form_name" value="digital_copy">
-    <input type="hidden" name="dpo_id" value="{{ $id }}">
+    <input type="hidden" name="artwork_id" value="{{ $id }}"> 
         <div class="row">
             <div class="col-4 mb-2">
                 <div class="form-group">

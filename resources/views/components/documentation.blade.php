@@ -2,7 +2,7 @@
     <div class="modal-dialog modal-lg">
         <div class="modal-content">
             <form method="POST" action="{{ route('dpo.documentation') }}" id="documentation_form">
-                <input type="hidden" name="dpo_id" value="{{ $id }}">
+                <input type="hidden" name="artwork_id" value="{{ $id }}"> 
                 @csrf
                 <div class="modal-header">
                     <h5 class="modal-title" id="myModalLabel">Documentation</h5>

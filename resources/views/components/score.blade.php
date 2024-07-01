@@ -1,7 +1,7 @@
 <div id="Score_modal" class="modal fade flip" tabindex="-1" role="dialog" aria-hidden="true">
     <div class="modal-dialog modal-lg">
         <form method="POST" action="{{ route('dpo.score') }}" id="score_form">
-            <input type="hidden" name="dpo_id" id="dpo_id" value="{{ $id }}">
+            <input type="hidden" name="artwork_id" id="artwork_id" value="{{ $id }}"> 
             @csrf
         <div class="modal-content">
             <div class="modal-header">

@@ -16,8 +16,10 @@ class DPOController extends Controller
     public function documentation(Request $request)
     {
         if($request->document_name)
-        {
+        { 
+            $this->insertDPO($request->artwork_id , $request->dpo_id);
             $component_id = DB::table('components')->insertGetId([
+                                                                    'artwork_id'    => $request->artwork_id,
                                                                     'dpo_id'        => $request->dpo_id,
                                                                     'user_id'       => Auth::user()->id,
                                                                     'dpo_type'      => 'documentation',
@@ -33,7 +35,7 @@ class DPOController extends Controller
             $data = [];
             foreach ($request->document_name as $key => $value) {
                 $data[] = [
-                            'component_id'  => $component_id,
+                            'component_id'  => $component_id, 
                             'dpo_id'        => $request->dpo_id,
                             'user_id'       => Auth::user()->id,
                             'document_type' => $value,
@@ -54,7 +56,9 @@ class DPOController extends Controller
 
     public function score(Request $request)
     { 
-            $component_id = DB::table('components')->insertGetId([
+        $this->insertDPO($request->artwork_id , $request->dpo_id);
+        $component_id = DB::table('components')->insertGetId([
+                                                                'artwork_id'    => $request->artwork_id,
                                                                 'dpo_id'        => $request->dpo_id,
                                                                 'user_id'       => Auth::user()->id,
                                                                 'dpo_type'      => 'score',
@@ -90,7 +94,9 @@ class DPOController extends Controller
             $table = $request->form_name;
             if(!empty($request->form_name))
             {
+            $this->insertDPO($request->artwork_id , $request->dpo_id);
             $component_id = DB::table('components')->insertGetId([
+                                                                        'artwork_id'    => $request->artwork_id,
                                                                         'dpo_id'        => $request->dpo_id,
                                                                         'user_id'       => Auth::user()->id,
                                                                         'dpo_type'      => 'component',
@@ -108,7 +114,7 @@ class DPOController extends Controller
                     $data = [  
                                 'user_id'           => Auth::user()->id, 
                                 'component_id'      => $component_id, 
-                                'dpo_id'            => $request->dpo_id, 
+                                'dpo_id'            => $request->dpo_id,
                                 'signature'         => $request->signature, 
                                 'format'            => $request->format,
                                 'original_item'     => $request->originam_item, 
@@ -162,7 +168,7 @@ class DPOController extends Controller
                     $data = [ 
                         'component_id'         => $component_id,
                         'user_id'              => Auth::user()->id,
-                        'dpo_id'               => $request->dpo_id,
+                        'dpo_id'        => $request->dpo_id,
                         'preservation_signature'=> $request->preservation_signature,
                         'original_signature'   => $request->original_signature,
                         'brand'                => $request->brand,
@@ -179,7 +185,7 @@ class DPOController extends Controller
                     $data = [
                         'component_id'         => $component_id,
                         'user_id'              => Auth::user()->id,
-                        'dpo_id'               => $request->dpo_id,
+                        'dpo_id'        => $request->dpo_id,
                         'preservation_signature' => $request->preservation_signature,
                         'original_signature'   => $request->original_signature,
                         'brand'                => $request->brand,
@@ -192,7 +198,7 @@ class DPOController extends Controller
                 break;
                 case 'tape_details':
                     $data = [
-                            'dpo_id'                => $request->dpo_id, 
+                            'dpo_id'        => $request->dpo_id,
                             'user_id'               => Auth::user()->id, 
                             'component_id'           => $component_id, 
                             'preservation_signature'=> $request->preservation_signature, 
@@ -219,7 +225,7 @@ class DPOController extends Controller
                 break;
                 case 'phonographicdisks':
                         $data = [
-                                    'dpo_id'                => $request->dpo_id,
+                                   'dpo_id'        => $request->dpo_id,
                                     'user_id'               => Auth::user()->id,
                                     'component_id'          => $component_id,
                                     'preservation_signature'=> $request->preservation_signature,
@@ -262,16 +268,14 @@ class DPOController extends Controller
         $searchValue    = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = DB::table('components')->where('user_id',Auth::user()->id)->where('dpo_id',$request->dpo_id)->count(); 
-        $totalRecordswithFilter = DB::table('components')->where('user_id',Auth::user()->id)
-        ->where('dpo_id',$request->dpo_id)
+        $totalRecords = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , 'dpo_id'=>$request->dpo_id])->count(); 
+        $totalRecordswithFilter = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , 'dpo_id'=>$request->dpo_id]) 
         ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
         ->count();
  
 
         // Get records, also we have included search filter as well
-        $records = DB::table('components')->where('user_id',Auth::user()->id)    
-            ->where('dpo_id',$request->dpo_id)                 
+        $records = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , 'dpo_id'=>$request->dpo_id])  
             ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
             ->orderBy($columnName, $columnSortOrder??'desc') 
             ->skip($start)
@@ -283,7 +287,7 @@ class DPOController extends Controller
         foreach ($records as $key=> $record) {
 
             $data_arr[] = array(
-                "id"            => 'DPO'.str_pad($key + 1, 2, "0",STR_PAD_LEFT),
+                "id"            => 'DPO'.$record->dpo_id,
                 "dpo_type"      => $record->dpo_type,
                 "component"     => $record->component??'-',
                 "audio_visual"  => $record->audio_visual??'-',
@@ -302,6 +306,54 @@ class DPOController extends Controller
         );
         echo json_encode($response);
    }
+   public function searchlist(Request $request){
+    $draw           = $request->draw;
+    $start          = $request->start;
+    $rowperpage     = $request->length; // total number of rows per page
+    $columnIndex_arr= $request->order;
+    $columnName_arr = $request->columns;
+    $order_arr      = $request->order;
+    $search_arr     = $request->search;
+    $columnIndex    = $columnIndex_arr[0]['column']; // Column index
+    $columnName     = $columnName_arr[$columnIndex]['data']; // Column name
+    $columnSortOrder= $order_arr[0]['dir']; // asc or desc
+    $searchValue    = $search_arr['value']; // Search value
+
+    // Total records
+    $totalRecords = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id])->count(); 
+    $totalRecordswithFilter = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id]) 
+    ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
+    ->count();
+
+
+    // Get records, also we have included search filter as well
+    $records = DB::table('components')->where(['user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id])  
+        ->whereRaw("CONCAT_WS(' ', dpo_type, component,audio_visual,original_docs,original_docs_sub) LIKE ?", ["%{$searchValue}%"])
+        ->orderBy($columnName, $columnSortOrder??'desc') 
+        ->skip($start)
+        ->take($rowperpage)
+        ->get();
+
+    $data_arr = array();
+
+    foreach ($records as $key=> $record) {
+
+        $data_arr[] = array(
+            "id"            => 'DPO'.$record->dpo_id,
+            "dpo_type"      => $record->dpo_type, 
+            "action"        => '<a href="'.route('dpo.view',encrypt($record->id)).'" class="btn btn-success btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View</a>
+                                <a href="javascript:;" onclick="remove(\''.encrypt($record->id).'\')" class="btn btn-sm btn-danger" title="Delete DPO"><i class="fs-5 bx bx-trash"></i></a> <a href="'.route('artwork.add',[encrypt($request->artwork_id),encrypt($record->dpo_id)]).'" class="btn btn-primary btn-sm" title="View DPO"><i class="fs-5 bx bxs-eye"></i>&nbsp;View DPO</a>',
+        );
+    }
+
+    $response = array(
+        "draw" => intval($draw),
+        "iTotalRecords" => $totalRecords,
+        "iTotalDisplayRecords" => $totalRecordswithFilter,
+        "aaData" => $data_arr,
+    );
+    echo json_encode($response);
+}
    public function view(Request $request , $component_id){
         $component_id = decrypt($component_id);
         $result = DB::table('components')->where('id',$component_id)->first();  
@@ -405,4 +457,13 @@ class DPOController extends Controller
     }
     DB::table('components')->where('id',$componemt_id)->delete();         
    } 
+   public function insertDPO($artwork , $id)
+   {
+    // dd(['artwork_id'=>$artwork , 'dpo_id' => $id , 'user_id' => Auth::user()->id]);
+        $dpo = DB::table('dpos')->where(['artwork_id'=>$artwork , 'dpo_id' => $id , 'user_id' => Auth::user()->id])->first();
+        if(!$dpo)
+        {
+            DB::table('dpos')->insert(['artwork_id'=>$artwork , 'dpo_id' => $id , 'user_id' => Auth::user()->id , 'status' => 1]);
+        }
+   }
 }

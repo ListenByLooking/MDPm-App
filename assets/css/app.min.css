@@ -12169,31 +12169,7 @@ table.dataTable th.dataTables_empty {
     --vz-table-accent-bg: var(--vz-secondary-bg)
 }
 
-table.dataTable>thead .sorting:before,
-table.dataTable>thead .sorting_asc:before,
-table.dataTable>thead .sorting_asc_disabled:before,
-table.dataTable>thead .sorting_desc:before,
-table.dataTable>thead .sorting_desc_disabled:before {
-    content: "\f0360";
-    position: absolute;
-    right: .5rem;
-    top: 12px;
-    font-size: .8rem;
-    font-family: "Material Design Icons"
-}
-
-table.dataTable>thead .sorting:after,
-table.dataTable>thead .sorting_asc:after,
-table.dataTable>thead .sorting_asc_disabled:after,
-table.dataTable>thead .sorting_desc:after,
-table.dataTable>thead .sorting_desc_disabled:after {
-    content: "\f035d";
-    position: absolute;
-    right: .5rem;
-    top: 18px;
-    font-size: .8rem;
-    font-family: "Material Design Icons"
-}
+ 
 
 table.dataTable>tbody>tr.child span.dtr-title {
     font-weight: 600;

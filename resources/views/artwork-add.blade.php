@@ -34,13 +34,13 @@ $user = Auth::user();
                                             <img src="{{ asset('public/images/img-5.jpg') }}" alt="" class="avatar-sm rounded-circle"> 
                                         </div>
                                         <div class="flex-grow-1 ms-2">
-                                            <h5 class="card-title mb-1">Title : {{ $dpo->title }}</h5>
-                                            <p class="text-muted mb-0">Author : {{ $dpo->author }}</p>
-                                        </div>
-                                        <a href="{{ route('artwork.add',encrypt($id))}}" class="btn btn-primary">Add DPO</a>
+                                            <h5 class="card-title mb-1">Title : {{ $artwork->title }}</h5>
+                                            <p class="text-muted mb-0">Author : {{ $artwork->author }}</p>
+                                        </div> 
+                                        <a href="{{ route('artwork.add',[encrypt($id),encrypt($dpo_id)])}}" class="btn btn-primary">Add DPO</a>
                                     </div>
-                                    <h6 class="mb-1">Year : {{ $dpo->year }}</h6>
-                                    <p class="card-text text-muted">Description : {{ $dpo->description }}</p> 
+                                    <h6 class="mb-1">Year : {{ $artwork->year }}</h6>
+                                    <p class="card-text text-muted">Description : {{ $artwork->description }}</p> 
                                 </div>
                             </div> 
                             <div class="col-12"> 
@@ -49,17 +49,12 @@ $user = Auth::user();
                                         <table id="dpo-table" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
                                             <thead>
                                                 <tr>
-                                                    <th>Id</th>
-                                                    <th>DPO Type</th>
-                                                    <th>Component</th> 
-                                                    <th>Audio Visual</th> 
-                                                    <th>Original Docs</th> 
-                                                    <th>Original</th> 
-                                                    <th>Action</th>
+                                                    <th width="10%">Id</th>
+                                                    <th width="80%">DPO Type</th> 
+                                                    <th width="10%">Action</th> 
                                                 </tr>
                                             </thead>
-                                            <tbody>
- 
+                                            <tbody> 
                                             </tbody>
                                         </table>
                                     </div>
@@ -72,37 +67,7 @@ $user = Auth::user();
 
 @endsection
 @section('script')
-<script> 
-    let editorValue;
-    ClassicEditor
-            .create( document.querySelector( '#ckeditor-classic' ), {
-        toolbar: {
-            items: [
-                'heading', 
-                '|',
-                'bold', 
-                'italic', 
-                'link', 
-                'bulletedList', 
-                'numberedList', 
-                'blockQuote',
-                '|',
-                'insertTable',
-                'undo', 
-                'redo'
-            ]
-        },
-        // Remove the plugins related to image and video if you don't want them to be loaded at all.
-       // removePlugins: ['Image', 'ImageToolbar', 'ImageCaption', 'ImageStyle', 'ImageResize', 'ImageUpload', 'MediaEmbed'] 
-    })
-        
-            .then(editor => {
-                editorValue = editor;
-            })
-            .catch(error => {
-                    console.error(error);
-            });
-   
+<script>  
     const doc_arr = [];
     const activity = {
         modal:function(){
@@ -242,12 +207,12 @@ $user = Auth::user();
         score:function()
         {
             var form = $("#score_form");
-            var dpo_id = $("#dpo_id").val();
+            var artwork_id = $("#artwork_id").val();
             var Content = editorValue.getData();
             $.ajax({
                     type:"POST",
                     url:form.attr("action"),
-                    data: { _token:'{{ csrf_token() }}' , score:Content , dpo_id:dpo_id },//only input
+                    data: { _token:'{{ csrf_token() }}' , score:Content , artwork_id:artwork_id },//only input
                     datatype:"json",
                     success: function(response){
                         if(response.status)
@@ -284,20 +249,19 @@ $user = Auth::user();
                 processing: true,
                 serverSide: true,
                 ajax: {
-                    url: "{{ route('dpo.search') }}",
+                    url: "{{ route('dpo.searchlist') }}",
                     type: 'POST',
-                    data:{ _token:'{{ csrf_token() }}' , dpo_id:'{{ $id}}' }
-                },     
-                order: [[0, 'desc']],    
+                    data:{ _token:'{{ csrf_token() }}' , artwork_id:'{{ $id}}' }
+                },         
                 columns: [
-                    { data: 'id' },
-                    { data: 'dpo_type' },
-                    { data: 'component' },
-                    { data: 'audio_visual' },
-                    { data: 'original_docs' },
-                    { data: 'original_docs_sub' },
-                    { data: 'action' },
-                ]
+                    { data: 'id' , name:'second'},
+                    { data: 'dpo_type' }, 
+                    { data: 'action' }, 
+                ],
+                rowsGroup: [
+                            'second:name',
+                            0
+                        ],
             });
         },
         addOption:function(option){           
