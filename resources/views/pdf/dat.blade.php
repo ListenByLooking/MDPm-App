@@ -1,5 +1,5 @@
-@extends('layouts.admin') 
-@section('title','Art Works')
+@extends('layouts.admin')
+@section('title','ArtWorks')
 @section('content')
 <style>
     td:nth-child(odd){ font-weight: 900; width: 20% }
@@ -13,7 +13,7 @@
                 <td>{{ $dat->preservation_signature }}</td>
                 <td>Original Signature</td>
                 <td>{{ $dat->original_signature }}</td>
-            </tr>  
+            </tr>
             <tr>
                 <td>Brand</td>
                 <td>{{ $dat->brand }}</td>
@@ -25,7 +25,7 @@
                 <td>{{ $dat->samplerate }}</td>
                 <td>Notes</td>
                 <td>{{ $dat->notes }}</td>
-            </tr> 
+            </tr>
         </table>
     </div>
 </div>

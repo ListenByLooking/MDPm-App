@@ -1,18 +1,18 @@
-@extends('layouts.admin') 
+@extends('layouts.admin')
 @section('title','Profile')
 @section('content')
 <div class="page-content">
-                <div class="container-fluid"> 
+                <div class="container-fluid">
                         <!--end col-->
                         <div class="col-xxl-9">
-                            <div class="card mt-xxl-n5">
+                            <div class="card mt-xxl-n5" style="margin-top: 0rem!important;">
                                 <div class="card-header">
                                     <ul class="nav nav-tabs-custom rounded card-header-tabs border-bottom-0" role="tablist">
                                         <li class="nav-item" role="presentation">
                                             <a class="nav-link active" data-bs-toggle="tab" href="#personalDetails" role="tab" aria-selected="true">
                                                 <i class="fas fa-home"></i> <h5 class="card-title mb-0">My Profile</h5>
                                             </a>
-                                        </li> 
+                                        </li>
                                     </ul>
                                 </div>
                                 <div class="card-body p-4">
@@ -22,7 +22,7 @@
                                                 @csrf
                                                 <div class="row">
                                                     <div class="col-4">
-                                                        <center><img height="250" width="80%" id="imagePreview" class="rounded-circle" src="{{ asset($user->image?'public/images/'.$user->image:'assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" style=""></center>
+                                                        <center><img height="250" width="100%" id="imagePreview" class="rounded-circle" src="{{ asset($user->image?'public/images/'.$user->image:'assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" style=""></center>
                                                     </div>
                                                     <div class="col-8">
                                                         <div class="row">
@@ -65,11 +65,11 @@
                                                                     <label for="JoiningdatInput" class="form-label">Password</label>
                                                                     <input type="text" class="form-control" name="password"  placeholder="Password">
                                                                 </div>
-                                                            </div> 
+                                                            </div>
                                                             <div class="col-lg-12">
                                                                 <div class="hstack gap-2 justify-content-end">
-                                                                    <button type="submit" class="btn btn-primary">Updates</button>
-                                                                    <button type="button" class="btn btn-danger">Cancel</button>
+                                                                    <button type="submit" class="btn btn-primary">Update</button>
+                                                                    <button type="reset" class="btn btn-danger">Clear</button>
                                                                 </div>
                                                             </div>
                                                             <!--end col-->
@@ -78,7 +78,7 @@
                                                 </div>
                                                 <!--end row-->
                                             </form>
-                                        </div> 
+                                        </div>
                                     </div>
                                 </div>
                             </div>

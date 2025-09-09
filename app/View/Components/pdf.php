@@ -17,12 +17,12 @@ class pdf extends Component
      */
     public function __construct($id)
     {
-        $component  = DB::table('components')->select('form_name')->where('user_id',Auth::user()->id)->where('id',$id)->first();
+        $component  = DB::table('components')->select('form_name')/*->where('user_id',Auth::user()->id)*/->where('id',$id)->first();
         $this->form = $component->form_name;
         if($this->form == 'documentation')
-            $this->data = DB::table($this->form)->where('component_id',$id)->get(); 
+            $this->data = DB::table($this->form)->where('component_id',$id)->get();
         else
-            $this->data = DB::table($this->form)->where('component_id',$id)->first(); 
+            $this->data = DB::table($this->form)->where('component_id',$id)->first();
 
     }
 

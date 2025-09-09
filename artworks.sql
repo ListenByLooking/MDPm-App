@@ -32,7 +32,7 @@ CREATE TABLE `artwork` (
   `user_id` int(11) NOT NULL,
   `title` varchar(255) NOT NULL,
   `description` text NOT NULL,
-  `year` year(4) NOT NULL,
+--  `year` year(4) NOT NULL,
   `author` varchar(100) NOT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -42,9 +42,9 @@ CREATE TABLE `artwork` (
 -- Dumping data for table `artwork`
 --
 
-INSERT INTO `artwork` (`id`, `user_id`, `title`, `description`, `year`, `author`, `status`, `created_at`) VALUES
-(2, 1, 'test', 'test', '1951', 'fdfdf', 1, '2024-06-27 05:00:10'),
-(3, 1, 'My Artwork', 'My Artwork', '1951', 'My Artwork', 1, '2024-06-30 05:27:55');
+-- INSERT INTO `artwork` (`id`, `user_id`, `title`, `description`, `year`, `author`, `status`, `created_at`) VALUES
+-- (2, 1, 'test', 'test', '1951', 'fdfdf', 1, '2024-06-27 05:00:10'),
+-- (3, 1, 'My Artwork', 'My Artwork', '1951', 'My Artwork', 1, '2024-06-30 05:27:55');
 
 -- --------------------------------------------------------
 
@@ -54,8 +54,8 @@ INSERT INTO `artwork` (`id`, `user_id`, `title`, `description`, `year`, `author`
 
 CREATE TABLE `audiocassette` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) DEFAULT NULL,
-  `component_id` int(11) NOT NULL,
+--  `dpo_id` int(11) DEFAULT NULL,
+--  `component_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `preservation_signature` varchar(255) NOT NULL,
   `original_signature` varchar(255) NOT NULL,
@@ -72,8 +72,8 @@ CREATE TABLE `audiocassette` (
 -- Dumping data for table `audiocassette`
 --
 
-INSERT INTO `audiocassette` (`id`, `dpo_id`, `component_id`, `user_id`, `preservation_signature`, `original_signature`, `brand`, `brand_of_box`, `cassette_type`, `noise_reduction`, `notes`, `status`, `created_at`) VALUES
-(1, 2, 8, 1, 'xczc', 'zczxc', 'A', 'D', 'IEC1', 'unknown', 'zxcxzxc', 1, '2024-06-30 00:00:00');
+-- INSERT INTO `audiocassette` (`id`, `dpo_id`, `component_id`, `user_id`, `preservation_signature`, `original_signature`, `brand`, `brand_of_box`, `cassette_type`, `noise_reduction`, `notes`, `status`, `created_at`) VALUES
+-- (1, 2, 8, 1, 'xczc', 'zczxc', 'A', 'D', 'IEC1', 'unknown', 'zxcxzxc', 1, '2024-06-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -81,33 +81,33 @@ INSERT INTO `audiocassette` (`id`, `dpo_id`, `component_id`, `user_id`, `preserv
 -- Table structure for table `components`
 --
 
-CREATE TABLE `components` (
-  `id` int(11) NOT NULL,
-  `artwork_id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
-  `user_id` int(11) NOT NULL,
-  `dpo_type` varchar(50) NOT NULL,
-  `component` varchar(50) DEFAULT NULL,
-  `audio_visual` varchar(50) DEFAULT NULL,
-  `original_docs` varchar(50) DEFAULT NULL,
-  `original_docs_sub` varchar(50) DEFAULT NULL,
-  `form_name` varchar(20) NOT NULL,
-  `status` int(11) NOT NULL,
-  `created_at` datetime NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+-- CREATE TABLE `components` (
+--  `id` int(11) NOT NULL,
+--  `artwork_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
+--  `user_id` int(11) NOT NULL,
+--  `comp_type` varchar(50) NOT NULL,
+--  `component_id` varchar(50) DEFAULT NULL,
+--  `audio_visual` varchar(50) DEFAULT NULL,
+--  `original_docs` varchar(50) DEFAULT NULL,
+--  `original_docs_sub` varchar(50) DEFAULT NULL,
+--  `form_name` varchar(20) NOT NULL,
+--  `status` int(11) NOT NULL,
+--  `created_at` datetime NOT NULL
+-- ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Dumping data for table `components`
 --
 
-INSERT INTO `components` (`id`, `artwork_id`, `dpo_id`, `user_id`, `dpo_type`, `component`, `audio_visual`, `original_docs`, `original_docs_sub`, `form_name`, `status`, `created_at`) VALUES
-(9, 2, 1, 1, 'score', '', '', '', '', 'score', 1, '2024-06-30 00:00:00'),
-(10, 2, 1, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
-(11, 2, 1, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
-(12, 2, 1, 1, 'component', 'AudioVisual', 'Audio', 'Original', 'dat', 'dat', 1, '2024-06-30 00:00:00'),
-(13, 2, 2, 1, 'score', '', '', '', '', 'score', 1, '2024-06-30 00:00:00'),
-(14, 2, 2, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
-(15, 2, 2, 1, 'component', 'AudioVisual', 'Audio', 'Original', 'dat', 'dat', 1, '2024-06-30 00:00:00');
+-- INSERT INTO `components` (`id`, `artwork_id`, `dpo_id`, `user_id`, `dpo_type`, `component`, `audio_visual`, `original_docs`, `original_docs_sub`, `form_name`, `status`, `created_at`) VALUES
+-- (9, 2, 1, 1, 'score', '', '', '', '', 'score', 1, '2024-06-30 00:00:00'),
+-- (10, 2, 1, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
+-- (11, 2, 1, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
+-- (12, 2, 1, 1, 'component', 'AudioVisual', 'Audio', 'Original', 'dat', 'dat', 1, '2024-06-30 00:00:00'),
+-- (13, 2, 2, 1, 'score', '', '', '', '', 'score', 1, '2024-06-30 00:00:00'),
+-- (14, 2, 2, 1, 'documentation', '', '', '', '', 'documentation', 1, '2024-06-30 00:00:00'),
+-- (15, 2, 2, 1, 'component', 'AudioVisual', 'Audio', 'Original', 'dat', 'dat', 1, '2024-06-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -127,25 +127,25 @@ CREATE TABLE `component_config` (
 --
 
 INSERT INTO `component_config` (`id`, `user_id`, `key_name`, `key_value`) VALUES
-(1, 1, 'brand', 'test'),
-(2, 1, 'brand_of_box', 'test'),
-(3, 1, 'cassette_type', 'test'),
-(4, 1, 'brand', 'd'),
-(5, 1, 'brand', 'E'),
-(6, 1, 'brand', 'F'),
-(7, 1, 'brand_of_box', 'A'),
-(8, 1, 'brand_of_box', 'B'),
-(9, 1, 'cassette_type', 'IECI1'),
-(10, 1, 'cassette_type', 'IECI2'),
-(11, 1, 'dat_brand', 'D'),
-(12, 1, 'dat_brand_of_box', 'C'),
-(13, 1, 'dat_brand_of_box', 'F'),
-(14, 1, 'samplerate', 'D'),
-(15, 1, 'stylus', 'C'),
-(16, 1, 'brand', 'sdfsdfsd'),
-(17, 1, 'brand', 'sdffs'),
-(18, 1, 'tape_brand_of_box', 'asdaSDASD'),
-(19, 1, 'tape_brand_of_box', 'CDSADA');
+-- (1, 1, 'brand', 'test'),
+-- (2, 1, 'brand_of_box', 'test'),
+-- (3, 1, 'cassette_type', 'test'),
+-- (4, 1, 'brand', 'd'),
+-- (5, 1, 'brand', 'E'),
+-- (6, 1, 'brand', 'F'),
+-- (7, 1, 'brand_of_box', 'A'),
+-- (8, 1, 'brand_of_box', 'B'),
+-- (9, 1, 'cassette_type', 'IECI1'),
+-- (10, 1, 'cassette_type', 'IECI2'),
+-- (11, 1, 'dat_brand', 'D'),
+-- (12, 1, 'dat_brand_of_box', 'C'),
+-- (13, 1, 'dat_brand_of_box', 'F'),
+-- (14, 1, 'samplerate', 'D'),
+-- (15, 1, 'stylus', 'C'),
+-- (16, 1, 'brand', 'sdfsdfsd'),
+-- (17, 1, 'brand', 'sdffs'),
+-- (18, 1, 'tape_brand_of_box', 'asdaSDASD'),
+-- (19, 1, 'tape_brand_of_box', 'CDSADA');
 
 -- --------------------------------------------------------
 
@@ -155,8 +155,8 @@ INSERT INTO `component_config` (`id`, `user_id`, `key_name`, `key_value`) VALUES
 
 CREATE TABLE `dat` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) DEFAULT NULL,
-  `component_id` int(11) NOT NULL,
+--  `dpo_id` int(11) DEFAULT NULL,
+--  `component_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `preservation_signature` varchar(255) NOT NULL,
   `original_signature` varchar(255) NOT NULL,
@@ -172,9 +172,9 @@ CREATE TABLE `dat` (
 -- Dumping data for table `dat`
 --
 
-INSERT INTO `dat` (`id`, `dpo_id`, `component_id`, `user_id`, `preservation_signature`, `original_signature`, `brand`, `brand_of_box`, `samplerate`, `notes`, `status`, `created_at`) VALUES
-(1, 1, 12, 1, 'QWEQ', 'QEQWE', 'C', 'D', '44100hz', 'QWEQWEE', 1, '2024-06-30 00:00:00'),
-(2, 2, 15, 1, 'zcscz', 'sada', 'B', 'E', '44100hz', 'asdsadad', 1, '2024-06-30 00:00:00');
+-- INSERT INTO `dat` (`id`, `dpo_id`, `component_id`, `user_id`, `preservation_signature`, `original_signature`, `brand`, `brand_of_box`, `samplerate`, `notes`, `status`, `created_at`) VALUES
+-- (1, 1, 12, 1, 'QWEQ', 'QEQWE', 'C', 'D', '44100hz', 'QWEQWEE', 1, '2024-06-30 00:00:00'),
+-- (2, 2, 15, 1, 'zcscz', 'sada', 'B', 'E', '44100hz', 'asdsadad', 1, '2024-06-30 00:00:00');
 
 -- --------------------------------------------------------
 
@@ -185,8 +185,8 @@ INSERT INTO `dat` (`id`, `dpo_id`, `component_id`, `user_id`, `preservation_sign
 CREATE TABLE `digital_copy` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `component_id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `component_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `signature` varchar(255) DEFAULT NULL,
   `format` varchar(50) DEFAULT NULL,
   `original_item` varchar(50) DEFAULT NULL,
@@ -212,9 +212,9 @@ CREATE TABLE `digital_copy` (
 
 CREATE TABLE `documentation` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `component_id` int(11) NOT NULL,
+--  `component_id` int(11) NOT NULL,
   `document_type` varchar(50) NOT NULL,
   `document_url` varchar(250) NOT NULL,
   `status` int(11) NOT NULL,
@@ -225,19 +225,19 @@ CREATE TABLE `documentation` (
 -- Dumping data for table `documentation`
 --
 
-INSERT INTO `documentation` (`id`, `dpo_id`, `user_id`, `component_id`, `document_type`, `document_url`, `status`, `created_at`) VALUES
-(1, 1, 1, 2, 'Photos', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
-(2, 1, 1, 2, 'A/V', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
-(3, 1, 1, 2, 'Interviews', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
-(4, 1, 1, 2, 'Docs', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
-(5, 1, 1, 2, 'Docs', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
-(9, 2, 1, 7, 'Photos', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
-(10, 2, 1, 7, 'A/V', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
-(11, 2, 1, 7, 'Interviews', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
-(12, 2, 1, 7, 'Docs', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
-(13, 1, 1, 10, 'Interviews', 'https://uniweb.unipd.it/myesse3job/Myesse3jobTrovaCVSubmit.do?', 1, '2024-06-30 08:52:42'),
-(14, 1, 1, 11, 'Docs', 'https://web.whatsapp.com/', 1, '2024-06-30 10:27:25'),
-(15, 2, 1, 14, 'Interviews', 'https://chatgpt.com/c/7eb4e8c5-301f-43b4-a5b6-af5ddcc906f6', 1, '2024-06-30 11:29:58');
+-- INSERT INTO `documentation` (`id`, `dpo_id`, `user_id`, `component_id`, `document_type`, `document_url`, `status`, `created_at`) VALUES
+-- (1, 1, 1, 2, 'Photos', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
+-- (2, 1, 1, 2, 'A/V', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
+-- (3, 1, 1, 2, 'Interviews', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
+-- (4, 1, 1, 2, 'Docs', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
+-- (5, 1, 1, 2, 'Docs', 'https://getbootstrap.com/docs/4.0/components/modal/', 1, '2024-06-23 01:57:51'),
+-- (9, 2, 1, 7, 'Photos', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
+-- (10, 2, 1, 7, 'A/V', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
+-- (11, 2, 1, 7, 'Interviews', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
+-- (12, 2, 1, 7, 'Docs', 'https://uniweb.unipd.it/Home.do', 1, '2024-06-28 01:45:22'),
+-- (13, 1, 1, 10, 'Interviews', 'https://uniweb.unipd.it/myesse3job/Myesse3jobTrovaCVSubmit.do?', 1, '2024-06-30 08:52:42'),
+-- (14, 1, 1, 11, 'Docs', 'https://web.whatsapp.com/', 1, '2024-06-30 10:27:25'),
+-- (15, 2, 1, 14, 'Interviews', 'https://chatgpt.com/c/7eb4e8c5-301f-43b4-a5b6-af5ddcc906f6', 1, '2024-06-30 11:29:58');
 
 -- --------------------------------------------------------
 
@@ -248,18 +248,30 @@ INSERT INTO `documentation` (`id`, `dpo_id`, `user_id`, `component_id`, `documen
 CREATE TABLE `dpos` (
   `id` int(11) NOT NULL,
   `artwork_id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `status` int(11) NOT NULL
+  `dpo_year` YEAR NOT NULL,
+  `dpo_venue` varchar(250) NOT NULL,
+  `dpo_city` varchar(250) NOT NULL,
+  `status` int(11) NOT NULL,
+  `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+CREATE TABLE `dpo_component_bridge` (
+    `id` int(11) NOT NULL,
+    `dpo_id` int(11) NOT NULL,
+    `comp_type` varchar(150) NOT NULL,
+    `component_id` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 
 --
 -- Dumping data for table `dpos`
 --
 
-INSERT INTO `dpos` (`id`, `artwork_id`, `dpo_id`, `user_id`, `status`) VALUES
-(1, 2, 1, 1, 1),
-(2, 2, 2, 1, 1);
+-- INSERT INTO `dpos` (`id`, `artwork_id`, `dpo_id`, `user_id`, `status`) VALUES
+-- (1, 2, 1, 1, 1),
+-- (2, 2, 2, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -307,9 +319,9 @@ INSERT INTO `migrations` (`id`, `migration`, `batch`) VALUES
 
 CREATE TABLE `original_docs` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `component_id` int(11) NOT NULL,
+--  `component_id` int(11) NOT NULL,
   `preservation_signature` text DEFAULT NULL,
   `original_signature` text DEFAULT NULL,
   `type` enum('Type1','Type2','Type3') DEFAULT NULL,
@@ -376,8 +388,8 @@ CREATE TABLE `personal_access_tokens` (
 CREATE TABLE `phonographicdisks` (
   `id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `dpo_id` int(11) DEFAULT NULL,
-  `component_id` int(11) NOT NULL,
+--  `dpo_id` int(11) DEFAULT NULL,
+--  `component_id` int(11) NOT NULL,
   `preservation_signature` varchar(255) NOT NULL,
   `original_signature` varchar(255) NOT NULL,
   `brand` varchar(255) NOT NULL,
@@ -387,7 +399,8 @@ CREATE TABLE `phonographicdisks` (
   `eq` varchar(255) NOT NULL,
   `type_of_recording` enum('mechanical','electrical') DEFAULT 'mechanical',
   `incisions` enum('horizontal','vertical') DEFAULT 'horizontal',
-  `notes` text DEFAULT NULL
+  `notes` text DEFAULT NULL,
+  `created_at` datetime NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 -- --------------------------------------------------------
@@ -398,9 +411,9 @@ CREATE TABLE `phonographicdisks` (
 
 CREATE TABLE `score` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `component_id` int(11) NOT NULL,
+--  `component_id` int(11) NOT NULL,
   `message` text NOT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -410,11 +423,11 @@ CREATE TABLE `score` (
 -- Dumping data for table `score`
 --
 
-INSERT INTO `score` (`id`, `dpo_id`, `user_id`, `component_id`, `message`, `status`, `created_at`) VALUES
-(1, 1, 1, 1, '<p>By following these steps, you can pass a status and message from your controller to your Blade template using session data. This allows you to provide feedback to the user after form submissions or other actions, enhancing the user experience.</p>', 1, '2024-06-23 01:57:18'),
-(4, 2, 1, 6, '<p>Scopri le opportunità della Biblioteca Digitale a tua disposizione per:</p><p>1) cercare un documento in modo facile e veloce</p><p>2) consultare da casa periodici e banche dati</p><p>3) gestire e organizzare in autonomia le tue ricerche bibliografiche</p><p>4) accedere ad una vasta gamma di oggetti multimediali (immagini, documenti, libri, audio, musica, video, risorse per la didattica). Se sei interessato, consulta la piattaforma <a href=\"https://phaidra.cab.unipd.it/\">Phaidra</a></p><p>Tutto questo e molto altro consultando il seguente link <a href=\"https://bibliotecadigitale.cab.unipd.it/\">https://bibliotecadigitale.cab.unipd.it</a></p>', 1, '2024-06-28 01:45:01'),
-(5, 1, 1, 9, '<p>sasdffasfasf</p>', 1, '2024-06-30 08:51:49'),
-(6, 2, 1, 13, '<p>dfdfdfdfdfdfd</p>', 1, '2024-06-30 11:29:42');
+-- INSERT INTO `score` (`id`, `dpo_id`, `user_id`, `component_id`, `message`, `status`, `created_at`) VALUES
+-- (1, 1, 1, 1, '<p>By following these steps, you can pass a status and message from your controller to your Blade template using session data. This allows you to provide feedback to the user after form submissions or other actions, enhancing the user experience.</p>', 1, '2024-06-23 01:57:18'),
+-- (4, 2, 1, 6, '<p>Scopri le opportunità della Biblioteca Digitale a tua disposizione per:</p><p>1) cercare un documento in modo facile e veloce</p><p>2) consultare da casa periodici e banche dati</p><p>3) gestire e organizzare in autonomia le tue ricerche bibliografiche</p><p>4) accedere ad una vasta gamma di oggetti multimediali (immagini, documenti, libri, audio, musica, video, risorse per la didattica). Se sei interessato, consulta la piattaforma <a href=\"https://phaidra.cab.unipd.it/\">Phaidra</a></p><p>Tutto questo e molto altro consultando il seguente link <a href=\"https://bibliotecadigitale.cab.unipd.it/\">https://bibliotecadigitale.cab.unipd.it</a></p>', 1, '2024-06-28 01:45:01'),
+-- (5, 1, 1, 9, '<p>sasdffasfasf</p>', 1, '2024-06-30 08:51:49'),
+-- (6, 2, 1, 13, '<p>dfdfdfdfdfdfd</p>', 1, '2024-06-30 11:29:42');
 
 -- --------------------------------------------------------
 
@@ -424,9 +437,9 @@ INSERT INTO `score` (`id`, `dpo_id`, `user_id`, `component_id`, `message`, `stat
 
 CREATE TABLE `tape_details` (
   `id` int(11) NOT NULL,
-  `dpo_id` int(11) NOT NULL,
+--  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
-  `component_id` int(11) NOT NULL,
+--  `component_id` int(11) NOT NULL,
   `preservation_signature` varchar(255) DEFAULT NULL,
   `original_signature` varchar(255) DEFAULT NULL,
   `brand_of_tape` varchar(50) DEFAULT NULL,
@@ -474,8 +487,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `last_name`, `phone_number`, `image`, `email`, `email_verified_at`, `password`, `user_type`, `remember_token`, `created_at`, `updated_at`) VALUES
-(1, 'Admin', 'Artworks', '9874563210', '1718078330.jpg', 'admin@gmail.com', NULL, '$2y$10$1KCoynUYNj3j04qHIvkWMu48vGm9lZqspA1..dDLpcI1C/0RTIami', 1, 'KpwtijG62TMTfZVEymVKeum2pNN1xaZg8Roy4S81ze1CkwiLXtjWNm4aDodO', '2023-07-27 11:22:06', '2023-07-27 11:22:06'),
-(2, 'Multimedia', 'Artworks', '9874563210', '', 'admin123@gmail.com', NULL, '$2y$10$Sozo9ke01FdxVAkhkjo5Y.ak7r3yD3oXt3lQuHdhsvTJd6Ul1xDsK', 2, NULL, '2024-06-23 06:49:40', NULL);
+(1, 'CSC', 'Artworks', '9874563210', 'CSC.jpg', 'csc@gmail.com', NULL, '$2y$10$v.alrcNgmkYmkt66bkdRKO249Zf56lltYYbtI3uy/d.agw.9PANem', 1, 'KpwtijG62TMTfZVEymVKeum2pNN1xaZg8Roy4S81ze1CkwiLXtjWNm4aDodO', '2023-07-27 11:22:06', '2023-07-27 11:22:06'),
+(2, 'Multimedia', 'Artworks', '9874563210', '', 'admin123@gmail.com', NULL, '$2y$10$QBtaABUS5IMd/89yezccD.X64fX4CP3OvWSeve1fMOI7pr0g5ZVDi', 2, NULL, '2024-06-23 06:49:40', NULL);
 
 --
 -- Indexes for dumped tables
@@ -530,6 +543,9 @@ ALTER TABLE `documentation`
 --
 ALTER TABLE `dpos`
   ADD PRIMARY KEY (`id`);
+
+ALTER TABLE `dpo_component_bridge`
+    ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `failed_jobs`
@@ -640,7 +656,10 @@ ALTER TABLE `documentation`
 -- AUTO_INCREMENT for table `dpos`
 --
 ALTER TABLE `dpos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+ALTER TABLE `dpo_component_bridge`
+    MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`

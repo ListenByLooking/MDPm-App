@@ -1,19 +1,19 @@
-@extends('layouts.admin') 
-@section('title','Art Works')
+@extends('layouts.admin')
+@section('title','ArtWorks')
 @section('content')
 <style>
     td:nth-child(odd){ font-weight: 900; width: 20% }
 </style>
 <div class="page-content">
     <div class="container-fluid">
-        <h2>Open Tape Details</h2> 
+        <h2>Open Tape Details</h2>
         <table class="table table-border">
             <tr>
                 <td>Preservation Signature</td>
                 <td>{{ $tapedetails->preservation_signature }}</td>
                 <td>Original Signature</td>
                <td>{{ $tapedetails->original_signature }}</td>
-            </tr> 
+            </tr>
             <tr>
                 <td>Brand of Tape</td>
                <td>{{ $tapedetails->brand_of_tape }}</td>

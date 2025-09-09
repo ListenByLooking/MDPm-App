@@ -21,10 +21,10 @@ class UserController extends Controller
     }
     public function update(Request $request)
     {
-        try {  
+        try {
             $imageName  = Auth::user()->image;
             $password   = Auth::user()->image;
-            if ($request->file('image')) { 
+            if ($request->file('image')) {
                 $old_Image = $imageName;
                 $image      = $request->file('image');
                 $imageName  = time().'.'.$image->extension();
@@ -34,7 +34,7 @@ class UserController extends Controller
                     unlink(public_path('images/'.$old_Image));
                 }
             }
-           
+
             $update = DB::table('users')->where(['id'=>Auth::user()->id])->update([
                 'name'          => $request->first_name,
                 'last_name'     => $request->last_name,
@@ -42,22 +42,22 @@ class UserController extends Controller
                 'image'         => $imageName
             ]);
             if(!empty($request->password)){
-                DB::table('users')->where(['id'=>Auth::user()->id])->update([ 
+                DB::table('users')->where(['id'=>Auth::user()->id])->update([
                     'password'      => Hash::make($request->password)
                 ]);
             }
             return redirect()->back()->with(['status'=>true,'message'=>'Successfully Updated']);
-        } catch (\Throwable $th) { 
+        } catch (\Throwable $th) {
             return redirect()->back()->with(['status'=>false,'message'=>'Oops']);
-        } 
+        }
     }
 
     public function updates(Request $request)
-    { 
-        try {   
+    {
+        try {
             $user = DB::table('users')->where('id',$request->id)->first();
             $imageName = '';
-            if ($request->file('image')) {  
+            if ($request->file('image')) {
                 $image      = $request->file('image');
                 $imageName  = time().'.'.$image->extension();
                 $image->move('public/images', $imageName);
@@ -66,7 +66,7 @@ class UserController extends Controller
                     unlink(public_path('images/'.$user->image));
                 }
             }
-           
+
             $update = DB::table('users')->where(['id'=>$request->id])->update([
                 'name'          => $request->first_name,
                 'last_name'     => $request->last_name,
@@ -74,34 +74,34 @@ class UserController extends Controller
                 'image'         => $imageName
             ]);
             if(!empty($request->password)){
-                DB::table('users')->where(['id'=>$request->id])->update([ 
+                DB::table('users')->where(['id'=>$request->id])->update([
                     'password'      => Hash::make($request->password)
                 ]);
             }
             return redirect()->back()->with(['status'=>true,'message'=>'Successfully Updated']);
-        } catch (\Throwable $th) { 
+        } catch (\Throwable $th) {
             dd($th->getMessage());
             return redirect()->back()->with(['status'=>false,'message'=>'Oops']);
-        } 
+        }
     }
 
     public function store(Request $request)
     {
         try {
-           
+
         $validatedData = Validator::make($request->all(),[
             'first_name' => 'required|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|min:8',
-        ]); 
+        ]);
 
         if(!$validatedData->fails())
         {
             $imageName = '';
-            if ($request->file('image')) {  
+            if ($request->file('image')) {
                 $image      = $request->file('image');
                 $imageName  = time().'.'.$image->extension();
-                $image->move('public/images', $imageName); 
+                $image->move('public/images', $imageName);
             }
             DB::table('users')->insert([
                                         'name'=>$request->first_name,
@@ -113,7 +113,7 @@ class UserController extends Controller
                                         'user_type'=>2,
                                         'created_at'=>date('Y-m-d h:i:s'),
                                     ]);
-            return redirect()->back()->with(['status'=>true , 'message' =>'insert Successfully']);                 
+            return redirect()->back()->with(['status'=>true , 'message' =>'User successfully inserted']);
         }else{
             return redirect()->back()->withErrors($validatedData)->withInput();
         }
@@ -137,16 +137,16 @@ class UserController extends Controller
         $searchValue    = $search_arr['value']; // Search value
 
         // Total records
-        $totalRecords = DB::table('users')->where('user_type','!=',1)->count(); 
+        $totalRecords = DB::table('users')->where('user_type','!=',1)->count();
         $totalRecordswithFilter = DB::table('users')->where('user_type','!=',2)
         ->whereRaw("CONCAT_WS(' ', name, email,phone_number) LIKE ?", ["%{$searchValue}%"])
         ->count();
- 
+
 
         // Get records, also we have included search filter as well
-        $records = DB::table('users')->where('user_type','!=',1)                     
+        $records = DB::table('users')->where('user_type','!=',1)
             ->whereRaw("CONCAT_WS(' ', name, email,phone_number) LIKE ?", ["%{$searchValue}%"])
-            ->orderBy($columnName, $columnSortOrder) 
+            ->orderBy($columnName, $columnSortOrder)
             ->skip($start)
             ->take($rowperpage)
             ->get();
@@ -172,7 +172,7 @@ class UserController extends Controller
             "aaData" => $data_arr,
         );
         echo json_encode($response);
-   } 
+   }
     public function edit(Request $request)
     {
         try {
@@ -190,17 +190,17 @@ class UserController extends Controller
     {
         try {
             $id = decrypt($request->id);
-            $user = DB::table('users')->where('id',$id)->first(); 
-            
+            $user = DB::table('users')->where('id',$id)->first();
+
             if($user)
             {
-                DB::table('users')->where('id',$id)->delete(); 
+                DB::table('users')->where('id',$id)->delete();
                 if(file_exists(public_path('images/'.$user->image)) && is_file(public_path('images/'.$user->image)))
                     {
                         unlink(public_path('images/'.$user->image));
                     }
-               
-            } 
+
+            }
             return response()->json(['status'=>true , 'message' => 'One Record Deleted']);
         } catch (\Throwable $th) {
             dd($th->getMessage());

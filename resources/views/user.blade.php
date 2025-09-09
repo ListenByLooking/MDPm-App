@@ -1,5 +1,5 @@
-@extends('layouts.admin') 
-@section('title','Art Works')
+@extends('layouts.admin')
+@section('title','ArtWorks')
 @section('content')
 <?php
 $user = Auth::user();
@@ -9,16 +9,16 @@ $user = Auth::user();
      .select2-container--default .select2-selection--single .select2-selection__arrow b{ top:60% }
     </style>
 <div class="page-content">
-                <div class="container-fluid"> 
+                <div class="container-fluid">
                         <!--end col-->
                         <div class="row">
-                            <div class="col-4"> 
-                                    <div class="card mt-xxl-n5">
+                            <div class="col-4">
+                                    <div class="card mt-xxl-n5" style="margin-top: 0rem!important">
                                         <div class="card-header">
                                            <h5 class="card-title mb-0">Add User</h5>
                                         </div>
                                         <div class="card-body">
-                                            <div class="tab-content"> 
+                                            <div class="tab-content">
                                                 @if (session('message'))
                                                     <div class="alert alert-{{ session('status')==true?'success':'danger'}}">
                                                         {{ session('message') }}
@@ -27,13 +27,13 @@ $user = Auth::user();
                                                 <div class="tab-pane active" id="personalDetails" role="tabpanel">
                                                     <form method="post" id="user-add-form" action="{{ route('user.store') }}" enctype="multipart/form-data">
                                                         @csrf
-                                                        <div class="row"> 
+                                                        <div class="row">
                                                             <div class="col-12">
                                                                 <div class="form-group mb-2">
                                                                     <label for="title" class="form-label">First Name</label>
-                                                                    <input type="text" class="form-control" name="first_name" value="{{ old('first_name')}}" placeholder="First Name"> 
+                                                                    <input type="text" class="form-control" name="first_name" value="{{ old('first_name')}}" placeholder="First Name">
 
-                                                                </div> 
+                                                                </div>
                                                                 <div class="form-group mb-2">
                                                                     <label for="title" class="form-label">Last Name</label>
                                                                     <input type="text" class="form-control" name="last_name" value="{{ old('last_name')}}" placeholder="Last Name">
@@ -59,22 +59,22 @@ $user = Auth::user();
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="hstack gap-2 justify-content-end">
-                                                                        <button type="submit" class="btn btn-success"><i class="bx bx-save"></i>&nbsp;Add User</button> 
+                                                                        <button type="submit" class="btn btn-success"><i class="bx bx-save"></i>&nbsp;Add User</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
                                                         </div>
                                                         <!--end row-->
                                                     </form>
-                                                </div> 
+                                                </div>
                                             </div>
                                         </div>
-                                    </div> 
+                                    </div>
                             </div>
                             <div class="col-8">
                                 <div class="card">
                                     {{-- <div class="card-header">
-                                        <h5 class="card-title mb-0">Art Work - List</h5>
+                                        <h5 class="card-title mb-0">ArtWork - List</h5>
                                     </div> --}}
                                     <div class="card-body">
                                         <table id="user-table" class="table table-bordered dt-responsive nowrap align-middle mdl-data-table" style="width:100%">
@@ -83,47 +83,47 @@ $user = Auth::user();
                                                     <th>Id</th>
                                                     <th>First Name</th>
                                                     <th>Email</th>
-                                                    <th>Phone</th> 
+                                                    <th>Phone</th>
                                                     <th>Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
- 
+
                                             </tbody>
                                         </table>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                       
+
                         <!--end col-->
                     </div>
                 </div>
                 <!-- container-fluid -->
-            </div> 
- 
-            </div> 
+            </div>
+
+            </div>
 
             <div class="modal" id="user_modal">
                 <div class="modal-dialog" role="document">
                   <div class="modal-content">
                     <div class="modal-header">
-                      <h5 class="modal-title">Modal title</h5>
+                      <h5 class="modal-title">Edit User</h5>
                       <a href="javascript:;"  class="close" data-bs-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
+                        <span aria-hidden="true" class="fs-24">&times;</span>
                       </a>
                     </div>
                     <div class="modal-body">
                         <form method="post" id="user-update-form" action="{{ route('user.update') }}" enctype="multipart/form-data">
                             @csrf
                             <input type="hidden" name="id" id="id" value="">
-                            <div class="row"> 
+                            <div class="row">
                                 <div class="col-12">
                                     <div class="form-group mb-2">
                                         <label for="title" class="form-label">First Name</label>
-                                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name')}}" placeholder="First Name"> 
+                                        <input type="text" class="form-control" id="first_name" name="first_name" value="{{ old('first_name')}}" placeholder="First Name">
 
-                                    </div> 
+                                    </div>
                                     <div class="form-group mb-2">
                                         <label for="title" class="form-label">Last Name</label>
                                         <input type="text" class="form-control" id="last_name" name="last_name" value="{{ old('last_name')}}" placeholder="Last Name">
@@ -149,20 +149,20 @@ $user = Auth::user();
                                     </div>
                                     <div class="form-group">
                                         <div class="hstack gap-2 justify-content-end">
-                                            <button type="submit" class="btn btn-success"><i class="bx bx-save"></i>&nbsp;Update User</button> 
+                                            <button type="submit" class="btn btn-success"><i class="bx bx-save"></i>&nbsp;Update User</button>
                                         </div>
                                     </div>
                                 </div>
                             </div>
                             <!--end row-->
                         </form>
-                    </div> 
+                    </div>
                   </div>
                 </div>
               </div>
 @endsection
 @section('script')
-<script> 
+<script>
 $(document).ready(function(){
     $('.select2').select2();
     $('#user-add-form').validate({
@@ -179,7 +179,7 @@ $(document).ready(function(){
             last_name:{ required:"Please enter Last Name" },
             email:{ required:"Please enter Email" },
             phone:{ required:"Please enter Phone Number" },
-            password:{ required:"Please enter Password" }, 
+            password:{ required:"Please enter Password" },
         }
     })
     $('#user-update-form').validate({
@@ -196,14 +196,14 @@ $(document).ready(function(){
             last_name:{ required:"Please enter Last Name" },
             email:{ required:"Please enter Email" },
             phone:{ required:"Please enter Phone Number" },
-            password:{ required:"Please enter Password" }, 
+            password:{ required:"Please enter Password" },
         }
     })
 })
 
 function table()
 {
-     
+
     $('#user-table').DataTable({
          processing: true,
          serverSide: true,
@@ -211,7 +211,7 @@ function table()
              url: "{{ route('user.search') }}",
              type: 'POST',
              data:{ _token:'{{ csrf_token() }}'}
-         },         
+         },
          columns: [
             { data: 'id' },
             { data: 'name' },
@@ -229,7 +229,7 @@ function component(){
 
 function remove(id)
 {
-    Swal.fire({ 
+    Swal.fire({
         html:'<div class="mt-3"><lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon><div class="mt-4 pt-2 fs-15 mx-5"><h4>Are you Sure ?</h4><p class="text-muted mx-4 mb-0">Are you Sure You want to Delete this Artworks ?</p></div></div>',
         showCancelButton:!0,
         confirmButtonClass:"btn btn-primary w-xs me-2 mb-1",
@@ -237,7 +237,7 @@ function remove(id)
         cancelButtonClass:"btn btn-danger w-xs mb-1",
         buttonsStyling:!1,
         showCloseButton:!0
-    }).then((result) => { 
+    }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
                 url:'{{ route("user.delete") }}',
@@ -245,11 +245,11 @@ function remove(id)
                 data:{_token:'{{ csrf_token() }}' , id:id},
                 datatype:"json",
                 success:function(response)
-                {  
+                {
                       if ($.fn.DataTable.isDataTable("#user-table")) {
                                 $('#user-table').DataTable().clear().destroy();
                                 table();
-                            }   
+                            }
                     Swal.fire({
                             icon:"success",
                             text:'One row deleted Successfully',
@@ -258,13 +258,13 @@ function remove(id)
                             cancelButtonClass:"btn btn-primary w-xs mb-1",
                             cancelButtonText:"Close",
                             buttonsStyling:!1,
-                            showCloseButton:!0})                     
+                            showCloseButton:!0})
                 }
             })
-        } 
+        }
         })
 
-      
+
 }
 function func_edit(id)
 {
@@ -274,18 +274,18 @@ function func_edit(id)
                 data:{_token:'{{ csrf_token() }}' , id:id},
                 datatype:"json",
                 success:function(response)
-                {  
+                {
                     if(response.status)
-                    { 
+                    {
                         $('#first_name').val(response.user.name);
                         $('#last_name').val(response.user.last_name);
                         $('#phone').val(response.user.phone_number);
-                        $('#email').val(response.user.email); 
+                        $('#email').val(response.user.email);
                         $('#id').val(id)
-                    }                   
+                    }
                 }
             })
 }
-    
+
 </script>
 @endsection
