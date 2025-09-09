@@ -126,7 +126,7 @@ CREATE TABLE `component_config` (
 -- Dumping data for table `component_config`
 --
 
-INSERT INTO `component_config` (`id`, `user_id`, `key_name`, `key_value`) VALUES
+-- INSERT INTO `component_config` (`id`, `user_id`, `key_name`, `key_value`) VALUES
 -- (1, 1, 'brand', 'test'),
 -- (2, 1, 'brand_of_box', 'test'),
 -- (3, 1, 'cassette_type', 'test'),
@@ -504,14 +504,14 @@ ALTER TABLE `artwork`
 -- Indexes for table `audiocassette`
 --
 ALTER TABLE `audiocassette`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `dpo_id` (`dpo_id`);
+  ADD PRIMARY KEY (`id`);
+  -- ADD KEY `dpo_id` (`dpo_id`);
 
 --
 -- Indexes for table `components`
 --
-ALTER TABLE `components`
-  ADD PRIMARY KEY (`id`);
+-- ALTER TABLE `components`
+  -- ADD PRIMARY KEY (`id`);
 
 --
 -- Indexes for table `component_config`
@@ -523,8 +523,8 @@ ALTER TABLE `component_config`
 -- Indexes for table `dat`
 --
 ALTER TABLE `dat`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `dpo_id` (`dpo_id`);
+  ADD PRIMARY KEY (`id`);
+  -- ADD KEY `dpo_id` (`dpo_id`);
 
 --
 -- Indexes for table `digital_copy`
@@ -584,8 +584,8 @@ ALTER TABLE `personal_access_tokens`
 -- Indexes for table `phonographicdisks`
 --
 ALTER TABLE `phonographicdisks`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `dpo_id` (`dpo_id`);
+  ADD PRIMARY KEY (`id`);
+  -- ADD KEY `dpo_id` (`dpo_id`);
 
 --
 -- Indexes for table `score`
@@ -625,8 +625,8 @@ ALTER TABLE `audiocassette`
 --
 -- AUTO_INCREMENT for table `components`
 --
-ALTER TABLE `components`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+-- ALTER TABLE `components`
+  -- MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `component_config`
