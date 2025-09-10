@@ -1,0 +1,26 @@
+services:
+    db:
+        image: mysql
+        ports: 
+            - "3306:3306"
+        environment:
+            MYSQL_DATABASE: music
+            MYSQL_ROOT_PASSWORD: csc1csc2
+            MYSQL_USER: csc
+            MYSQL_PASSWORD: csc1csc2
+        volumes:
+            - ./dump:/docker-entrypoint-initdb.d
+            - persistent:/var/lib/mysql
+        networks:
+            - default
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        links: 
+            - db:db
+        ports:
+            - 8001:80
+        environment:
+            MYSQL_USER: csc
+            MYSQL_PASSWORD: csc1csc2
+volumes:
+    persistent:
