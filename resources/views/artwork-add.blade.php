@@ -118,10 +118,10 @@ $user = Auth::user();
             $('#append_response_form').html('');
             if(input.value == 'Digital' && audio_visual == 'Film')
             {
-                $('#append_response_form').html($('#digital_copy').html());
+                $('#append_response_form').html($('#vfdigital_copy').html());
 
             }else if(input.value == 'Original' && audio_visual == 'Film') {
-                $('#append_response_form').html($('#original_docs').html());
+                $('#append_response_form').html($('#film').html());
             }else if(input.value == 'Digital' && audio_visual == 'Audio')
             {
                 $('#append_response_form').html($('#digital_copy').html());

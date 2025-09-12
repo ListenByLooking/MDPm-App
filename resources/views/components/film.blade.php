@@ -1,4 +1,4 @@
-<div class="col-12 components_div_right" id="original_docs">
+<div class="col-12 components_div_right" id="film">
     <h2 class="text-center p-2 boder-bottom">Film</h2>
     <input type="hidden" name="form_name" value="original_docs">
     <input type="hidden" name="artwork_id" value="{{$id}}">
@@ -33,7 +33,7 @@
                 <div class="form-group">
                 <label for="format">Format</label>
                     <div class="input-group">
-                <select id="format" name="format" class="form-control" required="
+                <select id="format" name="format" class="form-control" required="">
                     <option value="Format1">Format 1</option>
                     <option value="Format2">Format 2</option>
                     <option value="Format3">Format 3</option>

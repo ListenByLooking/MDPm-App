@@ -71,8 +71,8 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
-<x-digitalcopy :id="$id"/>
-<x-originaldocs :id="$id"/>
+<x-vfdigitalcopy :id="$id"/>
+<x-film :id="$id"/>
 <x-tapedetails :id="$id" />
 <x-audiocassette :id="$id" />
 <x-dat :id="$id" />
