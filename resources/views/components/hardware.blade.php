@@ -1,6 +1,6 @@
 <div class="col-12 components_div_right" id="hardware">
-    <h2 class="text-center">Hardware Form</h2>
-    <input type="hidden" name="form_name" value="phonographicdisks">
+    <h2 class="text-center">Hardware</h2>
+    <input type="hidden" name="form_name" value="hardware">
     <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">
 
@@ -37,7 +37,7 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="os">Serial Number</label>
+                <label for="serial">Serial Number</label>
                 <input type="text" id="serial" name="serial" required class="form-control" />
             </div>
         </div>

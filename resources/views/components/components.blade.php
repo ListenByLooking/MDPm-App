@@ -18,7 +18,7 @@
                                         <option value="Hardware">Hardware</option>
                                         <option value="Software">Software</option>
                                         <option value="AudioVisual">AudioVisual</option>
-                                        <option value="Other">Other</option>
+                                        <option value="General">General Object</option>
                                     </select>
                                 </div>
                                 <div class="components_div" id="AudioVisual_parent">
@@ -79,3 +79,4 @@
 <x-phonographic :id="$id"/>
 <x-hardware :id="$id"/>
 <x-software :id="$id"/>
+<x-general :id="$id"/>

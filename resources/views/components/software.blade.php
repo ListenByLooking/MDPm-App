@@ -1,6 +1,6 @@
 <div class="col-12 components_div_right" id="software">
-    <h2 class="text-center">Software Form</h2>
-    <input type="hidden" name="form_name" value="phonographicdisks">
+    <h2 class="text-center">Software</h2>
+    <input type="hidden" name="form_name" value="software">
     <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">
 
@@ -37,8 +37,8 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="os">Serial Number</label>
-                <input type="text" id="serial" name="serial" required class="form-control" />
+                <label for="license">License</label>
+                <input type="text" id="license" name="license" required class="form-control" />
             </div>
         </div>
         <div class="col-4">
@@ -49,38 +49,58 @@
         </div>
         <div class="col-4">
             <div class="form-group">
+                <label for="developer">Type</label>
+                <div class="input-group">
+                    <select id="type" name="type" required="" class="form-control">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
                 <label for="year">Year</label>
                 <input type="number" min="1901" step="1" placeholder="1970" id="year" class="form-control" name="year" required />
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="cpu">CPU</label>
-                <input type="text" id="cpu" class="form-control" name="cpu" required />
+                <label for="language">Programming language</label>
+                <div class="input-group">
+                    <select id="language" name="language" required="" class="form-control">
+                        <option value="A">A</option>
+                        <option value="B">B</option>
+                        <option value="C">C</option>
+                    </select>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                </div>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="ram">RAM</label>
-                <input type="text" id="ram" class="form-control" name="ram" required />
+                <label for="cpu">Software requirements</label>
+                <input type="text" id="requirements" class="form-control" name="requirements" required />
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="storage">Storage</label>
-                <input type="text" id="storage" class="form-control" name="storage" required />
+                <label for="link">Link (Repository)</label>
+                <input type="url" id="link" class="form-control" name="link" required />
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="form-group">
+                <label for="plugin">Plug-in/Library</label>
+                <input type="url" id="plugin" class="form-control" name="plugin" required />
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label for="description">Description</label>
                 <input type="text" id="description" class="form-control" name="description" required />
-            </div>
-        </div>
-        <div class="col-4">
-            <div class="form-group">
-                <label for="display">Display</label>
-                <input type="text" id="display" name="display" required class="form-control" />
             </div>
         </div>
         <div class="col-4">

@@ -207,6 +207,10 @@ $user = Auth::user();
             $('.components_div_right').hide();
             $('#append_response_form').html('');
             $('#append_response_form').html($('#software').html());
+        }  else if (input.value == 'General'){
+            $('.components_div_right').hide();
+            $('#append_response_form').html('');
+            $('#append_response_form').html($('#general').html());
         }
        },
        audiovisual:function(input){
