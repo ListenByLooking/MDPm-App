@@ -1,14 +1,8 @@
 <div class="col-12 components_div_right" id="dat">
-    <h2 class="text-center">DAT</h2> 
+    <h2 class="text-center">DAT</h2>
     <input type="hidden" name="form_name" value="dat">
-    <input type="hidden" name="artwork_id" value="{{$id}}"> 
+    <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">
-        <div class="col-4">
-            <div class="form-group">
-                <label for="id">ID</label>
-                <input type="text" id="id" name="id" required="" class="form-control">
-                    </div>
-                </div>
                 <div class="col-4">
                     <div class="form-group">
                 <label for="preservation_signature">Preservation Signature</label>
@@ -51,7 +45,7 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="samplerate">Samplerate</label>
+                <label for="samplerate">Sample Frequency</label>
                 <div class="input-group">
                     <select id="samplerate" name="samplerate" required="" class="form-control">
                         <option value="">Select...</option>
@@ -72,5 +66,5 @@
                 <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>
             </div>
         </div>
-    </div> 
+    </div>
 </div>

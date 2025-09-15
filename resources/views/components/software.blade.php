@@ -68,15 +68,8 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="language">Programming language</label>
-                <div class="input-group">
-                    <select id="language" name="language" required="" class="form-control">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
-                    </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
-                </div>
+                <label for="language">Programming Language</label>
+                <input type="text" id="language" name="language" required class="form-control" />
             </div>
         </div>
         <div class="col-4">

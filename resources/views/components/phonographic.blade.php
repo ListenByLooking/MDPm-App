@@ -1,14 +1,9 @@
-<div class="col-12 components_div_right" id="phonographic"> 
-    <h2 class="text-center">Phonographic Disks Form</h2>  
+<div class="col-12 components_div_right" id="phonographic">
+    <h2 class="text-center">Phonographic Disc</h2>
     <input type="hidden" name="form_name" value="phonographicdisks">
-    <input type="hidden" name="artwork_id" value="{{$id}}"> 
+    <input type="hidden" name="artwork_id" value="{{$id}}">
         <div class="row">
-            <div class="col-4">
-                <div class="form-group">
-                    <label for="id">ID</label>
-                    <input type="text" id="id" name="id" required="" class="form-control">
-                            </div>
-                        </div>
+
                         <div class="col-4">
                             <div class="form-group">
                     <label for="preservation_signature">Preservation Signature</label>
@@ -111,8 +106,8 @@
             <div class="col-4">
                 <div class="form-group">
                     <label for="notes">Notes</label>
-                    <textarea id="notes" name="notes" rows="3" class="form-control"></textarea> 
+                    <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>
                 </div>
-            </div> 
-        </div> 
+            </div>
+        </div>
 </div>

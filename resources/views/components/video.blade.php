@@ -1,6 +1,6 @@
-<div class="col-12 components_div_right" id="film">
-    <h2 class="text-center p-2 boder-bottom">Film</h2>
-    <input type="hidden" name="form_name" value="film">
+<div class="col-12 components_div_right" id="video">
+    <h2 class="text-center p-2 boder-bottom">Video</h2>
+    <input type="hidden" name="form_name" value="video">
     <input type="hidden" name="artwork_id" value="{{$id}}">
         <div class="row">
             <div class="col-4">
@@ -18,19 +18,6 @@
 
             <div class="col-4">
                 <div class="form-group">
-                    <label for="type">Type</label>
-                    <div class="input-group">
-                    <select id="type" name="type" class="form-control" required="">
-                        <option value="Type1">Type 1</option>
-                        <option value="Type2">Type 2</option>
-                        <option value="Type3">Type 3</option>
-                    </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
-                </div>
-            </div>
-            </div>
-            <div class="col-4">
-                <div class="form-group">
                 <label for="format">Format</label>
                     <div class="input-group">
                 <select id="format" name="format" class="form-control" required="">
@@ -40,6 +27,17 @@
                 </select>
                     <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
                 </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="signal">Type of Signal</label>
+                    <div class="checkbox-container">
+                        <input type="radio" id="analog" name="signal" value="analog">
+                        <label for="analog">Analog</label>
+                        <input type="radio" id="digital" name="signal" value="digital">
+                        <label for="digital">Digital</label>
+                    </div>
                 </div>
             </div>
             <div class="col-4">
@@ -99,10 +97,37 @@
                     </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="aspect_ratio">Aspect Ratio</label>
-                        <div class="input-group">
+
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="abit">Bitdepth (Audio)</label>
+                    <div class="input-group">
+                        <select id="abit" name="abit" class="form-control" required="">
+                            <option value="Type1">Type 1</option>
+                            <option value="Type2">Type 2</option>
+                            <option value="Type3">Type 3</option>
+                        </select>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="fsaudio">Sample Frequency (Audio)</label>
+                    <div class="input-group">
+                        <select id="fsaudio" name="fsaudio" class="form-control" required="">
+                            <option value="Type1">Type 1</option>
+                            <option value="Type2">Type 2</option>
+                            <option value="Type3">Type 3</option>
+                        </select>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    </div>
+                </div>
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="aspect_ratio">Aspect Ratio</label>
+                    <div class="input-group">
                         <select id="aspect_ratio" name="aspect_ratio" class="form-control" required="">
                             <option value="Aspect Ratio1">Ratio 1</option>
                             <option value="Aspect Ratio2">Ratio 2</option>
@@ -110,13 +135,13 @@
                         </select>
                         <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
                     </div>
-                    </div>
                 </div>
+            </div>
                 <div class="col-4">
                     <div class="form-group">
-                        <label for="film_brand">Film Brand</label>
+                        <label for="brand">Brand</label>
                         <div class="input-group">
-                        <select id="film_brand" name="film_brand" class="form-control" required="">
+                        <select id="brand" name="brand" class="form-control" required="">
                             <option value="Film Brand1">Brand 1</option>
                             <option value="Film Brand2">Brand 2</option>
                             <option value="Film Brand3">Brand 3</option>
@@ -125,19 +150,7 @@
                     </div>
                     </div>
                 </div>
-                    <div class="col-4">
-                        <div class="form-group">
-                        <label for="carter_brand">Carter Brand</label>
-                            <div class="input-group">
-                        <select id="carter_brand" name="carter_brand" class="form-control" required="">
-                            <option value="Carter Brand1">Carter 1</option>
-                            <option value="Carter Brand2">Carter 2</option>
-                            <option value="Carter Brand3">Carter 3</option>
-                        </select>
-                            <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
-                    </div>
-                        </div>
-                </div>
+
                 <div class="col-4">
                     <div class="form-group">
                         <label for="carter_material">Carter Material</label>
@@ -164,6 +177,19 @@
                     </div>
                     </div>
                 </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="standard">Standard</label>
+                    <div class="input-group">
+                        <select id="standard" name="standard" class="form-control" required="">
+                            <option value="Cover Material1">FPS 1</option>
+                            <option value="Cover Material2">FPS 2</option>
+                            <option value="Cover Material3">FPS 3</option>
+                        </select>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    </div>
+                </div>
+            </div>
                 <div class="col-4">
                     <div class="form-group">
                         <label for="fps">FPS</label>
@@ -177,42 +203,32 @@
                     </div>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="cement_splices">Cement Splices</label>
-                        <input type="number" id="cement_splices" name="cement_splices" class="form-control">
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="resolution">Resolution</label>
+                    <div class="input-group">
+                        <select id="resolution" name="resolution" class="form-control" required="">
+                            <option value="Type1">Type 1</option>
+                            <option value="Type2">Type 2</option>
+                            <option value="Type3">Type 3</option>
+                        </select>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="restored_cs">Restored CS</label>
-                        <input type="number" id="restored_cs" name="restored_cs" class="form-control">
+            </div>
+            <div class="col-4">
+                <div class="form-group">
+                    <label for="vbit">Bitdepth (Video)</label>
+                    <div class="input-group">
+                        <select id="vbit" name="vbit" class="form-control" required="">
+                            <option value="Type1">Type 1</option>
+                            <option value="Type2">Type 2</option>
+                            <option value="Type3">Type 3</option>
+                        </select>
+                        <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
                     </div>
                 </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="tape_splices">Tape Splices</label>
-                        <input type="number" id="tape_splices" name="tape_splices" class="form-control">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="restored_ts">Restored TS</label>
-                        <input type="number" id="restored_ts" name="restored_ts" class="form-control">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="restored_perforations">Restored Perforations</label>
-                        <input type="number" id="restored_perforations" name="restored_perforations" class="form-control">
-                    </div>
-                </div>
-                <div class="col-4">
-                    <div class="form-group">
-                        <label for="restored_frames">Restored Frames</label>
-                        <input type="number" id="restored_frames" name="restored_frames" class="form-control">
-                    </div>
-                </div>
+            </div>
                 <div class="col-4">
                     <div class="form-group">
                         <label for="notes">Notes</label>

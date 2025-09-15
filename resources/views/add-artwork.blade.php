@@ -217,7 +217,7 @@ $user = Auth::user();
             $('.components_div_right').hide()
             $('#originaldocs_sub_parent,#originaldocs_parent').hide();
             $('#originaldocs').val(null).change();
-            if(input.value == 'Audio' || input.value == 'Film' )
+            if(input.value == 'Audio' || input.value == 'Film' || input.value == 'Video' || input.value == 'Photo')
              {
                 $(`#originaldocs_parent`).show();
              }
@@ -230,15 +230,29 @@ $user = Auth::user();
             if(input.value == 'Digital' && audio_visual == 'Film')
             {
                 $('#append_response_form').html($('#vfdigital_copy').html());
+                document.getElementById("title").innerText = "Film Digital Copy";
 
             }else if(input.value == 'Original' && audio_visual == 'Film') {
                 $('#append_response_form').html($('#film').html());
             }else if(input.value == 'Digital' && audio_visual == 'Audio')
             {
-                $('#append_response_form').html($('#digital_copy').html());
+                $('#append_response_form').html($('#adigital_copy').html());
             }else if(input.value == 'Original' && audio_visual == 'Audio')
             {
                 $('#originaldocs_sub_parent').show()
+            }else if(input.value == 'Original' && audio_visual == 'Video')
+            {
+                $('#append_response_form').html($('#video').html());
+            }else if(input.value == 'Digital' && audio_visual == 'Video')
+            {
+                $('#append_response_form').html($('#vfdigital_copy').html());
+                document.getElementById("title").innerText = "Video Digital Copy";
+            }else if(input.value == 'Original' && audio_visual == 'Photo')
+            {
+                $('#append_response_form').html($('#photo').html());
+            }else if(input.value == 'Digital' && audio_visual == 'Photo')
+            {
+                $('#append_response_form').html($('#pdigital_copy').html());
             }
 
             $('#Component_modal > .select3').select2({
@@ -260,6 +274,9 @@ $user = Auth::user();
             }else if(input.value == 'phonographicdisks')
             {
                 $('#append_response_form').html($('#phonographic').html());
+            }else if(input.value == 'digitalaudio')
+            {
+                $('#append_response_form').html($('#digitalaudio').html());
             }
 
             dpo.getOption();

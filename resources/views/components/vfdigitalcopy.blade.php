@@ -1,11 +1,11 @@
 <div class="col-12 components_div_right" id="vfdigital_copy">
-    <h2 class="text-center">Video/Film Digital Copy</h2>
+    <h2 class="text-center" id="title" name="title"></h2>
     <input type="hidden" name="form_name" value="vfdigital_copy">
     <input type="hidden" name="artwork_id" value="{{ $id }}">
         <div class="row">
             <div class="col-4">
                 <div class="form-group">
-                    <label for="signature">Signature</label>
+                    <label for="signature">File Name</label>
                     <input type="text" id="signature" name="signature" class="form-control">
                 </div>
             </div>
@@ -47,14 +47,14 @@
             </div>
             <div class="col-4">
                 <div class="form-group">
-                    <label for="bitrate">Bitrate</label>
+                    <label for="bitrate">Bitrate [kb/s]</label>
                     <input type="number" id="bitrate" name="bitrate" class="form-control">
                 </div>
             </div>
             <div class="col-4">
                 <div class="form-group">
                     <label for="duration">Duration</label>
-                    <input type="text" id="duration" name="duration" placeholder="hh:mm:ss" pattern="/^([0-9]|[1-9][0-9]+):[0-5][0-9]:[0-5][0-9]$/" required class="form-control" />
+                    <input type="text" id="duration" name="duration" placeholder="hh:mm:ss" pattern="([0-9]|[1-9][0-9]+):[0-5][0-9]:[0-5][0-9]" required class="form-control" />
                 </div>
             </div>
             <div class="col-4">

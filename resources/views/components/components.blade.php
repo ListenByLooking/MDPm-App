@@ -50,8 +50,9 @@
                                                 <option value="">Select</option>
                                                 <option value="audiocassette">Audiocassette</option>
                                                 <option value="dat">DAT</option>
+                                                <option value="digitalaudio">Digital Audio</option>
                                                 <option value="openreeltape">Open Reel Tape</option>
-                                                <option value="phonographicdisks">Phonographic Disks</option>
+                                                <option value="phonographicdisks">Phonographic Disc</option>
                                         </select>
                                     </div>
                                 </div>
@@ -71,12 +72,17 @@
     </div><!-- /.modal-dialog -->
 </div><!-- /.modal -->
 
+<x-adigitalcopy :id="$id"/>
+<x-pdigitalcopy :id="$id"/>
 <x-vfdigitalcopy :id="$id"/>
 <x-film :id="$id"/>
+<x-video :id="$id"/>
+<x-photo :id="$id"/>
 <x-tapedetails :id="$id" />
 <x-audiocassette :id="$id" />
 <x-dat :id="$id" />
 <x-phonographic :id="$id"/>
+<x-digitalaudio :id="$id"/>
 <x-hardware :id="$id"/>
 <x-software :id="$id"/>
 <x-general :id="$id"/>
