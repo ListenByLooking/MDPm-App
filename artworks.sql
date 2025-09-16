@@ -248,6 +248,7 @@ CREATE TABLE `documentation` (
 CREATE TABLE `dpos` (
   `id` int(11) NOT NULL,
   `artwork_id` int(11) NOT NULL,
+  FOREIGN KEY(artwork_id) REFERENCES artwork(id),
 --  `dpo_id` int(11) NOT NULL,
   `user_id` int(11) NOT NULL,
   `dpo_year` YEAR NOT NULL,
@@ -671,7 +672,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `migrations`
 --
 ALTER TABLE `migrations`
-  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(10) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `original_docs`
@@ -695,7 +696,7 @@ ALTER TABLE `phonographicdisks`
 -- AUTO_INCREMENT for table `score`
 --
 ALTER TABLE `score`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT for table `tape_details`
@@ -707,7 +708,7 @@ ALTER TABLE `tape_details`
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="software">
-    <h2 class="text-center">Software</h2>
+    <h2 class="text-center p-2 border-bottom">Software</h2>
     <input type="hidden" name="form_name" value="software">
     <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">

@@ -18,7 +18,7 @@
             </div>
             <div class="modal-footer border border-top pt-2 pb-2">
                 <button type="button" class="btn btn-light" data-bs-dismiss="modal">Close</button>
-                <button type="submit" class="btn btn-primary ">Save Changes</button>
+                <button type="submit" class="btn btn-primary " >Save Changes</button>
             </div>
         </div><!-- /.modal-content -->
         </form>

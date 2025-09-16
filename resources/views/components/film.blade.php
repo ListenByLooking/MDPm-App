@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="film">
-    <h2 class="text-center p-2 boder-bottom">Film</h2>
+    <h2 class="text-center p-2 border-bottom">Film</h2>
     <input type="hidden" name="form_name" value="film">
     <input type="hidden" name="artwork_id" value="{{$id}}">
         <div class="row">
@@ -77,12 +77,19 @@
                 <div class="form-group">
                     <label for="color">Color/BW</label>
                     <div class="checkbox-container">
-                        <input type="radio" id="col" name="color" value="col">
-                        <label for="col">Color</label>
-                        <input type="radio" id="bw" name="color" value="bw">
-                        <label for="bw">B/W</label>
-                        <input type="radio" id="both" name="color" value="both">
-                        <label for="both">Both</label>
+                        <input type="radio" id="col" name="color" value="col" style="height: 2.4rem; width: 1.1rem; border-width: 0px;" required>
+
+                        <div style="display: inline-block; vertical-align: top">
+                            <label style="margin-top: 0.6rem;" for="col">Color</label>
+                        </div>
+                        <input type="radio" id="bw" name="color" value="bw" style="height: 2.4rem; width: 1.1rem; border-width: 0px;" required>
+                        <div style="display: inline-block; vertical-align: top">
+                            <label style="margin-top: 0.6rem;" for="bw">B/W</label>
+                        </div>
+                        <input type="radio" id="both" name="color" value="both" style="height: 2.4rem; width: 1.1rem; border-width: 0px;" required>
+                        <div style="display: inline-block; vertical-align: top">
+                            <label style="margin-top: 0.6rem;" for="both">Both</label>
+                        </div>
                     </div>
                 </div>
             </div>

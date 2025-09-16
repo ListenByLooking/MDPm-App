@@ -38,7 +38,7 @@ Route::post('/dpo/documentation', [App\Http\Controllers\DPOController::class, 'd
  Route::post('/dpo/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
 Route::post('/dpo/insert', [App\Http\Controllers\DPOController::class, 'insertDPO'])->name('dpo.insert');
 Route::post('/dpo/option', [App\Http\Controllers\DPOController::class, 'option'])->name('dpo.option');
-Route::get('/dpo/listOption', [App\Http\Controllers\DPOController::class, 'listOption'])->name('dpo.listOption');
+Route::get('/dpo/listOption/', [App\Http\Controllers\DPOController::class, 'listOption'])->name('dpo.listOption');
 Route::post('/dpo/delete', [App\Http\Controllers\DPOController::class, 'delete'])->name('dpo.delete');
 Route::post('/dpo/deleteDPO', [App\Http\Controllers\DPOController::class, 'deleteDPO'])->name('dpo.deleteDPO');
 Route::post('/dpo/component', [App\Http\Controllers\DPOController::class, 'component'])->name('dpo.component');

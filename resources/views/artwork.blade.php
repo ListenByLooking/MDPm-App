@@ -26,11 +26,13 @@ $user = Auth::user();
                                                             <div class="col-12">
                                                                 <div class="form-group mb-2">
                                                                     <label for="title" class="form-label">Title</label>
-                                                                    <input type="text" class="form-control" name="title" placeholder="Title">
+                                                                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" pattern="[^\s]+"
+                                                                           oninvalid="this.setCustomValidity('Please enter a valid Title!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                                                                 </div>
-                                                                <div class="form-group  mb-2">
-                                                                    <label for="title" class="form-label">Description</label>
-                                                                    <textarea class="form-control" name="description" rows="6"></textarea>
+                                                                <div class="form-group mb-2">
+                                                                    <label for="description" class="form-label">Description</label>
+                                                                    <textarea class="form-control" name="description" id="description" placeholder="Description" rows="6"
+                                                                              oninvalid="this.setCustomValidity('Please enter a valid Description!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required></textarea>
                                                                 </div>
 
                                                                 <!--div class="form-group  mb-2">
@@ -43,12 +45,13 @@ $user = Auth::user();
                                                                     </select>
                                                                 </div-->
                                                                 <div class="form-group  mb-2">
-                                                                    <label for="Author" class="form-label">Author</label>
-                                                                    <input type="text" class="form-control" name="author" placeholder="Author">
+                                                                    <label for="author" class="form-label">Author</label>
+                                                                    <input type="text" class="form-control" name="author" id="author" placeholder="Author" pattern="[^\s]+"
+                                                                           oninvalid="this.setCustomValidity('Please enter a valid Author!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                                                                 </div>
                                                                 <div class="form-group">
                                                                     <div class="hstack gap-2 justify-content-end">
-                                                                        <button type="submit" class="btn btn-success"><i class="bx bx-save"></i>&nbsp;Add ArtWork</button>
+                                                                        <button type="submit" class="btn btn-success" id="submit" onclick="document.getElementById('description').value = document.getElementById('description').value.trim()"><i class="bx bx-save"></i>&nbsp;Add ArtWork</button>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -117,7 +120,7 @@ $user = Auth::user();
 @section('script')
 <script>
 $(document).ready(function(){
-    $('.select2').select2();
+    /*$('.select2').select2();
     $('#artwork-add-form').validate({
         rules:{
             title:{ required:true },
@@ -131,8 +134,9 @@ $(document).ready(function(){
             //year:{ required:"Please select the year" },
             author:{ required:"Please enter author" },
         }
-    })
+    })*/
 })
+
     $('#artwork-table').DataTable({
          processing: true,
          serverSide: true,
@@ -163,7 +167,8 @@ function remove(id)
         confirmButtonText:"Yes, Delete It!",
         cancelButtonClass:"btn btn-danger w-xs mb-1",
         buttonsStyling:!1,
-        showCloseButton:!0
+        showCloseButton:!0,
+        focusCancel:!0
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({

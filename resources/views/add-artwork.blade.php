@@ -30,7 +30,7 @@ $user = Auth::user();
                                 <div class="card-header" style="display: inline-block; background-color: unset; box-shadow: none; vertical-align: middle;">
                     <h3 style="display: inline-block; margin-bottom: 0px;">DPO {{$new_id}}</h3>
                                 </div>
-                            <div class="card-header" style="color: none; display: inline-block; background-color: unset; box-shadow: none;">
+                            <div class="card-header" style="color: unset; display: inline-block; background-color: unset; box-shadow: none;">
                                 <a href="{{ route('artwork.view',encrypt($id)) }}" class="btn btn-danger">View all DPOs</a>
                             </div>
                         </div>
@@ -169,8 +169,23 @@ $user = Auth::user();
     //editorValue = CKEDITOR.document.getById( 'ckeditor-classic' );
     CKEDITOR.replace( 'ckeditor-classic' );
     editorValue = CKEDITOR.instances['ckeditor-classic'];
+    document.getElementById('score_form').onclick = function() {
+        //alert( CKEDITOR.instances['ckeditor-classic'].getData().replace(/<p>[&nbsp;\s*]+<\/p>/,'') );
+        //alert(CKEDITOR.instances['ckeditor-classic'].getData());
+        //var messageLength1 = CKEDITOR.instances['ckeditor-classic'].getData().length;
+        let message = CKEDITOR.instances['ckeditor-classic'].getData().replaceAll(/<p>[&nbsp;\s*]+<\/p>\n*/g,'');
+        CKEDITOR.instances['ckeditor-classic'].setData(message);
+        //alert( messageLength1 + ', ' + messageLength2);
+        //alert(CKEDITOR.instances['ckeditor-classic'].getData().replaceAll(/<p>[&nbsp;\s*]+<\/p>\n*/g,''));
+        //if( messageLength1 != messageLength2 && !messageLength2 ) {
+            //alert( 'Please enter a message' );
+        //}
+    };
     editorValue.on( 'required', function( evt ) {
-        alert( 'Article content is required.' );
+        //editorValue.setCustomValidity('Please enter a valid Text!');
+        //editorValue.style.border = 'solid 1px red';
+        //editorValue.style.background = '#ffdfdf'";
+        alert( 'Score content is required!' );
         evt.cancel();
     } );
 
@@ -203,6 +218,7 @@ $user = Auth::user();
             $('.components_div_right').hide();
             $('#append_response_form').html('');
             $('#append_response_form').html($('#hardware').html());
+            dpo.getOption('hardware');
         } else if (input.value == 'Software'){
             $('.components_div_right').hide();
             $('#append_response_form').html('');
@@ -231,6 +247,7 @@ $user = Auth::user();
             {
                 $('#append_response_form').html($('#vfdigital_copy').html());
                 document.getElementById("title").innerText = "Film Digital Copy";
+                dpo.getOption('vfdigital_copy');
 
             }else if(input.value == 'Original' && audio_visual == 'Film') {
                 $('#append_response_form').html($('#film').html());
@@ -296,7 +313,8 @@ $user = Auth::user();
                                             <span class="input-group-text" id="basic-addon1"><i class="fs-4 bx bx-link"></i></span>
                                         </div>
                                         <input type="hidden" name="document_name[]" value="${doc[id]}">
-                                        <input type="url" class="form-control" placeholder="${doc[id]}" name="document_links[]" id="documentation-${count}" required>
+                                        <input type="url" class="form-control" placeholder="url://" name="document_links[]" id="documentation-${count}"
+                                                   oninvalid="this.setCustomValidity('Please enter a valid Url!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required>
                                     </div>
                                 </td>
                                 <td style="text-align: center;">
@@ -445,31 +463,37 @@ $user = Auth::user();
                 })
             }
         },
-        getOption:function(){
-            $.ajax({
-                    url:'{{ route("dpo.listOption") }}',
-                    method:"get",
-                    datatype:"json",
-                    success:function(response)
-                    {
-                         $.each(response,function(key,value){
-                            $(`#component_form #${key}`).append(`<option value="${value}">${value}</option>`)
-                         })
+        getOption:function(id){
+
+            $(`#${id} select`).map(function() {
+
+                $.ajax({
+                    url: '{{ route("dpo.listOption") }}',
+                    method: "get",
+                    data: { _token:'{{ csrf_token() }}' , table_name:this.id },
+                    datatype: "json",
+                    success: function (response) {
+                        $.each(response, function (index, value) {
+                            //alert(`${value['table_id']}`);
+                            //alert($(`#append_response_form #${value['table_id']}`).html());
+                            $(`#append_response_form #${value['table_id']}`).append(`<option value="${value['index']}">${value['value']}</option>`)
+                        })
                     }
                 })
+            }).get();
         }
     }
     dpo.list();
 
     $(document).ready(function(){
-        $('#documentation_form').validate({
+        /*$('#documentation_form').validate({
             rules:{
                 documentation:{ required:true }
             },
             messages:{
                 documentation:{ required:"Please add any one" }
             }
-        })
+        })*/
 
 
     })
@@ -483,7 +507,8 @@ $user = Auth::user();
         confirmButtonText:"Yes, Delete It!",
         cancelButtonClass:"btn btn-danger w-xs mb-1",
         buttonsStyling:!1,
-        showCloseButton:!0
+        showCloseButton:!0,
+        focusCancel:!0
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({

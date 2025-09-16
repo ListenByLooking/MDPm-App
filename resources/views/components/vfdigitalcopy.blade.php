@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="vfdigital_copy">
-    <h2 class="text-center" id="title" name="title"></h2>
+    <h2 class="text-center p-2 border-bottom" id="title" name="title"></h2>
     <input type="hidden" name="form_name" value="vfdigital_copy">
     <input type="hidden" name="artwork_id" value="{{ $id }}">
         <div class="row">
@@ -25,7 +25,7 @@
             <div class="col-4 mb-2">
                 <div class="form-group">
                     <label>ID Original Item</label>
-                    <select class="form-control select3" name="originam_item">
+                    <select class="form-control select3" name="original_item" id="original_item" required>
                         <option value="option 1">Option 1</option>
                         <option value="option 2">Option 2</option>
                         <option value="option 3">Option 3</option>

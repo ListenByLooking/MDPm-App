@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="general">
-    <h2 class="text-center">General Object</h2>
+    <h2 class="text-center p-2 border-bottom">General Object</h2>
     <input type="hidden" name="form_name" value="general">
     <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">

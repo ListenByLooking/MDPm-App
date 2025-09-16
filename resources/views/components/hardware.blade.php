@@ -1,5 +1,5 @@
 <div class="col-12 components_div_right" id="hardware">
-    <h2 class="text-center">Hardware</h2>
+    <h2 class="text-center p-2 border-bottom">Hardware</h2>
     <input type="hidden" name="form_name" value="hardware">
     <input type="hidden" name="artwork_id" value="{{$id}}">
     <div class="row">
@@ -18,14 +18,11 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="manufacturer">Manufacturer</label>
+                <label for="brand">Manufacturer</label>
                 <div class="input-group">
-                    <select id="manufacturer" name="manufacturer" required="" class="form-control">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
+                    <select id="brand" name="brand" class="form-control" required>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand')">+</button>
                 </div>
             </div>
         </div>

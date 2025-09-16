@@ -334,7 +334,8 @@ $user = Auth::user();
         confirmButtonText:"Yes, Delete It!",
         cancelButtonClass:"btn btn-danger w-xs mb-1",
         buttonsStyling:!1,
-        showCloseButton:!0
+        showCloseButton:!0,
+        focusCancel:!0
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
