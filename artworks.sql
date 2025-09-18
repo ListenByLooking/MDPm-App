@@ -103,7 +103,7 @@ CREATE TABLE `audiocassette` (
   `brand` varchar(255) NOT NULL,
   `brand_of_box` varchar(255) NOT NULL,
   `cassette_type` varchar(255) NOT NULL,
-  `noise_reduction` enum('yes','no','unknown') DEFAULT 'unknown',
+  `noise_reduction` varchar(255) NOT NULL,
   `notes` text DEFAULT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -371,7 +371,7 @@ CREATE TABLE `documentation` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
 --  `component_id` int(11) NOT NULL,
-  `document_type` varchar(50) NOT NULL,
+  `document_type` ENUM('Photos', 'A/V', 'Interviews', 'Docs') NOT NULL,
   `document_url` varchar(250) NOT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -473,7 +473,7 @@ CREATE TABLE `film` (
                                   `author` varchar(255) NOT NULL,
                                   `year` year NOT NULL,
                                   `support_material` varchar(255) NOT NULL,
-                                  `color` varchar(255) NOT NULL,
+                                  `color` ENUM('Color', 'B/W', 'Both') NOT NULL,
                                   `sound` varchar(255) NOT NULL,
                                   `ar` varchar(255) NOT NULL,
                                   `film_brand` varchar(255) NOT NULL,
@@ -481,12 +481,12 @@ CREATE TABLE `film` (
                                   `carter_material` varchar(255) NOT NULL,
                                   `cover_material` varchar(255) NOT NULL,
                                   `fps` varchar(255) NOT NULL,
-                                  `cement_splices` varchar(255) NOT NULL,
-                                  `restored_cs` varchar(255) NOT NULL,
-                                  `tape_splices` varchar(255) NOT NULL,
-                                  `restored_ts` varchar(255) NOT NULL,
-                                  `restored_perforations` varchar(255) NOT NULL,
-                                  `restored_frames` varchar(255) NOT NULL,
+                                  `cement_splices` int(11) NOT NULL,
+                                  `restored_cs` int(11) NOT NULL,
+                                  `tape_splices` int(11) NOT NULL,
+                                  `restored_ts` int(11) NOT NULL,
+                                  `restored_perforations` int(11) NOT NULL,
+                                  `restored_frames` int(11) NOT NULL,
                                   `notes` text DEFAULT NULL,
                                   `status` int(11) NOT NULL,
                                   `created_at` datetime DEFAULT NULL
@@ -659,7 +659,7 @@ CREATE TABLE `personal_access_tokens` (
 
 
 
-CREATE TABLE `phonographicdisks` (
+CREATE TABLE `phonographicdisk` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`),
   `user_id` bigint(20) UNSIGNED NOT NULL,
@@ -702,7 +702,7 @@ CREATE TABLE `photo` (
                          `author` varchar(255) NOT NULL,
                          `year` year NOT NULL,
                          `support_material` varchar(255) NOT NULL,
-                         `color` ENUM('Color', 'B/W', 'Both') NOT NULL,
+                         `color` ENUM('Color', 'B/W') NOT NULL,
                          `ar` varchar(255) NOT NULL,
                          `brand` varchar(255) NOT NULL,
                          `dimensions` varchar(255) NOT NULL,
@@ -831,7 +831,7 @@ CREATE TABLE `video` (
                         `author` varchar(255) NOT NULL,
                         `year` year NOT NULL,
                         `support_material` varchar(255) NOT NULL,
-                        `color` varchar(255) NOT NULL,
+                        `color` ENUM('Color', 'B/W', 'Both') NOT NULL,
                         `sound` varchar(255) NOT NULL,
                         `abitdepth` varchar(255) NOT NULL,
                         `frequency` varchar(255) NOT NULL,
