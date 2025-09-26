@@ -24,7 +24,7 @@
                         <div class="col-12 bg-success-subtle">
                             <div class="form-group mb-2">
                                 <label for="dpo_venue" class="form-label">Venue</label>
-                                <input type="text" id="dpo_venue" placeholder="Teatro Comunale G. Verdi" class="form-control" name="dpo_venue" pattern="[^\s]+"
+                                <input type="text" id="dpo_venue" placeholder="Teatro Comunale G. Verdi" class="form-control" name="dpo_venue" pattern=".*\S.*"
                                        oninvalid="this.setCustomValidity('Please enter a valid Venue!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                             </div>
 
@@ -34,7 +34,7 @@
                         <div class="col-12 bg-success-subtle">
                             <div class="form-group mb-2">
                                 <label for="dpo_city" class="form-label">City</label>
-                                <input type="text" id="dpo_city" placeholder="Padova" class="form-control" name="dpo_city" pattern="[^\s]+"
+                                <input type="text" id="dpo_city" placeholder="Padova" class="form-control" name="dpo_city" pattern=".*\S.*"
                                        oninvalid="this.setCustomValidity('Please enter a valid City!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                             </div>
 

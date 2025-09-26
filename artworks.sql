@@ -21,6 +21,108 @@ SET time_zone = "+00:00";
 -- Database: `artworks`
 --
 
+-- ---------------------------MENU TABLES------------------------------
+
+CREATE TABLE `aspect_ratio` (
+                              `value` varchar(255) NOT NULL,
+                              PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `bitdepht` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `brand` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `channel_configuration` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `codec` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `dimensions` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `equalization` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `format_analog` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `format_digital` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `material` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `noise` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `resolution` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `sample_frequency` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `sound_types` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `speed` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `standard` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `stylus` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `general_type` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `software_type` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE `type_element` (
+                                `value` varchar(255) NOT NULL,
+                                PRIMARY KEY (`value`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
 -- --------------------------------------------------------
 
 --
@@ -467,7 +569,7 @@ CREATE TABLE `film` (
                                   FOREIGN KEY (user_id) REFERENCES users(id),
                                   `preservation_signature` varchar(255) NOT NULL,
                                   `original_signature` varchar(255) NOT NULL,
-                                  `type` varchar(255) NOT NULL,
+                                  `type_of_support` varchar(255) NOT NULL,
                                   `format` varchar(255) NOT NULL,
                                   `title` varchar(255) NOT NULL,
                                   `author` varchar(255) NOT NULL,
@@ -696,7 +798,7 @@ CREATE TABLE `photo` (
                          FOREIGN KEY (user_id) REFERENCES users(id),
                          `preservation_signature` varchar(255) NOT NULL,
                          `original_signature` varchar(255) NOT NULL,
-                         `type` varchar(255) NOT NULL,
+                         `type_of_support` varchar(255) NOT NULL,
                          `format` varchar(255) NOT NULL,
                          `title` varchar(255) NOT NULL,
                          `author` varchar(255) NOT NULL,
@@ -826,7 +928,7 @@ CREATE TABLE `video` (
                         `preservation_signature` varchar(255) NOT NULL,
                         `original_signature` varchar(255) NOT NULL,
                         `format` varchar(255) NOT NULL,
-                        `type` varchar(255) NOT NULL,
+                        `type_of_signal` ENUM('Analog', 'Digital') NOT NULL,
                         `title` varchar(255) NOT NULL,
                         `author` varchar(255) NOT NULL,
                         `year` year NOT NULL,

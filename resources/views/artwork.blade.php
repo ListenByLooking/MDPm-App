@@ -26,12 +26,12 @@ $user = Auth::user();
                                                             <div class="col-12">
                                                                 <div class="form-group mb-2">
                                                                     <label for="title" class="form-label">Title</label>
-                                                                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" pattern="[^\s]+"
+                                                                    <input type="text" class="form-control" id="title" name="title" placeholder="Title" pattern=".*\S.*"
                                                                            oninvalid="this.setCustomValidity('Please enter a valid Title!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                                                                 </div>
                                                                 <div class="form-group mb-2">
                                                                     <label for="description" class="form-label">Description</label>
-                                                                    <textarea class="form-control" name="description" id="description" placeholder="Description" rows="6"
+                                                                    <textarea class="form-control" name="description" id="description" placeholder="Description" rows="6" pattern=".*\S.*"
                                                                               oninvalid="this.setCustomValidity('Please enter a valid Description!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required></textarea>
                                                                 </div>
 
@@ -46,7 +46,7 @@ $user = Auth::user();
                                                                 </div-->
                                                                 <div class="form-group  mb-2">
                                                                     <label for="author" class="form-label">Author</label>
-                                                                    <input type="text" class="form-control" name="author" id="author" placeholder="Author" pattern="[^\s]+"
+                                                                    <input type="text" class="form-control" name="author" id="author" placeholder="Author" pattern=".*\S.*"
                                                                            oninvalid="this.setCustomValidity('Please enter a valid Author!'); this.style.border = 'solid 1px red'; this.style.background = '#ffdfdf'" oninput="setCustomValidity(''); this.style.border = ''; this.style.background = ''" required />
                                                                 </div>
                                                                 <div class="form-group">

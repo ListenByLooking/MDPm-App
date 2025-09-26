@@ -18,7 +18,7 @@
 
             <div class="col-4">
                 <div class="form-group">
-                    <label for="type">Type</label>
+                    <label for="type">Type of Support</label>
                     <div class="input-group">
                     <select id="type" name="type" class="form-control" required="">
                         <option value="Type1">Type 1</option>

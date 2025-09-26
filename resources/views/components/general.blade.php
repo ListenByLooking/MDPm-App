@@ -24,8 +24,8 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="date">Date</label>
-                <input type="date" id="date" name="date" required class="form-control" />
+                <label for="year">Year</label>
+                <input type="number" min="1901" step="1" placeholder="1970" id="year" class="form-control" name="year" required />
             </div>
         </div>
         <div class="col-4">
