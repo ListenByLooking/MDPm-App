@@ -2,14 +2,14 @@
             <!-- LOGO -->
             <div class="navbar-brand-box">
                 <!-- Dark Logo-->
-                <a href="//csc.dei.unipd.it" class="logo logo-dark">
+                <!--a href="//csc.dei.unipd.it" class="logo logo-dark">
                     <span class="logo-sm">
                         <img src="{{ asset('assets/images/Csc_nero.png') }}" alt="" height="22">
                     </span>
                     <span class="logo-lg">
                         <img src="{{ asset('assets/images/Csc_nero.png') }}" alt="" height="17">
                     </span>
-                </a>
+                </a-->
                 <!-- Light Logo-->
                 <a href="//csc.dei.unipd.it" class="logo logo-light">
                     <span class="logo-sm">

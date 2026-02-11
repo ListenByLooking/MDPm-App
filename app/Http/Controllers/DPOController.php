@@ -59,9 +59,9 @@ class DPOController extends Controller
             }
             //$insert = DB::table('documentation')->insert($data);
             if ($insert) {
-                return response()->json(["status" => true, "message" => "Insert Successfully"]);
+                return response()->json(["status" => true, "message" => "Inserted Successfully!"]);
             } else {
-                return response()->json(["status" => false, "message" => "You have some error"]);
+                return response()->json(["status" => false, "message" => "You have some Errors"]);
             }
         }
     }
@@ -107,11 +107,72 @@ class DPOController extends Controller
 
         //$insert = DB::table('score')->insert($data);
         if ($insert) {
-            return response()->json(["status" => true, "message" => "Insert Successfully"]);
+            return response()->json(["status" => true, "message" => "Inserted successfully!"]);
         } else {
-            return response()->json(["status" => false, "message" => "You have some error"]);
+            return response()->json(["status" => false, "message" => "You have some Errors"]);
         }
 
+    }
+
+    private function buildComponentPath(Request $request)
+    {
+        // Friendly name mapping (local to this function)
+        $friendly = [
+            // Level 1
+            'General' => 'General Object',
+            'Hardware' => 'Hardware',
+            'Software' => 'Software',
+            'AudioVisual' => 'Audio/Visual',
+
+            // Level 2
+            'Video' => 'Video',
+            'Photo' => 'Photograph',
+            'Audio' => 'Audio',
+            'Film' => 'Film',
+
+            // Level 3
+            'Original' => 'Original Item',
+            'Digital' => 'Digital Copy',
+
+            // Level 4 (audio originals)
+            'audiocassette' => 'Audio Cassette',
+            'dat' => 'Digital Audio Tape',
+            'openreeltape' => 'Open Reel Tape',
+            'phonographicdisk' => 'Phonographic Disk',
+            'digitalaudio' => 'Digital Audio',
+        ];
+
+        // Helper closure to convert raw → friendly
+        $f = fn($v) => $friendly[$v] ?? $v;
+
+        $parts = [];
+
+        // Level 1: Component
+        if ($request->component) {
+            $parts[] = $f($request->component);
+        }
+
+        // Level 2: Audiovisual
+        if ($request->audiovisual && $request->component === 'AudioVisual') {
+            $parts[] = $f($request->audiovisual);
+        }
+
+        // Level 3: Original / Digital
+        if ($request->originaldocs) {
+            $parts[] = $f($request->originaldocs);
+        }
+
+        // Level 4: Subtype (for original items)
+        if ($request->originaldocs_sub) {
+            $parts[] = $f($request->originaldocs_sub);
+        }
+
+        // ⭐ NEW: Level 4 for AUDIO DIGITAL COPY
+        if ($request->form_name === 'adigital_copy' && $request->original_type) {
+            $parts[] = $f($request->original_type);
+        }
+
+        return "Component (" . implode(" -> ", $parts) . ")";
     }
 
     public function component(Request $request)
@@ -120,7 +181,7 @@ class DPOController extends Controller
         try {
             $table = $request->form_name;
             if (!empty($request->form_name)) {
-                $this->insertDPO($request->artwork_id, $request->dpo_id);
+                /*$this->insertDPO($request->artwork_id, $request->dpo_id);
                 $component_id = DB::table('components')->insertGetId([
                     'artwork_id' => $request->artwork_id,
                     'dpo_id' => $request->dpo_id,
@@ -133,36 +194,226 @@ class DPOController extends Controller
                     'form_name' => $request->form_name,
                     'status' => 1,
                     'created_at' => date('Y-m-d'),
-                ]);
+                ]);*/
 
                 switch ($request->form_name) {
-                    case 'digital_copy':
+                    case 'general_object':
                         $data = [
-                            'user_id' => Auth::user()->id,
-                            'component_id' => $component_id,
-                            'dpo_id' => $request->dpo_id,
-                            'signature' => $request->signature,
-                            'format' => $request->format,
-                            'original_item' => $request->originam_item,
-                            'codec' => $request->codec,
-                            'bitrate' => $request->bitrate,
-                            'bitdepth_audio' => $request->bitdepth_audio,
-                            'bitdepth_video' => $request->bitdep_video,
-                            'resolution' => $request->resolution,
-                            'aspect_ratio' => $request->aspect_ratio,
-                            'frame_rate' => $request->frame_ratio,
-                            'sample_frequency' => $request->sample_frequency,
-                            'acquisition_device' => $request->acquisition,
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            'preservation_signature' => $request->preservation_signature,
+                            'name' => $request->name,
+                            'creator' => $request->creator,
+                            'year' => $request->year, // must be a DATE field
+                            'description' => $request->description,
+                            'type' => $request->type,
+                            'identifier' => $request->identifier,
+                            'brand' => $request->brand,
+                            'material' => $request->material,
                             'notes' => $request->notes,
                             'status' => 1,
-                            'created_at' => date('Y-m-d h:i:s')
+                            'created_at' => date('Y-m-d H:i:s')
                         ];
                         break;
-                    case 'original_docs':
+                    case 'software':
                         $data = [
-                            'dpo_id' => $request->dpo_id,
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+                            'preservation_signature' => $request->preservation_signature,
+                            'name' => $request->name,
+                            'developer' => $request->developer,
+                            'version' => $request->version,
+                            'license' => $request->license,
+                            'os' => $request->os,
+                            'type' => $request->type,
+                            'year' => $request->year,
+                            'language' => $request->language,
+                            'requirements' => $request->requirements,
+                            'link' => $request->link,
+                            'library' => $request->library,
+                            'notes' => $request->notes,
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'hardware':
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+                            'preservation_signature' => $request->preservation_signature,
+                            'name' => $request->name,
+                            'manufacturer' => $request->manufacturer,
+                            'model' => $request->model,
+                            'serial' => $request->serial,
+                            'os' => $request->os,
+                            'year' => $request->year,
+                            'cpu' => $request->cpu,
+                            'ram' => $request->ram,
+                            'storage' => $request->storage,
+                            'description' => $request->description,
+                            'display' => $request->display,
+                            'notes' => $request->notes,
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'photo':
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+                            'preservation_signature' => $request->preservation_signature,
+                            'original_signature' => $request->osignature,
+                            'type_of_support' => $request->type,
+                            'format' => $request->format,
+                            'title' => $request->title,
+                            'author' => $request->author,
+                            'year' => $request->year,
+                            'support_material' => $request->support_material,
+                            'color' => $request->color,
+                            // aspect ratio → ar
+                            'ar' => $request->aspect_ratio,
+                            'brand' => $request->brand,
+                            'dimensions' => $request->dimensions,
+                            'notes' => $request->notes,
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'digital_copy_photo':
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            // FIELD MAPPINGS
+                            'filename' => $request->signature,
+                            'format' => $request->format,
+                            'id_original' => $request->original_item,
+                            'bitdepth' => $request->abit,
+                            'resolution' => $request->resolution,
+                            'ar' => $request->aspect_ratio,
+                            'filesize' => $request->filesize,
+                            'acquisition_device' => $request->acquisition_device,
+                            'media' => $request->media,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'video':
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            'preservation_signature' => $request->preservation_signature,
+                            'original_signature' => $request->original_signature,
+                            'format' => $request->format,
+                            'type_of_signal' => $request->type_of_signal,
+                            'title' => $request->title,
+                            'author' => $request->author,
+                            'year' => $request->year,
+                            'support_material' => $request->support_material,
+                            'color' => $request->color,
+                            'sound' => $request->sound,
+                            'abitdepth' => $request->abit,
+                            'frequency' => $request->fsaudio,
+                            'ar' => $request->aspect_ratio,
+                            'brand' => $request->brand,
+                            'carter_material' => $request->carter_material,
+                            'cover_material' => $request->cover_material,
+                            'standard' => $request->standard,
+                            'fps' => $request->fps,
+                            'resolution' => $request->resolution,
+                            'vbitdepth' => $request->vbit,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'film':
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            'preservation_signature' => $request->preservation_signature,
+                            'original_signature' => $request->original_signature,
+                            'type_of_support' => $request->type_of_support,
+                            'format' => $request->format,
+                            'title' => $request->title,
+                            'author' => $request->author,
+                            'year' => $request->year,
+                            'support_material' => $request->support_material,
+                            'color' => $request->color,
+                            'sound' => $request->sound,
+                            'ar' => $request->aspect_ratio,
+                            'film_brand' => $request->film_brand,
+                            'carter_brand' => $request->carter_brand,
+                            'carter_material' => $request->carter_material,
+                            'cover_material' => $request->cover_material,
+                            'fps' => $request->fps,
+                            'cement_splices' => $request->cement_splices,
+                            'restored_cs' => $request->restored_cs,
+                            'tape_splices' => $request->tape_splices,
+                            'restored_ts' => $request->restored_ts,
+                            'restored_perforations' => $request->restored_perforations,
+                            'restored_frames' => $request->restored_frames,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'digital_copy_vf':
+
+                        // Convert hh:mm:ss → seconds
+                        list($h, $m, $s) = explode(':', $request->duration);
+                        $durationSeconds = $h * 3600 + $m * 60 + $s;
+
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            // BASIC FIELDS
+                            'filename' => $request->signature,
+                            'format' => $request->format,
+                            'id_original' => $request->original_item,
+
+                            // ORIGINAL TYPE (Film / Video)
+                            'original_type' => $request->audiovisual,
+
+                            // VIDEO DIGITAL FIELDS
+                            'codec' => $request->codec,
+                            'bitrate' => $request->bitrate,
+                            'duration' => $durationSeconds,
+                            'abitdepth' => $request->abit,
+                            'channel_config' => $request->channel_config,
+                            'vbitdepth' => $request->vbit,
+                            'resolution' => $request->resolution,
+                            'ar' => $request->aspect_ratio,
+                            'frame_rate' => $request->frame_rate,
+                            'frequency' => $request->fsaudio,
+                            'filesize' => $request->filesize,
+                            'acquisition_device' => $request->acquisition_device,
+                            'media' => $request->media,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    /*case 'original_docs':
+                        $data = [
+                            //'dpo_id' => $request->dpo_id,
                             'user_id' => Auth::user()->id,
-                            'component_id' => $component_id,
+                            //'component_id' => $component_id,
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'type' => $request->type,
@@ -189,12 +440,12 @@ class DPOController extends Controller
                             'created_at' => date('Y-m-d h:i:s')
                         ];
                         // dd($data);
-                        break;
+                        break;*/
                     case 'audiocassette':
                         $data = [
-                            'component_id' => $component_id,
+                            //'component_id' => $component_id,
                             'user_id' => Auth::user()->id,
-                            'dpo_id' => $request->dpo_id,
+                            //'dpo_id' => $request->dpo_id,
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'brand' => $request->brand,
@@ -203,15 +454,14 @@ class DPOController extends Controller
                             'noise_reduction' => $request->noise_reduction,
                             'notes' => $request->notes,
                             'status' => 1,
-                            'created_at' => date('Y-m-d')
+                            'created_at' => date('Y-m-d H:i:s'),
                         ];
-
                         break;
                     case 'dat':
                         $data = [
-                            'component_id' => $component_id,
+                            //'component_id' => $component_id,
                             'user_id' => Auth::user()->id,
-                            'dpo_id' => $request->dpo_id,
+                            //'dpo_id' => $request->dpo_id,
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'brand' => $request->brand,
@@ -219,14 +469,14 @@ class DPOController extends Controller
                             'samplerate' => $request->samplerate,
                             'notes' => $request->notes,
                             'status' => 1,
-                            'created_at' => date('Y-m-d')
+                            'created_at' => date('Y-m-d H:i:s'),
                         ];
                         break;
                     case 'tape_details':
                         $data = [
-                            'dpo_id' => $request->dpo_id,
+                            //'dpo_id' => $request->dpo_id,
                             'user_id' => Auth::user()->id,
-                            'component_id' => $component_id,
+                            //'component_id' => $component_id,
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'brand_of_tape' => $request->brand_of_tape,
@@ -245,15 +495,14 @@ class DPOController extends Controller
                             'eq' => $request->speed_sideB,
                             'notes' => $request->notes,
                             'status' => 1,
-                            'created_at' => date('Y-m-d h:i:s')
+                            'created_at' => date('Y-m-d H:i:s'),
                         ];
-
                         break;
-                    case 'phonographicdisks':
+                    case 'phonographicdisk':
                         $data = [
-                            'dpo_id' => $request->dpo_id,
+                            //'dpo_id' => $request->dpo_id,
                             'user_id' => Auth::user()->id,
-                            'component_id' => $component_id,
+                            //'component_id' => $component_id,
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'brand' => $request->brand,
@@ -263,19 +512,92 @@ class DPOController extends Controller
                             'eq' => $request->eq,
                             'type_of_recording' => $request->type_of_recording,
                             'incisions' => $request->incisions,
-                            'notes' => $request->notes
+                            'notes' => $request->notes,
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'digitalaudio':
+
+                        // Convert hh:mm:ss → seconds
+                        list($h, $m, $s) = explode(':', $request->duration);
+                        $durationSeconds = $h * 3600 + $m * 60 + $s;
+
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            'signature' => $request->signature,
+                            'container' => $request->container,
+                            'encoding' => $request->encoding,
+                            'bitrate' => $request->bitrate,
+                            'bitdepth' => $request->bitdepth,
+                            'duration' => $durationSeconds,
+                            'channel_configuration' => $request->channel_configuration,
+                            'checksum' => $request->checksum,
+                            'frequency' => $request->frequency,
+                            'filesize' => $request->filesize,
+                            'media' => $request->media,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
+                        ];
+                        break;
+                    case 'digital_copy_audio':
+
+                        list($h, $m, $s) = explode(':', $request->duration);
+                        $durationSeconds = $h * 3600 + $m * 60 + $s;
+
+                        $data = [
+                            'user_id' => Auth::id(),
+                            //'component_id' => $component_id,
+                            //'dpo_id' => $request->dpo_id,
+
+                            'filename' => $request->signature,
+                            'container' => $request->container,
+                            'encoding' => $request->encoding,
+                            'original_type' => $request->original_type,   // NOW CORRECT
+                            'id_original' => $request->original_item,
+                            'bitrate' => $request->bitrate,
+                            'bitdepth' => $request->bitdepht,
+                            'duration' => $durationSeconds,
+                            'channel_config' => $request->channel_config,
+                            'checksum' => $request->checksum,
+                            'frequency' => $request->frequency,
+                            'filesize' => $request->filesize,
+                            'acquisition_device' => $request->acquisition_device,
+                            'media' => $request->media,
+                            'notes' => $request->notes,
+
+                            'status' => 1,
+                            'created_at' => date('Y-m-d H:i:s'),
                         ];
                         break;
                 }
 
+                $comp_id = DB::table($request->form_name)->insert($data);
 
-                $insert = DB::table($request->form_name)->insert($data);
+                if ($comp_id) {
+                    $bridge = [
+                        'dpo_id' => $request->dpo_id,
+                        'component_id' => $comp_id,
+                        'comp_type' => $this->buildComponentPath($request),
+                    ];
+
+                    $insert = DB::table('dpo_component_bridge')->insert($bridge);
+                } else {
+                    $insert = false;
+                }
+
                 if ($insert) {
-                    return response()->json(['status' => true, 'message' => 'insert Successfully']);
+                    return response()->json(['status' => true, 'message' => 'Inserted Successfully!']);
                 }
             }
             //code...
         } catch (\Throwable $th) {
+            //error_log($th, 0);
             return response()->json(['status' => false, 'message' => 'You have some error please try later.']);
         }
     }
@@ -487,39 +809,178 @@ class DPOController extends Controller
 
     public function option(Request $request)
     {
-        $result = DB::table('component_config')->where(['key_name' => $request->option, 'key_value' => $request->value/*, 'user_id' => Auth::user()->id*/])->first();
-        if ($result) {
-            return ['status' => false, 'message' => 'Given Name Already exists'];
-        } else {
-            DB::table('component_config')->insert([
-                //'user_id' => Auth::user()->id ,
-                'key_name' => $request->option,
-                'key_value' => $request->value
+        $request->validate([
+            'option' => 'required|string',
+            'value'  => 'required|string'
+        ]);
+
+        $table = $request->option;
+        $value = trim($request->value);
+
+        // Whitelist lookup tables
+        $allowedTables = [
+            'aspect_ratio',
+            'bitdepth',
+            'brand',
+            'channel_configuration',
+            'codec',
+            'dimensions',
+            'equalization',
+            'format_analog',
+            'format_digital',
+            'material',
+            'noise',
+            'resolution',
+            'sample_frequency',
+            'sound_types',
+            'speed',
+            'standard',
+            'stylus',
+            'general_type',
+            'software_type',
+            'type_element',
+        ];
+
+        if (!in_array($table, $allowedTables)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid option table.'
             ]);
-            return ['status' => true, 'message' => 'insert Successfully'];
         }
+
+        // Prevent duplicates
+        if (DB::table($table)->where('value', $value)->exists()) {
+            return response()->json([
+                'status' => false,
+                'message' => 'This value already exists.'
+            ]);
+        }
+
+        // Insert new value
+        DB::table($table)->insert(['value' => $value]);
+
+        return response()->json([
+            'status' => true,
+            'message' => 'Option added successfully.'
+        ]);
     }
 
     public function listOption(Request $request)
     {
-     $response =  DB::table($request->table_name)/*->where('user_id',Auth::user()->id)->pluck('key_value','key_name')*/->get();
+        $table = $request->table_name;
 
-     $data_arr = array();
+        // Whitelist allowed lookup tables
+        $allowedTables = [
+            'aspect_ratio',
+            'bitdepth',
+            'brand',
+            'channel_configuration',
+            'codec',
+            'dimensions',
+            'equalization',
+            'format_analog',
+            'format_digital',
+            'material',
+            'noise',
+            'resolution',
+            'sample_frequency',
+            'sound_types',
+            'speed',
+            'standard',
+            'stylus',
+            'general_type',
+            'software_type',
+            'type_element',
+        ];
 
-     foreach ($response as $item) {
+        if (!in_array($table, $allowedTables)) {
+            return response()->json([
+                'status' => false,
+                'message' => 'Invalid lookup table'
+            ], 400);
+        }
 
-         $data_arr[] = array(
-             "table_id" => $request->table_name,
-             "index"            => $item->id,
-             "value"      => $item->title,
-         );
-     }
-        /*foreach ( $data_arr as $var ) {
-            error_log(implode(", ", $var), 0);
-        }*/
-     return response()->json($data_arr);
-   }
-   public function pdf(Request $request ,$component_id){
+        // Fetch all values from the lookup table
+        $rows = DB::table($table)->orderBy('value')->get();
+
+        // Format response
+        $data = [];
+        foreach ($rows as $row) {
+            $data[] = [
+                'value' => $row->value
+            ];
+        }
+
+        return response()->json($data);
+    }
+
+    public function fetchIDs(Request $request)
+    {
+        $tables = $request->get('tables', []);
+
+        $map = [
+            'audiocassette' => [
+                'table' => 'audiocassette',
+                'label' => 'preservation_signature',
+                'type'  => 'Audio Cassette'
+            ],
+            'dat' => [
+                'table' => 'dat',
+                'label' => 'preservation_signature',
+                'type'  => 'Digital Audio Tape'
+            ],
+            'digital_audio' => [
+                'table' => 'digital_audio',
+                'label' => 'signature',
+                'type'  => 'Digital Audio'
+            ],
+            'phonographicdisk' => [
+                'table' => 'phonographicdisk',
+                'label' => 'preservation_signature',
+                'type'  => 'Phonographic Disk'
+            ],
+            'tape' => [
+                'table' => 'tape',
+                'label' => 'preservation_signature',
+                'type'  => 'Open Reel Tape'
+            ],
+            'photo' => [
+                'table' => 'photo',
+                'label' => 'preservation_signature',
+                'type'  => 'Photograph'
+            ],
+            'video' => [
+                'table' => 'video',
+                'label' => 'preservation_signature',
+                'type'  => 'Video'
+            ],
+            'film' => [
+                'table' => 'film',
+                'label' => 'preservation_signature',
+                'type'  => 'Film'
+            ],
+        ];
+
+        $result = collect();
+
+        foreach ($tables as $t) {
+            if (!isset($map[$t])) {
+                continue;
+            }
+
+            $cfg = $map[$t];
+
+            $rows = DB::table($cfg['table'])
+                ->select('id', $cfg['label'] . ' as label', DB::raw("'" . $cfg['type'] . "' as type"))
+                ->get();
+
+            $result = $result->merge($rows);
+        }
+
+        return response()->json(['items' => $result]);
+    }
+
+    public function pdf(Request $request ,$component_id){
     header("Content-type:application/pdf");
     $result = DB::table('components')->where('id',$component_id)->first();
     return view('pdf.tapedetails');

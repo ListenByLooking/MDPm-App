@@ -20,9 +20,9 @@
             <div class="form-group">
                 <label for="brand">Manufacturer</label>
                 <div class="input-group">
-                    <select id="brand" name="brand" class="form-control" required>
+                    <select id="manufacturer" name="manufacturer" class="brand form-control" required>
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand', this)">+</button>
                 </div>
             </div>
         </div>
@@ -80,7 +80,7 @@
                 <input type="text" id="display" name="display" required class="form-control" />
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-12">
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>

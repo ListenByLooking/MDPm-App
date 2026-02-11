@@ -1,7 +1,7 @@
 services:
     db:
         image: mysql
-        ports: 
+        ports:
             - "3306:3306"
         environment:
             MYSQL_DATABASE: music
@@ -14,13 +14,18 @@ services:
         networks:
             - default
     phpmyadmin:
-        image: phpmyadmin/phpmyadmin
-        links: 
+        image: phpmyadmin/phpmyadmin:5.2.2
+        links:
             - db:db
         ports:
             - 8001:80
         environment:
             MYSQL_USER: csc
             MYSQL_PASSWORD: csc1csc2
+            PMA_HOST: db
+        volumes:
+            - ./config.user.inc.php:/etc/phpmyadmin/config.user.inc.php
+            - ./phpmyadmin-overrides/column_row.twig:/var/www/html/templates/table/insert/column_row.twig
+            - ./phpmyadmin-overrides/Template.php:/var/www/html/libraries/classes/Template.php
 volumes:
     persistent:

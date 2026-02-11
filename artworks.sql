@@ -28,7 +28,7 @@ CREATE TABLE `aspect_ratio` (
                               PRIMARY KEY (`value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-CREATE TABLE `bitdepht` (
+CREATE TABLE `bitdepth` (
                                 `value` varchar(255) NOT NULL,
                                 PRIMARY KEY (`value`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -153,8 +153,8 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`id`, `name`, `last_name`, `phone_number`, `image`, `email`, `email_verified_at`, `password`, `user_type`, `remember_token`, `created_at`, `updated_at`) VALUES
-                                                                                                                                                                                  (1, 'CSC', 'Artworks', '9874563210', 'CSC.jpg', 'csc@gmail.com', NULL, '$2y$10$v.alrcNgmkYmkt66bkdRKO249Zf56lltYYbtI3uy/d.agw.9PANem', 1, 'KpwtijG62TMTfZVEymVKeum2pNN1xaZg8Roy4S81ze1CkwiLXtjWNm4aDodO', '2023-07-27 11:22:06', '2023-07-27 11:22:06'),
-                                                                                                                                                                                  (2, 'Multimedia', 'Artworks', '9874563210', '', 'admin123@gmail.com', NULL, '$2y$10$QBtaABUS5IMd/89yezccD.X64fX4CP3OvWSeve1fMOI7pr0g5ZVDi', 2, NULL, '2024-06-23 06:49:40', NULL);
+                (1, 'CSC', 'Artworks', '9874563210', 'CSC.jpg', 'csc@gmail.com', NULL, '$2y$10$v.alrcNgmkYmkt66bkdRKO249Zf56lltYYbtI3uy/d.agw.9PANem', 1, 'KpwtijG62TMTfZVEymVKeum2pNN1xaZg8Roy4S81ze1CkwiLXtjWNm4aDodO', '2023-07-27 11:22:06', '2023-07-27 11:22:06'),
+                (2, 'Multimedia', 'Artworks', '9874563210', '', 'admin123@gmail.com', NULL, '$2y$10$QBtaABUS5IMd/89yezccD.X64fX4CP3OvWSeve1fMOI7pr0g5ZVDi', 2, NULL, '2024-06-23 06:49:40', NULL);
 
 
 
@@ -473,7 +473,7 @@ CREATE TABLE `documentation` (
   `user_id` bigint(20) UNSIGNED NOT NULL,
   FOREIGN KEY (user_id) REFERENCES users(id),
 --  `component_id` int(11) NOT NULL,
-  `document_type` ENUM('Photos', 'A/V', 'Interviews', 'Docs') NOT NULL,
+  `document_type` ENUM('Photos', 'A/V', 'Interviews', 'Docs')  DEFAULT 'Docs' NOT NULL,
   `document_url` varchar(250) NOT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -575,7 +575,7 @@ CREATE TABLE `film` (
                                   `author` varchar(255) NOT NULL,
                                   `year` year NOT NULL,
                                   `support_material` varchar(255) NOT NULL,
-                                  `color` ENUM('Color', 'B/W', 'Both') NOT NULL,
+                                  `color` ENUM('Color', 'B/W', 'Both')  DEFAULT 'Color' NOT NULL,
                                   `sound` varchar(255) NOT NULL,
                                   `ar` varchar(255) NOT NULL,
                                   `film_brand` varchar(255) NOT NULL,
@@ -607,7 +607,7 @@ CREATE TABLE `general_object` (
                        `preservation_signature` varchar(255) NOT NULL,
                        `name` varchar(255) NOT NULL,
                        `creator` varchar(255) NOT NULL,
-                       `date` date NOT NULL,
+                       `year` year NOT NULL,
                        `description` varchar(255) NOT NULL,
                        `type` varchar(255) NOT NULL,
                        `identifier` varchar(255) NOT NULL,
@@ -775,8 +775,8 @@ CREATE TABLE `phonographicdisk` (
   `rpm` varchar(255) NOT NULL,
   `stylus` varchar(255) NOT NULL,
   `eq` varchar(255) NOT NULL,
-  `type_of_recording` enum('mechanical','electrical') DEFAULT 'mechanical',
-  `incisions` enum('horizontal','vertical') DEFAULT 'horizontal',
+  `type_of_recording` enum('Mechanical','Electrical') DEFAULT 'Mechanical' NOT NULL,
+  `incisions` enum('Horizontal','Vertical') DEFAULT 'Horizontal' NOT NULL,
   `notes` text DEFAULT NULL,
   `status` int(11) NOT NULL,
   `created_at` datetime NOT NULL
@@ -804,7 +804,7 @@ CREATE TABLE `photo` (
                          `author` varchar(255) NOT NULL,
                          `year` year NOT NULL,
                          `support_material` varchar(255) NOT NULL,
-                         `color` ENUM('Color', 'B/W') NOT NULL,
+                         `color` ENUM('Color', 'B/W')  DEFAULT 'Color' NOT NULL,
                          `ar` varchar(255) NOT NULL,
                          `brand` varchar(255) NOT NULL,
                          `dimensions` varchar(255) NOT NULL,
@@ -897,7 +897,7 @@ CREATE TABLE `tape` (
   `material_of_carter` varchar(50) NOT NULL,
   `diameter_of_carter` varchar(50) NOT NULL,
   `tape_width` varchar(255) NOT NULL,
-  `num_of_sides` enum('One', 'Two') NOT NULL,
+  `num_of_sides` enum('One', 'Two')  DEFAULT 'One' NOT NULL,
   `num_of_channels_sideA` int(11) NOT NULL,
   `channels_config_sideA` varchar(255) NOT NULL,
   `speed_sideA` varchar(255) NOT NULL,
@@ -928,12 +928,12 @@ CREATE TABLE `video` (
                         `preservation_signature` varchar(255) NOT NULL,
                         `original_signature` varchar(255) NOT NULL,
                         `format` varchar(255) NOT NULL,
-                        `type_of_signal` ENUM('Analog', 'Digital') NOT NULL,
+                        `type_of_signal` ENUM('Analog', 'Digital')  DEFAULT 'Analog' NOT NULL,
                         `title` varchar(255) NOT NULL,
                         `author` varchar(255) NOT NULL,
                         `year` year NOT NULL,
                         `support_material` varchar(255) NOT NULL,
-                        `color` ENUM('Color', 'B/W', 'Both') NOT NULL,
+                        `color` ENUM('Color', 'B/W', 'Both')  DEFAULT 'Color' NOT NULL,
                         `sound` varchar(255) NOT NULL,
                         `abitdepth` varchar(255) NOT NULL,
                         `frequency` varchar(255) NOT NULL,

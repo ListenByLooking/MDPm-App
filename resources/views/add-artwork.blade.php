@@ -17,11 +17,15 @@ $user = Auth::user();
     #phonographic{ display:none }
     .components_div,.components_div_right{ display: none; }
     .form-group > label {
-    margin: 0px;
-}
-.form-group{
+        margin: 0px;
+    }
+    .form-group{
     margin-bottom: 10px;
-}
+    }
+    .ckeditor-error {
+        border: 1px solid red !important;
+        background: #ffdfdf !important;
+    }
     </style>
 <div class="page-content">
                 <div class="container-fluid">
@@ -137,9 +141,48 @@ $user = Auth::user();
 
 @endsection
 @section('script')
-<script>
+    <script>
+        // Prevent ENTER from closing Bootstrap modals
+        document.addEventListener('keydown', function (e) {
+            if (e.key === 'Enter' && $('.modal.show').length) {
+                e.preventDefault();
+                return false;
+            }
+        });
+    </script>
+    <script>
 
-    let editorValue;
+        //https://stackoverflow.com/questions/77959273/ckeditor-4-22-1-error-throws-an-error-regarding-version-is-not-secure
+
+        /*document.addEventListener('keydown', function (e) {
+            if (e.target.closest('.cke_dialog')) {
+                e.stopImmediatePropagation();
+            }
+        }, true);*/
+
+        // Fix CKEditor dialogs inside Bootstrap 4 modals
+    //$.fn.modal.Constructor.prototype.enforceFocus = function() {};
+
+    // 1. Disable Bootstrap 5 focus trap
+    /*document.addEventListener('shown.bs.modal', function (event) {
+        const modal = event.target;
+        const instance = bootstrap.Modal.getInstance(modal);
+        if (instance) {
+            instance._enforceFocus = function () {};
+        }
+    });*/
+    // Allow CKEditor dialogs to receive focus inside Bootstrap 5 modals
+    /*document.addEventListener('focusin', function (e) {
+        if (
+            e.target.closest('.cke_dialog') ||
+            e.target.classList.contains('cke_dialog_ui_input_text') ||
+            e.target.classList.contains('cke_dialog_ui_input_select')
+        ) {
+            e.stopPropagation();
+        }
+    });*/
+
+    //let editorValue;
     /*ClassicEditor
             .create( document.querySelector( '#ckeditor-classic' ), {
         toolbar: {
@@ -166,28 +209,87 @@ $user = Auth::user();
             .catch(error => {
                     console.error(error);
             });*/
+
+        document.addEventListener('shown.bs.modal', function (event) {
+            //console.log(event.target.id)
+            if (event.target.id === 'Score_modal') {
+                // Disable Bootstrap 5 focus trap for this modal
+                var modal = bootstrap.Modal.getInstance(event.target);
+                if (modal && modal._focustrap) {
+                    modal._focustrap.deactivate();
+                }
+
+                /*CKEDITOR.on('notificationShow', function (evt) {
+                    if (evt.data.message && evt.data.message.includes('not secure')) {
+                        evt.cancel();
+                    }
+                });*/
+            }
+        });
+
+        // Initialize CKEditor
+        if (!CKEDITOR.instances.editor) {
+            CKEDITOR.replace('ckeditor-classic');
+        }
+
     //editorValue = CKEDITOR.document.getById( 'ckeditor-classic' );
-    CKEDITOR.replace( 'ckeditor-classic' );
-    editorValue = CKEDITOR.instances['ckeditor-classic'];
-    document.getElementById('score_form').onclick = function() {
+    /*CKEDITOR.replace('ckeditor-classic'/*, {
+        removePlugins: 'required'
+    });*/
+
+    /*CKEDITOR.on('instanceReady', function (evt) {
+        evt.editor.on('required', function (e) {
+            e.cancel(); // stop CKEditor from firing its native alert
+        });
+    });*/
+    //editorValue = CKEDITOR.instances['ckeditor-classic'];
+    //document.getElementById('score_form').onclick = function() {
         //alert( CKEDITOR.instances['ckeditor-classic'].getData().replace(/<p>[&nbsp;\s*]+<\/p>/,'') );
         //alert(CKEDITOR.instances['ckeditor-classic'].getData());
         //var messageLength1 = CKEDITOR.instances['ckeditor-classic'].getData().length;
-        let message = CKEDITOR.instances['ckeditor-classic'].getData().replaceAll(/<p>[&nbsp;\s*]+<\/p>\n*/g,'');
-        CKEDITOR.instances['ckeditor-classic'].setData(message);
+    //    let message = CKEDITOR.instances['ckeditor-classic'].getData().replaceAll(/<p>[&nbsp;\s*]+<\/p>\n*/g,'');
+    //    CKEDITOR.instances['ckeditor-classic'].setData(message);
         //alert( messageLength1 + ', ' + messageLength2);
         //alert(CKEDITOR.instances['ckeditor-classic'].getData().replaceAll(/<p>[&nbsp;\s*]+<\/p>\n*/g,''));
         //if( messageLength1 != messageLength2 && !messageLength2 ) {
             //alert( 'Please enter a message' );
         //}
-    };
-    editorValue.on( 'required', function( evt ) {
+    //};
+
+    document.getElementById('score_form').addEventListener('submit', function (e) {
+        const editor = CKEDITOR.instances['ckeditor-classic'];
+        editor.container.addClass('ckeditor-error');
+        const raw = editor.getData();
+
+        // Remove empty paragraphs, whitespace, &nbsp;
+        const cleaned = raw.replace(/<p>(?:&nbsp;|\s)*<\/p>/g, '').trim();
+
+        if (!cleaned) {
+            e.preventDefault(); // stop form submission
+            alert('Score content is required!');
+            editor.focus();
+            return false;
+        }
+
+        // Put cleaned content back into the textarea before submit
+        editor.setData(cleaned);
+    });
+
+    //editorValue.on( 'required', function( evt ) {
         //editorValue.setCustomValidity('Please enter a valid Text!');
         //editorValue.style.border = 'solid 1px red';
         //editorValue.style.background = '#ffdfdf'";
-        alert( 'Score content is required!' );
-        evt.cancel();
-    } );
+    //    alert( 'Score content is required!' );
+    //    evt.cancel();
+    //} );
+
+    $('#Score_modal').on('hidden.bs.modal', function () {
+        const editor = CKEDITOR.instances['ckeditor-classic'];
+        if (editor) {
+            editor.container.removeClass('ckeditor-error');
+        }
+    });
+
 
     const doc_arr = [];
     const activity = {
@@ -218,21 +320,23 @@ $user = Auth::user();
             $('.components_div_right').hide();
             $('#append_response_form').html('');
             $('#append_response_form').html($('#hardware').html());
-            dpo.getOption('hardware');
+            ['brand'].forEach(field => dpo.getOption(field));
         } else if (input.value == 'Software'){
             $('.components_div_right').hide();
             $('#append_response_form').html('');
             $('#append_response_form').html($('#software').html());
+            ['brand', 'software_type'].forEach(field => dpo.getOption(field));
         }  else if (input.value == 'General'){
             $('.components_div_right').hide();
             $('#append_response_form').html('');
             $('#append_response_form').html($('#general').html());
+            ['brand', 'material', 'general_type'].forEach(field => dpo.getOption(field));
         }
        },
        audiovisual:function(input){
             $('.components_div_right').hide()
             $('#originaldocs_sub_parent,#originaldocs_parent').hide();
-            $('#originaldocs').val(null).change();
+            $('#originaldocs,#originaldocs_sub').val(null).change();
             if(input.value == 'Audio' || input.value == 'Film' || input.value == 'Video' || input.value == 'Photo')
              {
                 $(`#originaldocs_parent`).show();
@@ -245,31 +349,52 @@ $user = Auth::user();
             $('#append_response_form').html('');
             if(input.value == 'Digital' && audio_visual == 'Film')
             {
-                $('#append_response_form').html($('#vfdigital_copy').html());
+                $('#append_response_form').html($('#digital_copy_vf').html());
                 document.getElementById("title").innerText = "Film Digital Copy";
-                dpo.getOption('vfdigital_copy');
+                ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'resolution', 'aspect_ratio', 'speed', 'sample_frequency'].forEach(field => dpo.getOption(field));
+                dpo.populateIDs('originalID', [ 'film' ]);
 
             }else if(input.value == 'Original' && audio_visual == 'Film') {
                 $('#append_response_form').html($('#film').html());
+                ['brand', 'format_analog', 'aspect_ratio', 'type_element', 'material', 'sound_types', 'speed'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'Digital' && audio_visual == 'Audio')
             {
-                $('#append_response_form').html($('#adigital_copy').html());
+                $('#append_response_form').html($('#digital_copy_audio').html());
+                ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'sample_frequency'].forEach(field => dpo.getOption(field));
+                dpo.populateIDs('originalID', [ 'audiocassette', 'dat', 'digital_audio', 'phonographicdisk', 'tape' ]);
+                $('#original_item').on('change', function () {
+
+                    const selectedOption = $(this).find('option:selected');
+                    const optgroup = selectedOption.closest('optgroup');
+
+                    if (optgroup.length) {
+                        let type = optgroup.attr('label').toLowerCase().replace(/\b\w/g, c => c.toUpperCase()); // e.g. "Audio Cassette"
+                        $('#original_type').val(type);
+                    }
+                });
             }else if(input.value == 'Original' && audio_visual == 'Audio')
             {
-                $('#originaldocs_sub_parent').show()
+                //$('#originaldocs_sub').val(null).trigger('change');
+                $('#originaldocs_sub_parent').show();
             }else if(input.value == 'Original' && audio_visual == 'Video')
             {
                 $('#append_response_form').html($('#video').html());
+                ['format_analog', 'sound_types', 'bitdepth', 'sample_frequency', 'aspect_ratio', 'brand', 'material', 'standard', 'speed', 'resolution'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'Digital' && audio_visual == 'Video')
             {
-                $('#append_response_form').html($('#vfdigital_copy').html());
+                $('#append_response_form').html($('#digital_copy_vf').html());
                 document.getElementById("title").innerText = "Video Digital Copy";
+                ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'resolution', 'aspect_ratio', 'speed', 'sample_frequency'].forEach(field => dpo.getOption(field));
+                dpo.populateIDs('originalID', [ 'video' ]);
             }else if(input.value == 'Original' && audio_visual == 'Photo')
             {
                 $('#append_response_form').html($('#photo').html());
+                ['format_analog', 'aspect_ratio', 'brand', 'material', 'type_element'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'Digital' && audio_visual == 'Photo')
             {
-                $('#append_response_form').html($('#pdigital_copy').html());
+                $('#append_response_form').html($('#digital_copy_photo').html());
+                ['format_digital', 'bitdepth', 'resolution', 'aspect_ratio'].forEach(field => dpo.getOption(field));
+                dpo.populateIDs('originalID', [ 'photo' ]);
             }
 
             $('#Component_modal > .select3').select2({
@@ -282,21 +407,26 @@ $user = Auth::user();
             if(input.value == 'audiocassette')
             {
                 $('#append_response_form').html($('#audiocassette').html());
+                ['brand', 'equalization', 'noise'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'dat')
             {
                 $('#append_response_form').html($('#dat').html());
+                ['brand', 'sample_frequency'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'openreeltape')
             {
                 $('#append_response_form').html($('#tape_details').html());
-            }else if(input.value == 'phonographicdisks')
+                ['brand', 'material', 'dimensions', 'channel_configuration', 'speed', 'equalization', 'noise'].forEach(field => dpo.getOption(field));
+            }else if(input.value == 'phonographicdisk')
             {
-                $('#append_response_form').html($('#phonographic').html());
+                $('#append_response_form').html($('#phonographicdisk').html());
+                ['brand', 'stylus', 'speed', 'equalization'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'digitalaudio')
             {
                 $('#append_response_form').html($('#digitalaudio').html());
+                ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'sample_frequency'].forEach(field => dpo.getOption(field));
             }
 
-            dpo.getOption();
+            //dpo.getOption();
        },
 
        //component section Start
@@ -362,44 +492,173 @@ $user = Auth::user();
 
             }
         },
-        score:function()
-        {
-            var form = $("#score_form");
-            var artwork_id = $("#artwork_id").val();
-            var Content = editorValue.getData();
-            $.ajax({
-                    type:"POST",
-                    url:form.attr("route"),
-                    data: { _token:'{{ csrf_token() }}' , score:Content , artwork_id:artwork_id , dpo_id:'{{ $dpo_id }}' },//only input
-                    datatype:"json",
-                    success: function(response){
-                        $('#Score_modal').modal('hide');
-                        if(response.status)
-                        {
-                            editorValue.setData("");
-                            Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
-                                .then((result) => ($('#dpo-table').DataTable().ajax.reload()))
-                        }else{
-                            Swal.fire({icon:"error",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
-                        }
-                    }
+        score: function () {
+
+            const editor = CKEDITOR.instances['ckeditor-classic'];
+            let raw = editor.getData();
+
+            // 1. Clean obvious empty HTML
+            let cleaned = raw
+                .replace(/<p>(?:&nbsp;|\s|<br>)*<\/p>/gi, '')  // remove empty <p>
+                .replace(/<br\s*\/?>/gi, '')                  // remove <br>
+                .trim();
+
+            // 2. Check if there is at least one image
+            const hasImage = /<img\b[^>]*>/i.test(raw);
+
+            // 3. Extract visible text (strip HTML)
+            const textOnly = cleaned
+                .replace(/<[^>]+>/g, '') // remove HTML tags
+                .replace(/&nbsp;/g, ' ') // convert &nbsp;
+                .trim();
+
+            // 4. Validation rules:
+            //    - If there is an image → OK (even if no text)
+            //    - If no image → must contain real text
+            if (!hasImage && !textOnly) {
+                editor.container.addClass('ckeditor-error');
+                Swal.fire({
+                    icon: "error",
+                    text: "Score content is required!",
+                    showCancelButton: false,
+                    confirmButtonClass: "btn btn-primary w-xs mb-1",
+                    confirmButtonText: "Close",
+                    buttonsStyling: false,
+                    showCloseButton: true
                 });
-        },
-        save:function(){
-            var component_form = $('#component_form').serializeArray();
-            component_form.push({ name: "dpo_id", value: "{{ $dpo_id }}" })
+                editor.focus();
+                return;
+            } else {
+                editor.container.removeClass('ckeditor-error');
+            }
+
+            // 5. Update editor with cleaned content
+            editor.setData(cleaned);
+
+            // Continue with your AJAX logic...
+            const form = $("#score_form");
+            const artwork_id = $("#artwork_id").val();
+
             $.ajax({
-                url:'{{ route("dpo.component") }}',
-                method:"post",
-                data:component_form ,
-                datatype:"json",
-                success:function(response)
-                {
-                    Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
-                    $('#Component').val(null).change()
-                    dpo.list();
+                type: "POST",
+                url: form.attr("route"),
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    score: cleaned,
+                    artwork_id: artwork_id,
+                    dpo_id: '{{ $dpo_id }}'
+                },
+                datatype: "json",
+                success: function (response) {
+
+                    $('#Score_modal').modal('hide');
+
+                    if (response.status) {
+                        editor.setData("");
+
+                        Swal.fire({
+                            icon: "success",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        }).then(() => {
+                            $('#dpo-table').DataTable().ajax.reload();
+                        });
+
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+                    }
                 }
-            })
+            });
+        },
+        save: function () {
+
+            let component_form = $('#component_form').serializeArray();
+            component_form.push({ name: "dpo_id", value: "{{ $dpo_id }}" });
+
+            $.ajax({
+                url: '{{ route("dpo.component") }}',
+                method: "POST",
+                data: component_form,
+                dataType: "json",
+
+                success: function (response) {
+
+                    $('#Component_modal').modal('hide');
+
+                    if (response.status) {
+                        // SUCCESS CASE
+                        Swal.fire({
+                            icon: "success",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+
+                        $('#Component').val(null).change();
+                        dpo.list();
+
+                    } else {
+                        // INSERT FAILED (response.status = false)
+                        Swal.fire({
+                            icon: "error",
+                            text: response.message || "Insert failed.",
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+                    }
+                },
+
+                error: function (xhr, status, error) {
+                    // SERVER / NETWORK / VALIDATION ERRORS
+
+                    let message = "An unexpected error occurred.";
+
+                    // Laravel validation errors
+                    if (xhr.status === 422 && xhr.responseJSON?.errors) {
+                        message = Object.values(xhr.responseJSON.errors)
+                            .flat()
+                            .join("\n");
+                    }
+
+                    // Laravel exception message
+                    else if (xhr.responseJSON?.message) {
+                        message = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: "error",
+                        text: message,
+                        showCancelButton: true,
+                        showConfirmButton: false,
+                        cancelButtonClass: "btn btn-primary w-xs mb-1",
+                        cancelButtonText: "Close",
+                        buttonsStyling: false,
+                        showCloseButton: true
+                    });
+                }
+            });
         },
         list:function()
         {
@@ -442,45 +701,175 @@ $user = Auth::user();
                 //         }
             });
         },
-        addOption:function(option){
-            const userInput = prompt('Please enter option:', '');
-            if (userInput !== null) {
-                $.ajax({
-                    url:'{{ route("dpo.option") }}',
-                    method:"post",
-                    data:{_token:'{{ csrf_token() }}' , option:option , value:userInput},
-                    datatype:"json",
-                    success:function(response)
-                    {
-                        if(response.status)
-                        {
-                            $(`#${option}`).append(`<option value="${userInput}">${userInput}</option>`)
-                            Swal.fire({icon:"success",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
-                        }else{
-                            Swal.fire({icon:"error",text:response.message,showCancelButton:!0,showConfirmButton:!1,cancelButtonClass:"btn btn-primary w-xs mb-1",cancelButtonText:"Close",buttonsStyling:!1,showCloseButton:!0})
-                        }
-                    }
-                })
+        addOption: function(option, clickedButton = null) {
+
+            let userInput = prompt('Please enter option:', '');
+            if (userInput === null) return; // user cancelled
+
+            userInput = userInput.trim();
+            if (userInput === '') {
+                Swal.fire({
+                    icon: "error",
+                    text: "Value cannot be empty.",
+                    showCancelButton: true,
+                    showConfirmButton: false,
+                    cancelButtonClass: "btn btn-primary w-xs mb-1",
+                    cancelButtonText: "Close",
+                    buttonsStyling: false,
+                    showCloseButton: true
+                });
+                return;
             }
-        },
-        getOption:function(id){
 
-            $(`#${id} select`).map(function() {
+            // Prevent duplicates in ANY select with this class
+            let duplicateFound = false;
+            $(`select.${option} option`).each(function() {
+                if ($(this).val().toLowerCase() === userInput.toLowerCase()) {
+                    duplicateFound = true;
+                }
+            });
 
-                $.ajax({
-                    url: '{{ route("dpo.listOption") }}',
-                    method: "get",
-                    data: { _token:'{{ csrf_token() }}' , table_name:this.id },
-                    datatype: "json",
-                    success: function (response) {
-                        $.each(response, function (index, value) {
-                            //alert(`${value['table_id']}`);
-                            //alert($(`#append_response_form #${value['table_id']}`).html());
-                            $(`#append_response_form #${value['table_id']}`).append(`<option value="${value['index']}">${value['value']}</option>`)
-                        })
+            if (duplicateFound) {
+                Swal.fire({
+                    icon: "warning",
+                    text: "This value already exists.",
+                    showCancelButton: true,
+                    showConfirmButton: false,
+                    cancelButtonClass: "btn btn-primary w-xs mb-1",
+                    cancelButtonText: "Close",
+                    buttonsStyling: false,
+                    showCloseButton: true
+                });
+                return;
+            }
+
+            // Send to backend
+            $.ajax({
+                url: '{{ route("dpo.option") }}',
+                method: "post",
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    option: option,
+                    value: userInput
+                },
+                datatype: "json",
+                success: function(response) {
+
+                    if (response.status) {
+
+                        // Update ALL selects with this class
+                        $(`select.${option}`).each(function() {
+                            $(this).append(
+                                `<option value="${userInput}">${userInput}</option>`
+                            );
+                        });
+
+                        // If we know which "+" button was clicked, select only that dropdown
+                        if (clickedButton) {
+                            const selectToUpdate = $(clickedButton).closest('.input-group').find(`select.${option}`);
+                            selectToUpdate.val(userInput);
+                        }
+
+                        Swal.fire({
+                            icon: "success",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+
+                    } else {
+
+                        Swal.fire({
+                            icon: "error",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
                     }
-                })
-            }).get();
+                }
+            });
+        },
+        getOption: function(field) {
+
+            const selects = $(`select.${field}`);
+
+            $.ajax({
+                url: '{{ route("dpo.listOption") }}',
+                method: "get",
+                data: { table_name: field },
+                datatype: "json",
+                success: function (response) {
+
+                    selects.each(function() {
+
+                        const select = $(this);
+
+                        // Clear existing options
+                        select.empty();
+
+                        // Add a placeholder so nothing is selected by default
+                        select.append(`<option value="" disabled selected>Select an option</option>`);
+
+                        // Populate options
+                        response.forEach(item => {
+                            select.append(`<option value="${item.value}">${item.value}</option>`);
+                        });
+                    });
+                }
+            });
+        },
+        populateIDs: function(field, tables) {
+
+            const selects = $(`select.${field}`);
+
+            $.ajax({
+                url: '{{ route("dpo.fetchIDs") }}',
+                method: "get",
+                data: { tables: tables },
+                datatype: "json",
+
+                success: function (response) {
+
+                    selects.each(function() {
+
+                        const select = $(this);
+
+                        select.empty();
+                        select.append(`<option value="" disabled selected>Select an option</option>`);
+
+                        const groups = {};
+
+                        response.items.forEach(item => {
+                            if (!groups[item.type]) groups[item.type] = [];
+                            groups[item.type].push(item);
+                        });
+
+                        Object.keys(groups).forEach(type => {
+                            const optgroup = $(`<optgroup label="${type.toUpperCase()}"></optgroup>`);
+
+                            groups[type].forEach(item => {
+                                optgroup.append(
+                                    `<option value="${item.id}">${item.label} (ID ${item.id})</option>`
+                                );
+                            });
+
+                            select.append(optgroup);
+                        });
+
+                        if (select.hasClass('select2')) {
+                            select.trigger('change');
+                        }
+                    });
+                }
+            });
         }
     }
     dpo.list();
@@ -502,13 +891,15 @@ $user = Auth::user();
 {
     Swal.fire({
         html:'<div class="mt-3"><lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon><div class="mt-4 pt-2 fs-15 mx-5"><h4>Are you Sure?</h4><p class="text-muted mx-4 mb-0">Are you Sure You want to Delete this from all DPOs?</p></div></div>',
-        showCancelButton:!0,
-        confirmButtonClass:"btn btn-primary w-xs me-2 mb-1",
-        confirmButtonText:"Yes, Delete It!",
-        cancelButtonClass:"btn btn-danger w-xs mb-1",
-        buttonsStyling:!1,
-        showCloseButton:!0,
-        focusCancel:!0
+        showCancelButton: true,
+        confirmButtonText: "Yes, Delete It!",
+        customClass: {
+            confirmButton: 'btn btn-primary w-xs me-2 mb-1',
+            cancelButton: 'btn btn-danger w-xs mb-1'
+        },
+        buttonsStyling: false,
+        showCloseButton: true,
+        focusCancel: true
     }).then((result) => {
         if (result.isConfirmed) {
             $.ajax({
@@ -521,12 +912,12 @@ $user = Auth::user();
                     Swal.fire({
                             icon:"success",
                             text:'One row deleted successfully',
-                            showCancelButton:!0,
-                            showConfirmButton:!1,
+                            showCancelButton: true,
+                            showConfirmButton: false,
                             cancelButtonClass:"btn btn-primary w-xs mb-1",
                             cancelButtonText:"Close",
-                            buttonsStyling:!1,
-                            showCloseButton:!0})
+                            buttonsStyling: false,
+                            showCloseButton: true})
                         .then((result) => $('#dpo-table').DataTable().ajax.reload())
                 }
             })

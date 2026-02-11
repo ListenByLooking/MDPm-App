@@ -20,19 +20,16 @@
             <div class="form-group">
                 <label for="developer">Developer</label>
                 <div class="input-group">
-                    <select id="developer" name="developer" required="" class="form-control">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
+                    <select id="developer" name="developer" required class="brand form-control">
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('brand', this)">+</button>
                 </div>
             </div>
         </div>
         <div class="col-4">
             <div class="form-group">
                 <label for="version">Version</label>
-                <input type="text" id="version" name="version" pattern="[0-9]+\.?[0-9]*\.?[0-9]*" required class="form-control" />
+                <input type="text" id="version" name="version" placeholder="10.11.12" pattern="[0-9]+\.?[0-9]*\.?[0-9]*" required class="form-control" />
             </div>
         </div>
         <div class="col-4">
@@ -51,12 +48,9 @@
             <div class="form-group">
                 <label for="developer">Type</label>
                 <div class="input-group">
-                    <select id="type" name="type" required="" class="form-control">
-                        <option value="A">A</option>
-                        <option value="B">B</option>
-                        <option value="C">C</option>
+                    <select id="type" name="type" required class="software_type form-control">
                     </select>
-                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('phone_brand')">+</button>
+                    <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('software_type', this)">+</button>
                 </div>
             </div>
         </div>
@@ -86,8 +80,8 @@
         </div>
         <div class="col-4">
             <div class="form-group">
-                <label for="plugin">Plug-in/Library</label>
-                <input type="url" id="plugin" class="form-control" name="plugin" required />
+                <label for="library">Plug-in/Library</label>
+                <input type="url" id="library" class="form-control" name="library" required />
             </div>
         </div>
         <div class="col-4">
@@ -96,7 +90,7 @@
                 <input type="text" id="description" class="form-control" name="description" required />
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-8">
             <div class="form-group">
                 <label for="notes">Notes</label>
                 <textarea id="notes" name="notes" rows="3" class="form-control"></textarea>

@@ -21,10 +21,10 @@
                                             <form method="post" action="{{ route('profile.update') }}" enctype="multipart/form-data">
                                                 @csrf
                                                 <div class="row">
-                                                    <div class="col-4">
-                                                        <center><img height="250" width="100%" id="imagePreview" class="rounded-circle" src="{{ asset($user->image?'public/images/'.$user->image:'assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" style=""></center>
+                                                    <div class="col-3">
+                                                            <img height="250" id="imagePreview" class="rounded-circle" src="{{ asset($user->image?'public/images/'.$user->image:'assets/images/users/avatar-1.jpg') }}" alt="Header Avatar" style="" />
                                                     </div>
-                                                    <div class="col-8">
+                                                    <div class="col-9">
                                                         <div class="row">
                                                             <div class="col-lg-6">
                                                                 <div class="mb-3">
