@@ -26,6 +26,10 @@ $user = Auth::user();
         border: 1px solid red !important;
         background: #ffdfdf !important;
     }
+    .no-transition {
+        transition: none !important;
+        animation: none !important;
+    }
     </style>
 <div class="page-content">
                 <div class="container-fluid">
@@ -41,21 +45,19 @@ $user = Auth::user();
                     </div>
                         <!--end col-->
                         <div class="row">
-                            <div class="col-6">
+                            <div class="col-4">
                                 <div class="card ">
                                     <div class="card-header bg-secondary-subtle" >
                                         <h5 class="card-title mb-0 ">Create new:</h5>
-                                        <hr>
+                                        <hr style="margin-bottom: 0;">
                                     </div>
                                     <div class="card-body bg-secondary-subtle pt-0">
                                             <div class="row">
-                                                <div class="col-4 mb-2">
+                                                <div class="d-flex justify-content-between w-100">
                                                     <button class="btn btn-primary" type="button" onclick="activity.dpotypes('Component')">Component</button>
-                                                </div>
-                                                <div class="col-4 mb-2" style="text-align: center;">
+
                                                     <button class="btn btn-primary" type="button" onclick="activity.dpotypes('Score')">Score</button>
-                                                </div>
-                                                <div class="col-4 mb-2" style="text-align: right;">
+
                                                     <button class="btn btn-primary" type="button" onclick="activity.dpotypes('Documentation')">Documentation</button>
                                                     {{-- <div class="form-group mb-2">
                                                             <label for="title" class="form-label">DPO Type</label>
@@ -82,29 +84,39 @@ $user = Auth::user();
                                 </div>
                             </div>
 
-                            <div class="col-6">
+                            <div class="col-8">
                                 <div class="card ">
                                     <div class="card-header bg-secondary-subtle" >
                                         <h5 class="card-title mb-0 ">Add from existing:</h5>
-                                        <hr>
+                                        <hr style="margin-bottom: 0;">
                                     </div>
+                                    <form method="POST" action="javascript:activity.addBridgeToCurrent()" id="addBridgeRow_form">
                                     <div class="card-body bg-secondary-subtle pt-0">
                                         <div class="row">
-                                            <div class="col-2 mb-2 align-middle" style="text-align: right; padding-right: 0; display: flex;"><label style="margin: auto 0 auto auto;">Entry type:</label></div>
-                                            <div class="col-5 mb-2">
-                                                <select class="form-control select3" name="format">
-                                                    <option value="" disabled selected>Select your option</option>
+                                            <div class="col-auto align-middle" style="text-align: right; padding-right: 0; display: flex;"><label for="entry_type" style="margin: auto 0 auto auto;">Entry type:</label></div>
+                                            <div class="col-3">
+                                                <select class="form-control" name="format" id="entry_type" required>
+                                                    <option value="" disabled selected>Select a type</option>
                                                     <option value="documentation">Documentation</option>
                                                     <option value="score">Score</option>
-                                                    <option value="option 3">Option 3</option>
+                                                    <option value="general object">General Object</option>
+                                                    <option value="hardware">Hardware</option>
+                                                    <option value="software">Software</option>
+                                                    <option value="audio/visual">Audio/Visual</option>
                                                 </select>
                                             </div>
-                                            <div class="col-2 mb-2" style="text-align: right; padding-right: 0; display: flex;"><label style="margin: auto 0 auto auto;">Entry id:</label></div>
-                                            <div class="col-3 mb-2">
-                                                <input type="number" class="form-control" name="selector_id" placeholder="0">
+                                            <div class="col-auto" style="text-align: right; padding-right: 0; margin-left: 1rem; display: flex;"><label style="margin: auto 0 auto auto;">Entry ID:</label></div>
+                                            <div class="col">
+                                                <select class="form-control selector_id" name="selector_id" required>
+                                                    <option value="" disabled selected>Select an element</option>
+                                                </select>
+                                            </div>
+                                            <div class="col-auto" style="text-align: left; padding-left: 0; display: flex;">
+                                                <button class="btn btn-primary" type="submit">Add</button>
                                             </div>
                                         </div>
                                     </div>
+                                    </form>
                                 </div>
                             </div>
 
@@ -148,6 +160,50 @@ $user = Auth::user();
                 e.preventDefault();
                 return false;
             }
+        });
+
+        const ENTRY_TYPE_TABLES = {
+            documentation: ["documentation"],
+            score: ["score"],
+            "general object": ["general_object"],
+            hardware: ["hardware"],
+            software: ["software"],
+            "audio/visual": [
+                "video",
+                "digital_copy_vf",
+                "photo",
+                "digital_copy_photo",
+                "film",
+                "audiocassette",
+                "dat",
+                "tape",
+                "phonographicdisk",
+                "digital_audio",
+                "digital_copy_audio"
+            ]
+        };
+
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const entryTypeSelect = document.getElementById("entry_type");
+            const idSelect = document.querySelector("input[name='selector_id']");
+
+            entryTypeSelect.addEventListener("change", function () {
+
+                const selected = this.value;
+
+                // Find tables for this entry type
+                const tables = ENTRY_TYPE_TABLES[selected];
+
+                if (!tables) {
+                    console.warn("No table mapping for:", selected);
+                    return;
+                }
+
+                // Call your existing function
+                dpo.populateIDs("selector_id", tables, false, true);
+            });
+
         });
     </script>
     <script>
@@ -309,7 +365,47 @@ $user = Auth::user();
            $('.dpo_parents').hide();
            $(`#${input}_parent`).show();
        },
-       component:function(input){
+        addBridgeToCurrent: function()
+        {
+            const bridge_Id = $('.selector_id').val();
+
+            $.ajax({
+                type: "POST",
+                url: '{{ route("dpo.addExisting") }}',
+                data: {
+                    _token: '{{ csrf_token() }}',
+                    dpo_id: "{{ $dpo_id }}",
+                    bridge_id: bridge_Id,
+                },
+                success: function(response){
+                    if(response.status){
+                        Swal.fire({
+                            icon:"success",
+                            text:response.message,
+                            showCancelButton:!0,
+                            showConfirmButton:!1,
+                            cancelButtonClass:"btn btn-primary w-xs mb-1",
+                            cancelButtonText:"Close",
+                            buttonsStyling:!1,
+                            showCloseButton:!0
+                        }).then(() => $('#dpo-table').DataTable().ajax.reload());
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            text: response.message,
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+                    }
+                }
+            });
+        },
+
+        component:function(input){
         $('.components_div').hide();
         $('.components_div_right').hide()
         $('#Audiovisual').val(null).change();
@@ -352,7 +448,7 @@ $user = Auth::user();
                 $('#append_response_form').html($('#digital_copy_vf').html());
                 document.getElementById("title").innerText = "Film Digital Copy";
                 ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'resolution', 'aspect_ratio', 'speed', 'sample_frequency'].forEach(field => dpo.getOption(field));
-                dpo.populateIDs('originalID', [ 'film' ]);
+                dpo.populateIDs('originalID', [ 'film' ], true);
 
             }else if(input.value == 'Original' && audio_visual == 'Film') {
                 $('#append_response_form').html($('#film').html());
@@ -361,7 +457,7 @@ $user = Auth::user();
             {
                 $('#append_response_form').html($('#digital_copy_audio').html());
                 ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'sample_frequency'].forEach(field => dpo.getOption(field));
-                dpo.populateIDs('originalID', [ 'audiocassette', 'dat', 'digital_audio', 'phonographicdisk', 'tape' ]);
+                dpo.populateIDs('originalID', [ 'audiocassette', 'dat', 'digital_audio', 'phonographicdisk', 'tape' ], true);
                 $('#original_item').on('change', function () {
 
                     const selectedOption = $(this).find('option:selected');
@@ -385,7 +481,7 @@ $user = Auth::user();
                 $('#append_response_form').html($('#digital_copy_vf').html());
                 document.getElementById("title").innerText = "Video Digital Copy";
                 ['format_digital', 'codec', 'bitdepth', 'channel_configuration', 'resolution', 'aspect_ratio', 'speed', 'sample_frequency'].forEach(field => dpo.getOption(field));
-                dpo.populateIDs('originalID', [ 'video' ]);
+                dpo.populateIDs('originalID', [ 'video' ], true);
             }else if(input.value == 'Original' && audio_visual == 'Photo')
             {
                 $('#append_response_form').html($('#photo').html());
@@ -394,7 +490,7 @@ $user = Auth::user();
             {
                 $('#append_response_form').html($('#digital_copy_photo').html());
                 ['format_digital', 'bitdepth', 'resolution', 'aspect_ratio'].forEach(field => dpo.getOption(field));
-                dpo.populateIDs('originalID', [ 'photo' ]);
+                dpo.populateIDs('originalID', [ 'photo' ], true);
             }
 
             $('#Component_modal > .select3').select2({
@@ -610,10 +706,12 @@ $user = Auth::user();
                             cancelButtonText: "Close",
                             buttonsStyling: false,
                             showCloseButton: true
+                        }).then(() => {
+                            $('#Component').val(null).change();
+                            $('#dpo-table').DataTable().ajax.reload();
                         });
 
-                        $('#Component').val(null).change();
-                        dpo.list();
+                        //dpo.list();
 
                     } else {
                         // INSERT FAILED (response.status = false)
@@ -678,7 +776,7 @@ $user = Auth::user();
                 columns: [
                     //{ data: 'id' , },
                     { data: 'component_id' , name: 'second', },
-                    { data: 'comp_type' },
+                    { data: 'component_type' },
                     /*{ data: 'component' },
                     { data: 'audio_visual' },
                     { data: 'original_docs' },
@@ -700,6 +798,78 @@ $user = Auth::user();
                 //             }
                 //         }
             });
+
+            // When table reloads → refresh the second dropdown
+                $('#dpo-table').on('xhr.dt', function () {
+
+                        const entryType = $('#entry_type').val();
+
+                        if (!entryType) return;
+
+                        const tables = ENTRY_TYPE_TABLES[entryType];
+
+                        if (!tables) return;
+
+                        dpo.populateIDs("selector_id", tables, false, true);
+                });
+
+            // Fires ONLY when page is restored from Back/Forward cache
+            window.addEventListener("pageshow", function (event) {
+                if (event.persisted) {
+
+                    // 1. Reset both dropdowns
+                    $('#entry_type').val('').trigger('change');
+                    $('.selector_id').empty().append('<option value="" disabled selected>Select an element</option>').trigger('change');
+
+                    // 2. Reload the table
+                    $('#dpo-table').DataTable().ajax.reload(null, false);
+
+                    $('#Component').val(null).change();
+                    CKEDITOR.instances['ckeditor-classic'].setData("");
+                    $('#Documentation_response').html('');
+                    $('#Documentation').val(null).change();
+
+                    const modals = ['Component_modal', 'Score_modal', 'Documentation_modal'];
+
+                    modals.forEach(id => {
+                        const modalEl = document.getElementById(id);
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (!modal) return;
+
+                        // Add no-transition BEFORE hide starts
+                        modalEl.classList.add('no-transition');
+
+                        // Also disable transitions on ANY existing backdrop
+                        document.querySelectorAll('.modal-backdrop').forEach(b => {
+                            b.classList.add('no-transition');
+                        });
+
+                        // Hide the modal
+                        modal.hide();
+
+                        // Bootstrap may create a NEW backdrop during hide,
+                        // so we wait a tick and disable transitions on that too.
+                        setTimeout(() => {
+                            document.querySelectorAll('.modal-backdrop').forEach(b => {
+                                b.classList.add('no-transition');
+                            });
+                        }, 10);
+
+                        // Cleanup after everything is removed
+                        setTimeout(() => {
+                            modalEl.classList.remove('no-transition');
+                            document.querySelectorAll('.modal-backdrop').forEach(b => {
+                                b.classList.remove('no-transition');
+                            });
+                        }, 200);
+                    });
+
+                    // 3. If the user had selected an entry type before going back,
+                    //    repopulate the second dropdown
+                    //refreshExistingDropdown();
+                }
+            });
+
         },
         addOption: function(option, clickedButton = null) {
 
@@ -826,24 +996,33 @@ $user = Auth::user();
                 }
             });
         },
-        populateIDs: function(field, tables) {
+        populateIDs: function(field, tables, missing, onlyCurrent) {
 
             const selects = $(`select.${field}`);
 
             $.ajax({
                 url: '{{ route("dpo.fetchIDs") }}',
                 method: "get",
-                data: { tables: tables },
+                data: { tables: tables , dpo_id:'{{ $dpo_id }}', filter: onlyCurrent },
                 datatype: "json",
 
                 success: function (response) {
+
+                    //console.log(response.items);
 
                     selects.each(function() {
 
                         const select = $(this);
 
                         select.empty();
-                        select.append(`<option value="" disabled selected>Select an option</option>`);
+
+                        // Optional placeholder
+                        select.append(`<option value="" disabled>Select an element</option>`);
+
+                        // MISSING → backend will convert "__NULL__" to actual SQL NULL
+                        if (missing) {
+                            select.append(`<option value="__NULL__">MISSING</option>`);
+                        }
 
                         const groups = {};
 
@@ -857,20 +1036,29 @@ $user = Auth::user();
 
                             groups[type].forEach(item => {
                                 optgroup.append(
-                                    `<option value="${item.id}">${item.label} (ID ${item.id})</option>`
+                                    `<option value="${item.bridge_id}">${item.label} (ID ${item.id})</option>`
                                 );
                             });
 
                             select.append(optgroup);
                         });
 
-                        if (select.hasClass('select2')) {
+                        /*if (select.hasClass('select2')) {
                             select.trigger('change');
+                        }*/
+
+                        // Select the first valid option (not placeholder, not MISSING)
+                        const firstValid = select.find('option[value]:not([value=""]):not([value="__NULL__"])').first();
+
+                        if (firstValid.length) {
+                            firstValid.prop('selected', true);
+                            select.trigger('change'); // if using Select2 or want change event
                         }
                     });
                 }
             });
         }
+
     }
     dpo.list();
 
@@ -890,7 +1078,18 @@ $user = Auth::user();
     function remove(id)
 {
     Swal.fire({
-        html:'<div class="mt-3"><lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px"></lord-icon><div class="mt-4 pt-2 fs-15 mx-5"><h4>Are you Sure?</h4><p class="text-muted mx-4 mb-0">Are you Sure You want to Delete this from all DPOs?</p></div></div>',
+        html:'<div class="mt-3">' +
+            '<lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop" colors="primary:#f7b84b,secondary:#f06548" style="width:100px;height:100px">' +
+            '</lord-icon>' +
+            '<div class="mt-4 pt-2 fs-15 mx-5">' +
+            '<h4>Are you Sure?</h4>' +
+            '<p class="text-muted mx-4 mb-0">Are you Sure You want to Delete it from the current DPO?</p>' +
+            '</div>' +
+            '<div style="text-align:center">' +
+                '<input type="checkbox" id="deleteAll" style="transform: scale(1.4); margin-right:0.5rem; cursor: pointer">' +
+                    '<label for="deleteAll" style="font-size: 0.85rem; text-decoration: underline; font-style: italic; cursor: pointer;">Delete also this component from ALL DPOs</label>' +
+                '</div>' +
+            '</div>',
         showCancelButton: true,
         confirmButtonText: "Yes, Delete It!",
         customClass: {
@@ -902,10 +1101,13 @@ $user = Auth::user();
         focusCancel: true
     }).then((result) => {
         if (result.isConfirmed) {
+
+            const check = document.getElementById('deleteAll').checked;
+
             $.ajax({
                 url:'{{ route("dpo.delete") }}',
                 method:"post",
-                data:{_token:'{{ csrf_token() }}' , id:id},
+                data:{_token:'{{ csrf_token() }}' , id:id, deleteAll:check},
                 datatype:"json",
                 success:function(response)
                 {

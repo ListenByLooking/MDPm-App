@@ -115,10 +115,105 @@ $user = Auth::user();
         reader.readAsDataURL(file);
     }
 });
+
 </script>
+
 @endsection
 @section('script')
-<script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+
+            const form = document.getElementById('artwork-add-form'); // or your artwork form ID
+
+            form.addEventListener('submit', function (e) {
+                e.preventDefault();
+
+                let formData = new FormData(form);
+
+                fetch("{{ route('artwork.store') }}", {
+                    method: "POST",
+                    headers: {
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}"
+                    },
+                    body: formData
+                })
+                    .then(res => res.json())
+                    .then(data => {
+
+                        // SUCCESS
+                        if (data.status === true) {
+
+                            // Clear the form BEFORE showing the Swal
+                            form.reset();
+
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success',
+                                text: data.message,
+                                showCancelButton: false,
+                                showConfirmButton: true,
+                                confirmButtonClass: "btn btn-primary w-xs mb-1",
+                                confirmButtonText: "Go to Artwork",
+                                buttonsStyling: false,
+                                showCloseButton: false
+                            }).then(() => {
+                                window.location.href = data.redirect;
+                            });
+                            return;
+                        }
+
+                        // WARNING
+                        if (data.status === 'warning') {
+                            Swal.fire({
+                                icon: "warning",
+                                title: 'Already Exists',
+                                text: data.message,
+                                showCancelButton: true,
+                                showConfirmButton: false,
+                                cancelButtonClass: "btn btn-primary w-xs mb-1",
+                                cancelButtonText: "Close",
+                                buttonsStyling: false,
+                                showCloseButton: true
+                            });
+                            return;
+                        }
+
+                        // ERROR
+                        if (data.status === false) {
+                            Swal.fire({
+                                icon: "error",
+                                title: 'Error',
+                                text: data.message,
+                                showCancelButton: true,
+                                showConfirmButton: false,
+                                cancelButtonClass: "btn btn-primary w-xs mb-1",
+                                cancelButtonText: "Close",
+                                buttonsStyling: false,
+                                showCloseButton: true
+                            });
+                            return;
+                        }
+
+                    })
+                    .catch(err => {
+
+                        Swal.fire({
+                            icon: "error",
+                            title: 'Error',
+                            text: 'Unexpected error occurred',
+                            showCancelButton: true,
+                            showConfirmButton: false,
+                            cancelButtonClass: "btn btn-primary w-xs mb-1",
+                            cancelButtonText: "Close",
+                            buttonsStyling: false,
+                            showCloseButton: true
+                        });
+                    });
+            });
+
+        });
+    </script>
+    <script>
 $(document).ready(function(){
     /*$('.select2').select2();
     $('#artwork-add-form').validate({
@@ -153,6 +248,18 @@ $(document).ready(function(){
             { data: 'action', orderable: false},
          ]
       });
+
+// Fires ONLY when page is restored from Back/Forward cache
+window.addEventListener("pageshow", function (event) {
+    if (event.persisted) {
+
+        // 1. Reset the form fields (title, description, author)
+        document.getElementById('artwork-add-form').reset();
+
+        // 2. Reload the DataTable so it shows fresh data
+        $('#artwork-table').DataTable().ajax.reload(null, false);
+    }
+});
 
 function component(){
     document.getElementById('Components').innerHTML();

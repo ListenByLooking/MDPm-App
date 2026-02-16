@@ -13,6 +13,60 @@ class DPOController extends Controller
         $this->middleware('auth');
     }
 
+    public function addExisting(Request $request)
+    {
+        //try {
+            $request->validate([
+                'dpo_id' => 'required|integer',
+                'bridge_id' => 'required|integer'
+            ]);
+
+            // Prevent duplicates
+            $exists = DB::table('dpo_component_bridge')
+                ->where('id', $request->bridge_id)
+                ->first();
+
+            if (!$exists) {
+                return response()->json([
+                    "status" => false,
+                    "message" => "Original component link not found."
+                ]);
+            }
+
+            // 2. Prevent duplicates for this DPO
+            $alreadyLinked = DB::table('dpo_component_bridge')
+                ->where('dpo_id', $request->dpo_id)
+                ->where('component_id', $request->component_id)
+                ->exists();
+
+            if ($alreadyLinked) {
+                return response()->json([
+                    "status" => 'warning',
+                    "message" => "This component is already linked to this DPO."
+                ]);
+            }
+
+            // 3. Clone the row (except bridge_id)
+            $newRow = [
+                'dpo_id' => $request->dpo_id,          // override
+                'component_id' => $exists->component_id,
+                'component_type' => $exists->component_type,
+                //'created_at' => now(),
+            ];
+
+            // 4. Insert the cloned row
+            $insert = DB::table('dpo_component_bridge')->insert($newRow);
+
+            return response()->json([
+                "status" => $insert,
+                "message" => $insert ? "Component added successfully!" : "Failed to link component."
+            ]);
+
+        /*} catch (\Throwable $th) {
+            error_log($th, 0);
+        }*/
+    }
+
     public function documentation(Request $request)
     {
         if ($request->document_name) {
@@ -49,7 +103,7 @@ class DPOController extends Controller
                     $bridge = [
                         'dpo_id' => $request->dpo_id,
                         'component_id' => $comp_id,
-                        'comp_type' => 'Documentation -> ' . $value,
+                        'component_type' => 'Documentation -> ' . $value,
                     ];
 
                     $insert = $insert && DB::table('dpo_component_bridge')->insert($bridge);
@@ -97,7 +151,7 @@ class DPOController extends Controller
             $bridge = [
                 'dpo_id' => $request->dpo_id,
                 'component_id' => $comp_id,
-                'comp_type' => 'Score',
+                'component_type' => 'Score',
             ];
 
             $insert = DB::table('dpo_component_bridge')->insert($bridge);
@@ -283,6 +337,10 @@ class DPOController extends Controller
                         ];
                         break;
                     case 'digital_copy_photo':
+
+                        // Convert "__NULL__" to actual null ONLY for original_item
+                        $originalItem = $request->original_item === "__NULL__" ? null : $request->original_item;
+
                         $data = [
                             'user_id' => Auth::id(),
                             //'component_id' => $component_id,
@@ -291,7 +349,7 @@ class DPOController extends Controller
                             // FIELD MAPPINGS
                             'filename' => $request->signature,
                             'format' => $request->format,
-                            'id_original' => $request->original_item,
+                            'id_original' => $originalItem,
                             'bitdepth' => $request->abit,
                             'resolution' => $request->resolution,
                             'ar' => $request->aspect_ratio,
@@ -376,6 +434,9 @@ class DPOController extends Controller
                         list($h, $m, $s) = explode(':', $request->duration);
                         $durationSeconds = $h * 3600 + $m * 60 + $s;
 
+                        // Convert "__NULL__" to actual null ONLY for original_item
+                        $originalItem = $request->original_item === "__NULL__" ? null : $request->original_item;
+
                         $data = [
                             'user_id' => Auth::id(),
                             //'component_id' => $component_id,
@@ -384,7 +445,7 @@ class DPOController extends Controller
                             // BASIC FIELDS
                             'filename' => $request->signature,
                             'format' => $request->format,
-                            'id_original' => $request->original_item,
+                            'id_original' => $originalItem,
 
                             // ORIGINAL TYPE (Film / Video)
                             'original_type' => $request->audiovisual,
@@ -550,6 +611,9 @@ class DPOController extends Controller
                         list($h, $m, $s) = explode(':', $request->duration);
                         $durationSeconds = $h * 3600 + $m * 60 + $s;
 
+                        // Convert "__NULL__" to actual null ONLY for original_item
+                        $originalItem = $request->original_item === "__NULL__" ? null : $request->original_item;
+
                         $data = [
                             'user_id' => Auth::id(),
                             //'component_id' => $component_id,
@@ -559,7 +623,7 @@ class DPOController extends Controller
                             'container' => $request->container,
                             'encoding' => $request->encoding,
                             'original_type' => $request->original_type,   // NOW CORRECT
-                            'id_original' => $request->original_item,
+                            'id_original' => $originalItem,
                             'bitrate' => $request->bitrate,
                             'bitdepth' => $request->bitdepht,
                             'duration' => $durationSeconds,
@@ -583,7 +647,7 @@ class DPOController extends Controller
                     $bridge = [
                         'dpo_id' => $request->dpo_id,
                         'component_id' => $comp_id,
-                        'comp_type' => $this->buildComponentPath($request),
+                        'component_type' => $this->buildComponentPath($request),
                     ];
 
                     $insert = DB::table('dpo_component_bridge')->insert($bridge);
@@ -620,14 +684,14 @@ class DPOController extends Controller
         // Total records
         $totalRecords = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'dpo_id' => $request->dpo_id])->count();
         $totalRecordswithFilter = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'dpo_id' => $request->dpo_id])
-            ->whereRaw("CONCAT_WS(' ', comp_type) LIKE ?", ["%{$searchValue}%"])
+            ->whereRaw("CONCAT_WS(' ', component_type) LIKE ?", ["%{$searchValue}%"])
             ->count();
 
         //error_log($columnName, 0);
 
         // Get records, also we have included search filter as well
         $records = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'dpo_id' => $request->dpo_id])
-            ->whereRaw("CONCAT_WS(' ', comp_type) LIKE ?", ["%{$searchValue}%"])
+            ->whereRaw("CONCAT_WS(' ', component_type) LIKE ?", ["%{$searchValue}%"])
             ->orderBy($columnName, $columnSortOrder ?? 'desc')
             ->skip($start)
             ->take($rowperpage)
@@ -639,13 +703,13 @@ class DPOController extends Controller
 
         foreach ($records as $record) {
 
-            //error_log(explode(" -> ", $record->comp_type, PHP_INT_MAX)[0]);
+            //error_log(explode(" -> ", $record->component_type, PHP_INT_MAX)[0]);
 
             $data_arr[] = array(
 
                 "id" => $record->id,
                 "component_id" => $record->component_id,
-                "comp_type" => $record->comp_type,
+                "component_type" => $record->component_type,
                 /*"component"     => $record->component??'-',
                 "audio_visual"  => $record->audio_visual??'-',
                 "original_docs" => $record->original_docs??'-',
@@ -741,18 +805,67 @@ class DPOController extends Controller
 
     public function view(Request $request, $id)
     {
+        $vdMap = [
+            'Audio Cassette' => 'audiocassette',
+            'Digital Audio Tape' => 'dat',
+            'Open Reel Tape' => 'tape',
+            'Phonographic Disk' => 'phonographicdisk',
+            'Digital Audio' => 'digitalaudio',
+            'Digital Copy Audio' => 'digital_copy_audio',
+            'Digital Copy Photo' => 'digital_copy_photo',
+            'Digital Copy Video' => 'digital_copy_vf',
+            'Digital Copy Film' => 'digital_copy_vf',
+            'Photo' => 'photo',
+            'Video' => 'video',
+            'Film' => 'film',
+            'General Object' => 'general_object',
+            'Hardware' => 'hardware',
+            'Software' => 'software',
+        ];
 
         //error_log($request, 0);
 
         $record = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'id' => decrypt($id)])->first();
         //error_log($record, 0);
-        $component_type = explode(" -> ", $record->comp_type, PHP_INT_MAX)[0];
+
+        $raw = $record->component_type;
+
+// Case 1: Score
+        if ($raw === 'Score') {
+            $component = 'Score';
+        }
+
+// Case 2: Documentation
+        elseif (str_starts_with($raw, 'Documentation')) {
+            $component = 'Documentation';
+        }
+
+// Case 3: Component (...)
+        else {
+            if (preg_match('/Component\s*\((.*)\)/', $raw, $matches)) {
+                $chain = $matches[1]; // e.g. "Audio/Visual -> Audio -> Digital Copy -> Audio Cassette"
+                $segments = array_map('trim', explode('->', $chain));
+
+                // SPECIAL CASE: Digital Copy of Audio (or any Digital Copy with original_type)
+                // Example: [ "Audio/Visual", "Audio", "Digital Copy", "Audio Cassette" ]
+                if (in_array('Digital Copy', $segments, true) && count($segments) > 3) {
+                    // Use the second-last element → "Digital Copy"
+                    $component = $segments[count($segments) - 2];
+                } else {
+                    // Default: use the last element
+                    $component = end($segments);
+                }
+            } else {
+                $component = $raw; // fallback
+            }
+        }
+
         $component_id = $record->component_id;
 
-        if ($component_type == 'Documentation') {
+        if ($component == 'Documentation') {
 
             $records = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'dpo_id' => $record->dpo_id])
-                ->whereRaw("CONCAT_WS(' ', comp_type) LIKE ?", ["%{$component_type}%"])->get();
+                ->whereRaw("CONCAT_WS(' ', component_type) LIKE ?", ["%{$component}%"])->get();
 
             $result = array();
 
@@ -762,14 +875,20 @@ class DPOController extends Controller
             }
 
             return view('pdf.documentation', compact('result'));
-        } else if ($component_type == 'Score') {
+        } else if ($component == 'Score') {
             $result = DB::table('score')->where('id', $component_id)->first();
             //error_log($result, 0);
             return view('pdf.score', compact('result'));
         } else {
-            $component = explode(" -> ", decrypt($component_type), PHP_INT_MAX)[-1];
-            //$result = DB::table('documentation')->where('id', $component_id)->first();
-            // dd($result->form_name);
+            $cfg = $map[$component] ?? null;
+
+            $data = DB::table($cfg['table'])->where('id', $component_id)->first();
+
+            return view('pdf.pdf', [
+                'form' => $cfg['form'],
+                'data' => $data
+            ]);
+
             switch ($component) {
                 case 'tape_details':
                     $tapedetails = DB::table('tape_details')->where('component_id', $component_id)->first();
@@ -916,68 +1035,259 @@ class DPOController extends Controller
 
     public function fetchIDs(Request $request)
     {
-        $tables = $request->get('tables', []);
+        //try{
+            $tables = $request->get('tables', []);
+            $currentDpoId = $request->get('dpo_id');
+            $filterOtherDpos = $request->get('filter', false); // true = exclude current DPO
+
+            //error_log(print_r($tables, true));
+
+        /*$usedByType = DB::table('dpo_component_bridge')
+            ->whereIn('component_type', $tables)
+            ->select('component_type', 'component_id')
+            ->get()
+            ->groupBy('component_type')
+            ->map(function ($group) {
+                return $group->pluck('component_id')->toArray();
+            });*/
 
         $map = [
-            'audiocassette' => [
-                'table' => 'audiocassette',
-                'label' => 'preservation_signature',
-                'type'  => 'Audio Cassette'
-            ],
-            'dat' => [
-                'table' => 'dat',
-                'label' => 'preservation_signature',
-                'type'  => 'Digital Audio Tape'
-            ],
-            'digital_audio' => [
-                'table' => 'digital_audio',
-                'label' => 'signature',
-                'type'  => 'Digital Audio'
-            ],
-            'phonographicdisk' => [
-                'table' => 'phonographicdisk',
-                'label' => 'preservation_signature',
-                'type'  => 'Phonographic Disk'
-            ],
-            'tape' => [
-                'table' => 'tape',
-                'label' => 'preservation_signature',
-                'type'  => 'Open Reel Tape'
-            ],
-            'photo' => [
-                'table' => 'photo',
-                'label' => 'preservation_signature',
-                'type'  => 'Photograph'
-            ],
-            'video' => [
-                'table' => 'video',
-                'label' => 'preservation_signature',
-                'type'  => 'Video'
-            ],
-            'film' => [
-                'table' => 'film',
-                'label' => 'preservation_signature',
-                'type'  => 'Film'
-            ],
+                'documentation' => [
+                    'table' => 'documentation',
+                    'label' => 'document_type',
+                    'type' => 'Documentation',
+                    'path_prefix' => 'Documentation'
+                ],
+                'score' => [
+                    'table' => 'score',
+                    'label' => 'id',
+                    'type' => 'Score',
+                    'path_prefix' => 'Score'
+                ],
+                'general_object' => [
+                    'table' => 'general_object',
+                    'label' => 'preservation_signature',
+                    'type' => 'General Object',
+                    'path_prefix' => 'General Object'
+                ],
+                'hardware' => [
+                    'table' => 'hardware',
+                    'label' => 'preservation_signature',
+                    'type' => 'Hardware',
+                    'path_prefix' => 'Hardware'
+                ],
+                'software' => [
+                    'table' => 'software',
+                    'label' => 'preservation_signature',
+                    'type' => 'Software',
+                    'path_prefix' => 'Software'
+                ],
+                'digital_copy_audio' => [
+                    'table' => 'digital_copy_audio',
+                    'label' => 'filename',
+                    'type' => 'Digital Copy (Audio)',
+                    'has_original_type' => true,
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Digital Copy)',
+                ],
+                'digital_copy_photo' => [
+                    'table' => 'digital_copy_photo',
+                    'label' => 'filename',
+                    'type' => 'Digital Copy (Photograph)',
+                    'has_original_type' => false,
+                    'path_prefix' => 'Component (Audio/Visual -> Photograph -> Digital Copy)'
+                ],
+                'digital_copy_vf' => [
+                    'table' => 'digital_copy_vf',
+                    'label' => 'filename',
+                    'type' => 'Digital Copy (Film/Video)',
+                    'has_original_type' => true,
+                    'path_prefix' => ['Component (Audio/Visual -> Video -> Digital Copy)',
+                        'Component (Audio/Visual -> Film -> Digital Copy)',]
+                ],
+                'audiocassette' => [
+                    'table' => 'audiocassette',
+                    'label' => 'preservation_signature',
+                    'type' => 'Audio Cassette',
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Original Item -> Audio Cassette)'
+                ],
+                'dat' => [
+                    'table' => 'dat',
+                    'label' => 'preservation_signature',
+                    'type' => 'Digital Audio Tape',
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Original Item -> Digital Audio Tape)'
+                ],
+                'digital_audio' => [
+                    'table' => 'digital_audio',
+                    'label' => 'signature',
+                    'type' => 'Digital Audio',
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Original Item -> Digital Audio)'
+                ],
+                'phonographicdisk' => [
+                    'table' => 'phonographicdisk',
+                    'label' => 'preservation_signature',
+                    'type' => 'Phonographic Disk',
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Original Item -> Phonographic Disk)'
+                ],
+                'tape' => [
+                    'table' => 'tape',
+                    'label' => 'preservation_signature',
+                    'type' => 'Open Reel Tape',
+                    'path_prefix' => 'Component (Audio/Visual -> Audio -> Original Item -> Open Reel Tape)'
+                ],
+                'photo' => [
+                    'table' => 'photo',
+                    'label' => 'preservation_signature',
+                    'type' => 'Photograph',
+                    'path_prefix' => 'Component (Audio/Visual -> Photograph -> Original Item)'
+                ],
+                'video' => [
+                    'table' => 'video',
+                    'label' => 'preservation_signature',
+                    'type' => 'Video',
+                    'path_prefix' => 'Component (Audio/Visual -> Video -> Original Item)'
+                ],
+                'film' => [
+                    'table' => 'film',
+                    'label' => 'preservation_signature',
+                    'type' => 'Film',
+                    'path_prefix' => 'Component (Audio/Visual -> Film -> Original Item)'
+                ]
         ];
 
         $result = collect();
 
+        $usedByType = [];
+
         foreach ($tables as $t) {
-            if (!isset($map[$t])) {
-                continue;
-            }
+            if (!isset($map[$t])) continue;
 
             $cfg = $map[$t];
+            $prefixes = (array) $map[$t]['path_prefix'];
 
-            $rows = DB::table($cfg['table'])
-                ->select('id', $cfg['label'] . ' as label', DB::raw("'" . $cfg['type'] . "' as type"))
-                ->get();
+            // 1. Get component_ids already linked to THIS DPO, but only for this component_type family
+            $currentDpoComponents = DB::table('dpo_component_bridge')
+                ->where('dpo_id', $currentDpoId)
+                ->where(function ($q) use ($prefixes) {
+                    foreach ($prefixes as $p) {
+                        $q->orWhere('component_type', 'LIKE', $p . '%');
+                    }
+                })
+                ->pluck('component_id')
+                ->toArray();
 
-            $result = $result->merge($rows);
-        }
+            //error_log(print_r($currentDpoComponents, true));
 
-        return response()->json(['items' => $result]);
+            // 2. Build the main query
+            $query = DB::table('dpo_component_bridge')
+                ->when($filterOtherDpos, function ($q) use ($currentDpoId) {
+                    return $q->where('dpo_id', '!=', $currentDpoId);
+                })
+                ->where(function ($q) use ($prefixes) {
+                    foreach ($prefixes as $p) {
+                        $q->orWhere('component_type', 'LIKE', $p . '%');
+                    }
+                })
+                ->when($filterOtherDpos && !empty($currentDpoComponents), function ($q) use ($currentDpoComponents) {
+                    // Exclude components already linked to the current DPO
+                    return $q->whereNotIn('component_id', $currentDpoComponents);
+                });
+
+            //$usedByType[$t] = $query->select('id as bridge_id', 'component_id')->get();
+
+            //error_log(print_r($query->get()->toArray(), true));
+
+            //error_log(print_r($cfg, true));
+
+                // IDs to exclude for THIS table only
+                //$include = $usedByType[$t] ?? [];
+
+            $bridgeRows = $query->select('id as bridge_id', 'component_id') ->get();
+
+            //error_log(print_r($bridgeRows, true));
+
+            $bridgeMap = [];
+
+            foreach ($bridgeRows as $br) {
+                $bridgeMap[$br->component_id] = $br->bridge_id;
+            }
+
+            // Extract component IDs
+            $include = $bridgeRows->pluck('component_id')->toArray();
+
+            //error_log(print_r($include, true));
+
+                // DIGITAL CASES
+                        if (in_array($t, ['digital_copy_audio', 'digital_copy_photo', 'digital_copy_vf'])) {
+
+                            if ($cfg['has_original_type']) {
+                                // Tables WITH original_type column
+                                $rows = DB::table($cfg['table'])
+                                    ->whereIn('id', $include)
+                                    ->select(
+                                        'id',
+                                        DB::raw("CONCAT(original_type, '/', {$cfg['label']}) AS label"),
+                                        DB::raw("'" . $cfg['type'] . "' AS type")
+                                    )
+                                    ->get();
+
+                                foreach ($rows as $row) {
+                                    $row->bridge_id = $bridgeMap[$row->id] ?? null;
+                                }
+                            } else {
+                                // digital_copy_photo → NO original_type column
+                                $rows = DB::table($cfg['table'])
+                                    ->whereIn('id', $include)
+                                    ->select(
+                                        'id',
+                                        DB::raw("CONCAT('Photograph', '/', {$cfg['label']}) AS label"),
+                                        DB::raw("'" . $cfg['type'] . "' AS type")
+                                    )
+                                    ->get();
+
+                                foreach ($rows as $row) {
+                                    $row->bridge_id = $bridgeMap[$row->id] ?? null;
+                                }
+                            }
+
+                        } else if (in_array($t, ['score'])) {
+                            $rows = DB::table($cfg['table'])
+                                ->whereIn('id', $include)
+                                ->select(
+                                    'id',
+                                    DB::raw("CONCAT('Score') AS label"),
+                                    DB::raw("'" . $cfg['type'] . "' AS type")
+                                )
+                                ->get();
+
+                            foreach ($rows as $row) {
+                                $row->bridge_id = $bridgeMap[$row->id] ?? null;
+                            }
+                        } else {
+                            // NON-DIGITAL CASES
+                            $rows = DB::table($cfg['table'])
+                                ->whereIn('id', $include)
+                                ->select(
+                                    'id',
+                                    "{$cfg['label']} AS label",
+                                    DB::raw("'" . $cfg['type'] . "' AS type")
+                                )
+                                ->get();
+
+                            foreach ($rows as $row) {
+                                $row->bridge_id = $bridgeMap[$row->id] ?? null;
+                            }
+                        }
+
+                $result = $result->merge($rows);
+
+            //error_log(print_r($result, true));
+            }
+
+            return response()->json(['items' => $result]);
+
+        /*} catch (\Throwable $th) {
+            error_log($th, 0);
+        }*/
     }
 
     public function pdf(Request $request ,$component_id){
@@ -986,73 +1296,358 @@ class DPOController extends Controller
     return view('pdf.tapedetails');
    }
 
-   public function delete(Request $request)
-   {
-    $id            = $request->id;
-    $component    = DB::table('dpo_component_bridge')->where('id',decrypt($id))->first();
-    $component_id = $component->component_id;
-    $component_type = explode(" -> ", $component->comp_type, PHP_INT_MAX)[0];
+    // NOTE FOR FUTURE LOCALIZATION:
+    // The resolver depends on the *English-friendly labels* generated by buildComponentPath().
+    // If the UI is ever localized, you must:
+    // 1. Localize buildComponentPath() output
+    // 2. Update this resolver to map localized labels back to table names
+    // 3. OR replace this resolver with a stable internal code instead of UI labels.
 
-    switch ($component_type) {
-        case 'audiocassette':
-            DB::table('audiocassette')->where('component_id',$componemt_id)->delete();
-        break;
-        case 'dat':
-            DB::table('dat')->where('component_id',$componemt_id)->delete();
-        break;
-        case 'digital_copy':
-            DB::table('digital_copy')->where('component_id',$componemt_id)->delete();
-        break;
-        case 'Documentation':
-            DB::table('documentation')->where('id',$component_id)->delete();
-        break;
-        case 'original_docs':
-            DB::table('original_docs')->where('component_id',$componemt_id)->delete();
-        break;
-        case 'phonographicdisks':
-            DB::table('phonographicdisks')->where('component_id',$componemt_id)->delete();
-        break;
-        case 'Score':
-            DB::table('score')->where('id',$component_id)->delete();
-        break;
-        case 'tape_details':
-            DB::table('tape_details')->where('component_id',$componemt_id)->delete();
-        break;
+    private function resolveTableName(string $compType): ?string
+    {
+        // Strip "Component (" and ")"
+        $compType = trim($compType);
+        $compType = str_replace(['Component (', ')'], '', $compType);
 
-    }
+        // Split into parts
+        $parts = array_map('trim', explode('->', $compType));
+        $parts = array_map('strtolower', $parts);
 
-    //error_log($component_id, 0);
+        $level1 = $parts[0] ?? null;
+        $level2 = $parts[1] ?? null;
+        $level3 = $parts[2] ?? null;
+        $level4 = $parts[3] ?? null;
 
-    DB::table('dpo_component_bridge')->where('component_id',$component_id)->delete();
+        //error_log($level1, 0);
+        //error_log($level2, 0);
+        //error_log($level3, 0);
+        //error_log($level4, 0);
 
-   }
+        // -------------------------
+        // LEVEL 1: SCORE
+        // -------------------------
+        if ($level1 === 'score') {
+            return 'score';
+        }
 
-    public function insertDPO(Request $request)
-   {
-    // dd(['artwork_id'=>$artwork , 'dpo_id' => $id , 'user_id' => Auth::user()->id]);
-       try{
+        // -------------------------
+        // LEVEL 1: DOCUMENTATION
+        // -------------------------
+        if ($level1 === 'documentation') {
+            return 'documentation';
+        }
 
-        $dpo = DB::table('dpos')->where(['artwork_id'=>$request->artwork_id, 'dpo_year'=>$request->dpo_year, 'dpo_venue'=>$request->dpo_venue, 'dpo_city'=>$request->dpo_city /*, 'id' => $id , 'user_id' => Auth::user()->id*/])->first();
-        if(!$dpo) {
-            $insert = DB::table('dpos')->insert(['artwork_id' => $request->artwork_id, 'dpo_year' => $request->dpo_year, 'dpo_venue' => $request->dpo_venue, 'dpo_city' => $request->dpo_city, 'user_id' => Auth::user()->id, 'created_at' => date('Y-m-d h:i:s'), 'status' => 1 /*, 'dpo_id' => $id */]);
-            if ($insert) {
-                return redirect()->route('artwork.view',encrypt($request->artwork_id))->with(['status'=>true , 'message'=>'DPO inserted successfully']);
-            } else {
-                return redirect()->route('artwork.view',encrypt($request->artwork_id))->with(['status'=>false , 'message'=>'You have some error. please try later']);
+        // -------------------------
+        // LEVEL 1: GENERAL OBJECT
+        // -------------------------
+        if ($level1 === 'general object') {
+            return 'general_object';
+        }
+
+        // -------------------------
+        // LEVEL 1: HARDWARE
+        // -------------------------
+        if ($level1 === 'hardware') {
+            return 'hardware';
+        }
+
+        // -------------------------
+        // LEVEL 1: SOFTWARE
+        // -------------------------
+        if ($level1 === 'software') {
+            return 'software';
+        }
+
+        // -------------------------
+        // LEVEL 1: AUDIOVISUAL
+        // -------------------------
+        if ($level1 === 'audio/visual') {
+
+            // -------------------------
+            // VIDEO
+            // -------------------------
+            if ($level2 === 'video') {
+                if ($level3 === 'original item') return 'video';
+                if ($level3 === 'digital copy') return 'digital_copy_vf';
+            }
+
+            // -------------------------
+            // PHOTO
+            // -------------------------
+            if ($level2 === 'photograph') {
+                if ($level3 === 'original item') return 'photo';
+                if ($level3 === 'digital copy') return 'digital_copy_photo';
+            }
+
+            // -------------------------
+            // FILM
+            // -------------------------
+            if ($level2 === 'film') {
+                if ($level3 === 'original item') return 'film';
+                if ($level3 === 'digital copy') return 'digital_copy_vf'; // shared with video
+            }
+
+            // -------------------------
+            // AUDIO
+            // -------------------------
+            if ($level2 === 'audio') {
+
+                // ORIGINAL ITEM
+                if ($level3 === 'original item') {
+                    return match ($level4) {
+                        'audio cassette'       => 'audiocassette',
+                        'digital audio tape'   => 'dat',
+                        'open reel tape'       => 'tape',
+                        'phonographic disk'    => 'phonographicdisk',
+                        'digital audio'        => 'digital_audio',
+                        default                => null,
+                    };
+                }
+
+                // DIGITAL COPY
+                // AUDIO → DIGITAL COPY always maps to digital_copy_audio.
+                // Level 4 is only for user readability, not for table resolution.
+
+                if ($level3 === 'digital copy') {
+                    return 'digital_copy_audio';
+                }
             }
         }
 
-           return redirect()->route('artwork.view',encrypt($request->artwork_id))->with(['status'=>false , 'message'=>'DPO already present']);
+        return null; // TODO: log unexpected component_type for debugging
+    }
 
-       } catch (\Throwable $th) {
-           return redirect()->route('artwork.view',encrypt($request->artwork_id))->with(['status'=>false , 'message'=>'You have some error. please try later']);
-       }
+    public function delete(Request $request)
+    {
+        $bridgeId = decrypt($request->id);
+        $deleteAll = filter_var($request->deleteAll, FILTER_VALIDATE_BOOLEAN);
 
-   }
+        $bridge = DB::table('dpo_component_bridge')->where('id', $bridgeId)->first();
+
+        if (!$bridge) {
+            return response()->json(['error' => 'Component not found'], 404);
+        }
+
+        $componentId = $bridge->component_id;
+
+        $table = $this->resolveTableName($bridge->component_type);
+
+        if (!$table) {
+            return response()->json(['error' => 'Unknown component type'], 400);
+            //throw new \RuntimeException("Unknown component type: $bridge->component_type");
+        }
+
+        if ($deleteAll) { // 🔥 Delete component AND all bridge rows
+            $this->deleteComponentByTypeAndId($table, $componentId, $bridge->component_type);
+            return response()->json(['success' => true]);
+        }
+
+        // 🔥 Delete ONLY this bridge row
+        DB::table('dpo_component_bridge')->where('id', $bridgeId)->delete();
+
+        // Check if component is still referenced elsewhere
+        $stillUsed = DB::table('dpo_component_bridge')
+            ->where('component_id', $componentId)
+            ->where('component_type', $bridge->component_type)
+            ->exists();
+
+        if (!$stillUsed) {
+            // 🔥 Component is orphaned → delete it
+            $this->deleteComponentByTypeAndId($table, $componentId, $bridge->component_type);
+        }
+
+        return response()->json(['success' => true]);
+    }
+
+    public function insertDPO(Request $request)
+    {
+        try {
+            $dpo = DB::table('dpos')->where([
+                'artwork_id' => $request->artwork_id,
+                'dpo_year'   => $request->dpo_year,
+                'dpo_venue'  => $request->dpo_venue,
+                'dpo_city'   => $request->dpo_city
+            ])->first();
+
+            if ($dpo) {
+                return response()->json([
+                    'status'  => 'warning',
+                    'message' => 'DPO already present'
+                ]);
+            }
+
+            $insert = DB::table('dpos')->insert([
+                'artwork_id' => $request->artwork_id,
+                'dpo_year'   => $request->dpo_year,
+                'dpo_venue'  => $request->dpo_venue,
+                'dpo_city'   => $request->dpo_city,
+                'user_id'    => Auth::user()->id,
+                'created_at' => date('Y-m-d H:i:s'),
+                'status'     => 1
+            ]);
+
+            if ($insert) {
+
+                // Get the new DPO ID
+                $dpoId = DB::getPdo()->lastInsertId();
+
+                // Compute the sequential number (count_arr logic)
+                $allIds = DB::table('dpos')
+                    ->where('artwork_id', $request->artwork_id)
+                    ->orderBy('id', 'asc')
+                    ->pluck('id')
+                    ->toArray();
+
+                $count = array_search($dpoId, $allIds) + 1; // +1 because array_search is 0-based
+
+                // Build redirect URL exactly like searchlist()
+                $redirectUrl = route('artwork.add', [
+                    encrypt($request->artwork_id),
+                    encrypt($dpoId),
+                    encrypt($count)
+                ]);
+
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'DPO inserted successfully',
+                    'redirect' => $redirectUrl
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'You have some error. Please try later'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'You have some error. Please try later'
+            ]);
+        }
+    }
+
+    private function deleteComponentByTypeAndId(String $table, int $componentId, string $component_type)
+    {
+
+        DB::transaction(function () use ($table, $componentId, $component_type) {
+
+            // -------------------------------------------------------
+            // 1. If this is an ORIGINAL item, update digital copies
+            // -------------------------------------------------------
+            $originalTables = [
+                'audiocassette',
+                'dat',
+                'tape',
+                'phonographicdisk',
+                'digital_audio',
+                'video',
+                'photo',
+                'film',
+            ];
+
+            if (in_array($table, $originalTables)) {
+
+                // DIGITAL COPY AUDIO
+                DB::table('digital_copy_audio')
+                    ->where('id_original', $componentId)
+                    ->update([
+                        'id_original'   => null,
+                    ]);
+
+                // DIGITAL COPY PHOTO
+                DB::table('digital_copy_photo')
+                    ->where('id_original', $componentId)
+                    ->update([
+                        'id_original' => null
+                    ]);
+
+                // DIGITAL COPY VIDEO/FILM — must distinguish original type
+                if ($table === 'video') {
+                    DB::table('digital_copy_vf')
+                        ->where('id_original', $componentId)
+                        ->where('original_type', 'video')
+                        ->update([
+                            'id_original'   => null,
+                        ]);
+                }
+
+                if ($table === 'film') {
+                    DB::table('digital_copy_vf')
+                        ->where('id_original', $componentId)
+                        ->where('original_type', 'film')
+                        ->update([
+                            'id_original'   => null,
+                        ]);
+                }
+            }
+
+            // -------------------------------------------------------
+            // 2. Delete the component itself
+            // -------------------------------------------------------
+            DB::table($table)->where('id', $componentId)->delete();
+
+            // -------------------------------------------------------
+            // 3. Delete ALL bridge rows referencing this component
+            // -------------------------------------------------------
+            DB::table('dpo_component_bridge')
+                ->where('component_id', $componentId)
+                ->where('component_type', $component_type)
+                ->delete();
+        });
+    }
 
     public function deleteDPO(Request $request)
     {
-        $id            = $request->id;
-        DB::table('dpos')->where('id',decrypt($id))->delete();
+            $dpoId = decrypt($request->id);
+
+            DB::transaction(function () use ($dpoId) {
+
+                // 1. Get all components linked to this DPO
+                $components = DB::table('dpo_component_bridge')
+                    ->where('dpo_id', $dpoId)
+                    ->get();
+
+                // 2. For each component, check if it is orphaned
+                foreach ($components as $comp) {
+
+                    $componentId = $comp->component_id;
+                    $compType = $comp->component_type;
+
+                    // Check if this component is referenced in ANY other DPO
+                    $stillUsed = DB::table('dpo_component_bridge')
+                        ->where('component_id', $componentId)
+                        ->where('component_type', $compType)
+                        ->where('dpo_id', '!=', $dpoId)
+                        ->exists();
+
+                    // If NOT used elsewhere → delete the component
+                    if (!$stillUsed) {
+
+                        $table = $this->resolveTableName($compType);
+
+                        //error_log($table, 0);
+
+                        if (!$table) {
+                            //return response()->json(['error' => 'Unknown component type'], 400);
+                            throw new \RuntimeException("Unknown component type: $compType");
+                        }
+
+                        $this->deleteComponentByTypeAndId($table, $componentId, $compType);
+                    }
+                }
+
+                // 3. Delete all bridge rows for this DPO
+                DB::table('dpo_component_bridge')
+                    ->where('dpo_id', $dpoId)
+                    ->delete();
+
+                // 4. Delete the DPO itself
+                DB::table('dpos')->where('id', $dpoId)->delete();
+
+                //error_log("Ciao!", 0);
+            });
+
+            return response()->json(['success' => true]);
     }
 }

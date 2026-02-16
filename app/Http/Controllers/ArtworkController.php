@@ -17,30 +17,53 @@ class ArtworkController extends Controller
    {
     return view('artwork');
    }
-   public function store(Request $request)
-   {
-      try {
+    public function store(Request $request)
+    {
+        try {
+            $artwork = DB::table('artwork')->where([
+                'title'       => $request->title,
+                //'description' => $request->description,
+                'author'      => $request->author,
+            ])->first();
 
-         $dpo = DB::table('artwork')->insertGetId([
-                                    'user_id'      =>Auth::user()->id,
-                                    'title'        => $request->title,
-                                    'description'  =>$request->description,
-                                    //'year'         =>$request->year,
-                                    'author'       =>$request->author,
-                                    'status'       =>1,
-                                    'created_at'   =>date('Y-m-d h:i:s'),
-                                    ]);
-         if($dpo)
-         {
-            return redirect()->route('artwork.view',encrypt($dpo))->with(['status'=>true , 'message'=>'DPO Added successfully']);
-         }else{
-            return redirect()->back()->with(['status'=>false , 'message'=>'You have some error. please try later']);
-         }
-      } catch (\Throwable $th) {
-         return redirect()->back()->with(['status'=>false , 'message'=>'You have some error. please try later']);
-      }
-   }
-   public function view($id)
+            if ($artwork) {
+                return response()->json([
+                    'status'  => 'warning',
+                    'message' => 'Artwork already present'
+                ]);
+            }
+
+            $artworkId = DB::table('artwork')->insertGetId([
+                'user_id'     => Auth::user()->id,
+                'title'       => $request->title,
+                'description' => $request->description,
+                'author'      => $request->author,
+                'status'      => 1,
+                'created_at'  => date('Y-m-d H:i:s'),
+            ]);
+
+            if ($artworkId) {
+                return response()->json([
+                    'status'   => true,
+                    'message'  => 'Artwork added successfully',
+                    'redirect' => route('artwork.view', encrypt($artworkId))
+                ]);
+            }
+
+            return response()->json([
+                'status'  => false,
+                'message' => 'You have some error. Please try later'
+            ]);
+
+        } catch (\Throwable $th) {
+            return response()->json([
+                'status'  => false,
+                'message' => 'You have some error. Please try later'
+            ]);
+        }
+    }
+
+    public function view($id)
    {
       $id = decrypt($id);
       $artwork = DB::table('artwork')->where('id',$id)/*->where('user_id',Auth::user()->id)*/->first();
@@ -125,15 +148,34 @@ class ArtworkController extends Controller
         echo json_encode($response);
    }
 
-   public function delete(Request $request)
+    public function delete(Request $request)
    {
-       $id            = $request->id;
+       //$id            = $request->id;
        //error_log(decrypt($id), 0);
-      $dpo           = DB::table('artwork')->where('id',decrypt($id))->delete();
+      //$dpo           = DB::table('artwork')->where('id',decrypt($id))->delete();
        //error_log($dpo, 0);
-      $components    = DB::table('dpos')->where('artwork_id',decrypt($id))/*->where('user_id',Auth::user()->id)*/->delete();
+      //$components    = DB::table('dpos')->where('artwork_id',decrypt($id))/*->where('user_id',Auth::user()->id)*/->delete();
 
        //error_log($components, 0);
+//try{
+       $artworkId = decrypt($request->id);
+
+       // 1. Fetch all DPOs linked to this artwork
+       $dpos = DB::table('dpos')
+           ->where('artwork_id', $artworkId)
+           ->get();
+
+    $dpoController = new \App\Http\Controllers\DPOController();
+
+       // 2. Delete each DPO using the existing DPO delete logic
+       foreach ($dpos as $dpo) {
+           $dpoController->deleteDPO(new Request(['id' => encrypt($dpo->id)]));
+       }
+
+       // 3. Delete the artwork itself
+       DB::table('artwork')->where('id', $artworkId)->delete();
+
+       return response()->json(['success' => true]);
 
       /*$componemt_id  = $components->id;
                      DB::table('audiocassette')->where('component_id',$componemt_id)->delete();
@@ -144,5 +186,8 @@ class ArtworkController extends Controller
                      DB::table('phonographicdisks')->where('component_id',$componemt_id)->delete();
                      DB::table('score')->where('component_id',$componemt_id)->delete();
                      DB::table('tape_details')->where('component_id',$componemt_id)->delete();*/
+/*} catch (\Throwable $th) {
+    error_log($th, 0);
+}*/
    }
 }

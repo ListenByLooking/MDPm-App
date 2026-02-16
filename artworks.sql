@@ -383,7 +383,7 @@ CREATE TABLE `digital_copy_audio` (
   `container` varchar(255) NOT NULL,
   `encoding` varchar(255) NOT NULL,
   `original_type` varchar(255) NOT NULL,
-  `id_original` int(11) NOT NULL,
+  `id_original` int(11) NULL,
   `bitrate` int(11) NOT NULL,
   `bitdepth` varchar(50) NOT NULL,
   `duration` int(11) NOT NULL,
@@ -412,7 +412,7 @@ CREATE TABLE `digital_copy_photo` (
 --  `dpo_id` int(11) NOT NULL,
                                       `filename` varchar(255) NOT NULL,
                                       `format` varchar(255) NOT NULL,
-                                      `id_original` int(11) NOT NULL,
+                                      `id_original` int(11) NULL,
                                       `bitdepth` varchar(50) NOT NULL,
                                       `resolution` varchar(255) NOT NULL,
                                       `ar` varchar(255) NOT NULL,
@@ -438,7 +438,7 @@ CREATE TABLE `digital_copy_vf` (
 --  `dpo_id` int(11) NOT NULL,
                                       `filename` varchar(255) NOT NULL,
                                       `format` varchar(255) NOT NULL,
-                                      `id_original` int(11) NOT NULL,
+                                      `id_original` int(11) NULL,
                                       `original_type` varchar(255) NOT NULL,
                                       `codec` varchar(255) NOT NULL,
                                       `bitrate` int(11) NOT NULL,
@@ -527,7 +527,7 @@ CREATE TABLE `dpo_component_bridge` (
     PRIMARY KEY (`id`),
     `dpo_id` int(11) NOT NULL,
     FOREIGN KEY(dpo_id) REFERENCES dpos(id),
-    `comp_type` varchar(150) NOT NULL,
+    `component_type` varchar(150) NOT NULL,
     `component_id` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 

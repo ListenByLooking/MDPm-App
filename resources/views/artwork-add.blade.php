@@ -22,7 +22,11 @@ $user = Auth::user();
 .form-group{
     margin-bottom: 10px;
 }
-    </style>
+    .no-transition {
+        transition: none !important;
+        animation: none !important;
+    }
+</style>
 <div class="page-content">
                 <div class="container-fluid">
                         <!--end col-->
@@ -38,7 +42,7 @@ $user = Auth::user();
                                             <p class="text-muted mb-0">Author : {{ $artwork->author }}</p>
                                         </div>
                                         <!--href="\{\{ route('artwork.add',[encrypt($id),encrypt($dpo_id)])}}"-->
-                                        <a class="btn btn-primary"  onclick="activity.dpotypes('dpo')">Add DPO</a>
+                                        <a class="btn btn-primary" onclick="activity.dpotypes('dpo')">Add DPO</a>
 
                                         <!-- Default Modal -->
                                         <x-adddpo :id="$id"></x-adddpo>
@@ -273,6 +277,45 @@ $user = Auth::user();
                             'second:name',
                             0
                         ],*/
+            });
+
+            // Fix for browser back button restoring stale table
+            window.addEventListener("pageshow", function (event) {
+                if (event.persisted) {
+                    $('#dpo-table').DataTable().ajax.reload(null, false);
+                    document.getElementById('dpo_form').reset();
+
+                    const modalEl = document.getElementById('dpo_modal');
+                        const modal = bootstrap.Modal.getInstance(modalEl);
+                        if (!modal) return;
+
+                        // Add no-transition BEFORE hide starts
+                        modalEl.classList.add('no-transition');
+
+                        // Also disable transitions on ANY existing backdrop
+                        document.querySelectorAll('.modal-backdrop').forEach(b => {
+                            b.classList.add('no-transition');
+                        });
+
+                        // Hide the modal
+                        modal.hide();
+
+                        // Bootstrap may create a NEW backdrop during hide,
+                        // so we wait a tick and disable transitions on that too.
+                        setTimeout(() => {
+                            document.querySelectorAll('.modal-backdrop').forEach(b => {
+                                b.classList.add('no-transition');
+                            });
+                        }, 10);
+
+                        // Cleanup after everything is removed
+                        setTimeout(() => {
+                            modalEl.classList.remove('no-transition');
+                            document.querySelectorAll('.modal-backdrop').forEach(b => {
+                                b.classList.remove('no-transition');
+                            });
+                        }, 200);
+                }
             });
         },
         addOption:function(option){

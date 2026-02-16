@@ -34,6 +34,7 @@ Route::post('/artwork-delete', [App\Http\Controllers\ArtworkController::class, '
 Route::get('/artwork-view/{id}', [App\Http\Controllers\ArtworkController::class, 'view'])->name('artwork.view');
 Route::get('/artwork-add/{id}/{dpo_id}/{new_id}', [App\Http\Controllers\ArtworkController::class, 'add'])->name('artwork.add');
 Route::get('/artwork-pdf/{id}', [App\Http\Controllers\ArtworkController::class, 'pdf'])->name('artwork.pdf');
+Route::post('/dpo/add-existing', [App\Http\Controllers\DPOController::class, 'addExisting'])->name('dpo.addExisting');
 Route::post('/dpo/documentation', [App\Http\Controllers\DPOController::class, 'documentation'])->name('dpo.documentation');
  Route::post('/dpo/score', [App\Http\Controllers\DPOController::class, 'score'])->name('dpo.score');
 Route::post('/dpo/insert', [App\Http\Controllers\DPOController::class, 'insertDPO'])->name('dpo.insert');
