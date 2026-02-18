@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','DAT')
+@section('title','General Object')
 @section('content')
 
     <style>
@@ -41,7 +41,7 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            <h2>DAT [ID: {{ $data->id }}]</h2>
+            <h2>General Object [ID: {{ $data->id }}]</h2>
 
             <table class="object-table">
                 <tr>
@@ -50,8 +50,33 @@
                 </tr>
 
                 <tr>
-                    <td class="label">Original Signature</td>
-                    <td class="value">{{ $data->original_signature }}</td>
+                    <td class="label">Name</td>
+                    <td class="value">{{ $data->name }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Creator</td>
+                    <td class="value">{{ $data->creator }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Year</td>
+                    <td class="value">{{ $data->year }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Description</td>
+                    <td class="value">{{ $data->description }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Type</td>
+                    <td class="value">{{ $data->type }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Identifier</td>
+                    <td class="value">{{ $data->identifier }}</td>
                 </tr>
 
                 <tr>
@@ -60,24 +85,19 @@
                 </tr>
 
                 <tr>
-                    <td class="label">Brand of Box</td>
-                    <td class="value">{{ $data->brand_of_box }}</td>
-                </tr>
-
-                <tr>
-                    <td class="label">Samplerate</td>
-                    <td class="value">{{ $data->samplerate }}</td>
-                </tr>
-
-                <tr>
-                    <td class="label">Notes</td>
-                    <td class="value">{{ $data->notes }}</td>
+                    <td class="label">Material</td>
+                    <td class="value">{{ $data->material }}</td>
                 </tr>
 
                 <!--tr>
                     <td class="label">Status</td>
                     <td class="value">{{ $data->status }}</td>
                 </tr-->
+
+                <tr>
+                    <td class="label">Notes</td>
+                    <td class="value">{{ $data->notes }}</td>
+                </tr>
 
                 <tr>
                     <td class="label">Created At</td>

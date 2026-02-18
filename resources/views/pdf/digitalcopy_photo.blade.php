@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','DAT')
+@section('title','Digital Copy Photo')
 @section('content')
 
     <style>
@@ -41,32 +41,52 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            <h2>DAT [ID: {{ $data->id }}]</h2>
+            <h2>Digital Copy (Photograph) [ID: {{ $data->id }}]</h2>
 
             <table class="object-table">
                 <tr>
-                    <td class="label">Preservation Signature</td>
-                    <td class="value">{{ $data->preservation_signature }}</td>
+                    <td class="label">Filename</td>
+                    <td class="value">{{ $data->filename }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Original Signature</td>
-                    <td class="value">{{ $data->original_signature }}</td>
+                    <td class="label">Format</td>
+                    <td class="value">{{ $data->format }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand</td>
-                    <td class="value">{{ $data->brand }}</td>
+                    <td class="label">ID Original</td>
+                    <td class="value">{{ $data->id_original }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand of Box</td>
-                    <td class="value">{{ $data->brand_of_box }}</td>
+                    <td class="label">Bit Depth</td>
+                    <td class="value">{{ $data->bitdepth }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Samplerate</td>
-                    <td class="value">{{ $data->samplerate }}</td>
+                    <td class="label">Resolution</td>
+                    <td class="value">{{ $data->resolution }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Aspect Ratio</td>
+                    <td class="value">{{ $data->ar }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Filesize (bytes)</td>
+                    <td class="value">{{ $data->filesize }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Acquisition Device</td>
+                    <td class="value">{{ $data->acquisition_device }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Media</td>
+                    <td class="value">{{ $data->media }}</td>
                 </tr>
 
                 <tr>

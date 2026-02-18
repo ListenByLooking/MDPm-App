@@ -78,7 +78,7 @@
 <x-film :id="$id"/>
 <x-video :id="$id"/>
 <x-photo :id="$id"/>
-<x-tapedetails :id="$id" />
+<x-tape :id="$id" />
 <x-audiocassette :id="$id" />
 <x-dat :id="$id" />
 <x-phonographic :id="$id"/>

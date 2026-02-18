@@ -143,7 +143,7 @@
             <td colspan="3">{{ $data->notes}}</td>
         </tr>
     </table>
-    @elseif($form == 'tape_details')
+    @elseif($form == 'tape')
     <h2 style="border-bottom:1px solid black; "><span style="background: black; color:white; padding: 2px 20px; border-radius: 0px 25px 0px 0px;">Open Tape Details</span></h2>
         <table class="table table-border">
             <tr>

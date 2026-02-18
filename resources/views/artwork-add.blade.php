@@ -11,7 +11,7 @@ $user = Auth::user();
     .input-group{ flex-wrap:unset}
     #digital_copy,
     #original_docs,
-    #tape_details,
+    #tape,
     #audiocassette,
     #dat,
     #phonographic{ display:none }
@@ -149,7 +149,7 @@ $user = Auth::user();
                 $('#append_response_form').html($('#dat').html());
             }else if(input.value == 'openreeltape')
             {
-                $('#append_response_form').html($('#tape_details').html());
+                $('#append_response_form').html($('#tape').html());
             }else if(input.value == 'phonographicdisks')
             {
                 $('#append_response_form').html($('#phonographic').html());

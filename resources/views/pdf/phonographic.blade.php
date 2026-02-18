@@ -1,44 +1,111 @@
 @extends('layouts.admin')
-@section('title','ArtWorks')
+@section('title','Phonographic Disk')
 @section('content')
-<style>
-    td:nth-child(odd){ font-weight: 900; width: 20% }
-</style>
-<div class="page-content">
-    <div class="container-fluid">
-        <h2>Phonographicdisks</h2>
-        <table class="table table-border">
-            <tr>
-                <td>Preservation Signature</td>
-                <td>{{ $phonographicdisks->preservation_signature}}</td>
-                <td>Original Signature</td>
-                <td>{{ $phonographicdisks->original_signature}}</td>
-            </tr>
-            <tr>
-                <td>Brand</td>
-                <td>{{ $phonographicdisks->brand}}</td>
-                <td>Brand of the Box</td>
-                <td>{{ $phonographicdisks->brand_of_box}}</td>
-            </tr>
-            <tr>
-                <td>RPM</td>
-                <td>{{ $phonographicdisks->rpm}}</td>
-                <td>Stylus</td>
-                <td>{{ $phonographicdisks->stylus}}</td>
-            </tr>
-            <tr>
-                <td>EQ</td>
-                <td>{{ $phonographicdisks->eq}}</td>
-                <td>Type of Recording</td>
-                <td>{{ $phonographicdisks->type_of_recording}}</td>
-            </tr>
-            <tr>
-                <td>Incisions</td>
-                <td>{{ $phonographicdisks->incisions}}</td>
-                <td>Notes</td>
-                <td>{{ $phonographicdisks->notes}}</td>
-            </tr>
-        </table>
+
+    <style>
+        table.object-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            background: #fff;
+        }
+
+        table.object-table td {
+            padding: 10px 15px;
+            border: 1px solid #ccc;
+            vertical-align: top;
+            word-wrap: break-word;
+        }
+
+        /* Label column auto-sizes to longest text */
+        table.object-table td.label {
+            font-weight: 700;
+            text-align: right;
+            white-space: nowrap; /* prevents wrapping */
+            padding-right: 20px;
+            background: #f7f7f7;
+        }
+
+        table.object-table td.value {
+            text-align: left;
+            width: 100%;
+            white-space: normal; /* allows wrapping */
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            font-weight: 800;
+        }
+    </style>
+
+    <div class="page-content">
+        <div class="container-fluid">
+
+            <h2>Phonographic Disk [ID: {{ $data->id }}]</h2>
+
+            <table class="object-table">
+                <tr>
+                    <td class="label">Preservation Signature</td>
+                    <td class="value">{{ $data->preservation_signature }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Original Signature</td>
+                    <td class="value">{{ $data->original_signature }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Brand</td>
+                    <td class="value">{{ $data->brand }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Brand of Box</td>
+                    <td class="value">{{ $data->brand_of_box }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">RPM</td>
+                    <td class="value">{{ $data->rpm }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Stylus</td>
+                    <td class="value">{{ $data->stylus }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Equalization (EQ)</td>
+                    <td class="value">{{ $data->eq }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Type of Recording</td>
+                    <td class="value">{{ $data->type_of_recording }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Incisions</td>
+                    <td class="value">{{ $data->incisions }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Notes</td>
+                    <td class="value">{{ $data->notes }}</td>
+                </tr>
+
+                <!--tr>
+                    <td class="label">Status</td>
+                    <td class="value">{{ $data->status }}</td>
+                </tr-->
+
+                <tr>
+                    <td class="label">Created At</td>
+                    <td class="value">{{ $data->created_at }}</td>
+                </tr>
+            </table>
+
+        </div>
     </div>
-</div>
+
 @endsection

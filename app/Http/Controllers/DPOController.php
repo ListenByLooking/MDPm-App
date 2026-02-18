@@ -221,8 +221,8 @@ class DPOController extends Controller
             $parts[] = $f($request->originaldocs_sub);
         }
 
-        // ⭐ NEW: Level 4 for AUDIO DIGITAL COPY
-        if ($request->form_name === 'adigital_copy' && $request->original_type) {
+        // NEW: Level 4 for AUDIO DIGITAL COPY
+        if ($request->form_name === 'digital_copy_audio' && $request->original_type) {
             $parts[] = $f($request->original_type);
         }
 
@@ -234,7 +234,7 @@ class DPOController extends Controller
         // DD($request->all());
         try {
             $table = $request->form_name;
-            if (!empty($request->form_name)) {
+            if (!empty($table)) {
                 /*$this->insertDPO($request->artwork_id, $request->dpo_id);
                 $component_id = DB::table('components')->insertGetId([
                     'artwork_id' => $request->artwork_id,
@@ -250,7 +250,9 @@ class DPOController extends Controller
                     'created_at' => date('Y-m-d'),
                 ]);*/
 
-                switch ($request->form_name) {
+                //error_log($table, 0);
+
+                switch ($table) {
                     case 'general_object':
                         $data = [
                             'user_id' => Auth::id(),
@@ -533,7 +535,7 @@ class DPOController extends Controller
                             'created_at' => date('Y-m-d H:i:s'),
                         ];
                         break;
-                    case 'tape_details':
+                    case 'tape':
                         $data = [
                             //'dpo_id' => $request->dpo_id,
                             'user_id' => Auth::user()->id,
@@ -541,6 +543,7 @@ class DPOController extends Controller
                             'preservation_signature' => $request->preservation_signature,
                             'original_signature' => $request->original_signature,
                             'brand_of_tape' => $request->brand_of_tape,
+                            'material_of_tape' => $request->material_of_tape,
                             'brand_of_box' => $request->brand_of_box,
                             'brand_of_carter' => $request->brand_of_carter,
                             'material_of_carter' => $request->material_of_carter,
@@ -554,6 +557,7 @@ class DPOController extends Controller
                             'channels_config_sideB' => $request->channels_config_sideB,
                             'speed_sideB' => $request->speed_sideB,
                             'eq' => $request->speed_sideB,
+                            'noise_reduction' => $request->noise_reduction,
                             'notes' => $request->notes,
                             'status' => 1,
                             'created_at' => date('Y-m-d H:i:s'),
@@ -578,7 +582,7 @@ class DPOController extends Controller
                             'created_at' => date('Y-m-d H:i:s'),
                         ];
                         break;
-                    case 'digitalaudio':
+                    case 'digital_audio':
 
                         // Convert hh:mm:ss → seconds
                         list($h, $m, $s) = explode(':', $request->duration);
@@ -641,7 +645,9 @@ class DPOController extends Controller
                         break;
                 }
 
-                $comp_id = DB::table($request->form_name)->insert($data);
+                $comp_id = DB::table($request->form_name)->insertGetId($data);
+
+                //error_log($comp_id, 0);
 
                 if ($comp_id) {
                     $bridge = [
@@ -805,12 +811,12 @@ class DPOController extends Controller
 
     public function view(Request $request, $id)
     {
-        $vdMap = [
+        $map = [
             'Audio Cassette' => 'audiocassette',
             'Digital Audio Tape' => 'dat',
             'Open Reel Tape' => 'tape',
             'Phonographic Disk' => 'phonographicdisk',
-            'Digital Audio' => 'digitalaudio',
+            'Digital Audio' => 'digital_audio',
             'Digital Copy Audio' => 'digital_copy_audio',
             'Digital Copy Photo' => 'digital_copy_photo',
             'Digital Copy Video' => 'digital_copy_vf',
@@ -831,17 +837,17 @@ class DPOController extends Controller
         $raw = $record->component_type;
 
 // Case 1: Score
-        if ($raw === 'Score') {
+        /*if ($raw === 'Score') {
             $component = 'Score';
-        }
+        }*/
 
 // Case 2: Documentation
-        elseif (str_starts_with($raw, 'Documentation')) {
+        /*elseif (str_starts_with($raw, 'Documentation')) {
             $component = 'Documentation';
-        }
+        }*/
 
 // Case 3: Component (...)
-        else {
+        /*else {
             if (preg_match('/Component\s*\((.*)\)/', $raw, $matches)) {
                 $chain = $matches[1]; // e.g. "Audio/Visual -> Audio -> Digital Copy -> Audio Cassette"
                 $segments = array_map('trim', explode('->', $chain));
@@ -858,11 +864,15 @@ class DPOController extends Controller
             } else {
                 $component = $raw; // fallback
             }
-        }
+        }*/
+
+        $component = $this->resolveTableName($raw);
+
+        //error_log($component, 0);
 
         $component_id = $record->component_id;
 
-        if ($component == 'Documentation') {
+        if ($component == 'documentation') {
 
             $records = DB::table('dpo_component_bridge')->where([/*'user_id'=>Auth::user()->id ,'artwork_id'=>$request->artwork_id , */ 'dpo_id' => $record->dpo_id])
                 ->whereRaw("CONCAT_WS(' ', component_type) LIKE ?", ["%{$component}%"])->get();
@@ -875,53 +885,69 @@ class DPOController extends Controller
             }
 
             return view('pdf.documentation', compact('result'));
-        } else if ($component == 'Score') {
+        } else if ($component == 'score') {
             $result = DB::table('score')->where('id', $component_id)->first();
             //error_log($result, 0);
             return view('pdf.score', compact('result'));
         } else {
-            $cfg = $map[$component] ?? null;
+            //$cfg = $map[$component] ?? null;
 
-            $data = DB::table($cfg['table'])->where('id', $component_id)->first();
+            $data = DB::table($component)->where('id', $component_id)->first();
 
-            return view('pdf.pdf', [
+            error_log(print_r($data, true));
+
+            /*return view('pdf.pdf', [
                 'form' => $cfg['form'],
                 'data' => $data
-            ]);
+            ]);*/
 
             switch ($component) {
-                case 'tape_details':
-                    $tapedetails = DB::table('tape_details')->where('component_id', $component_id)->first();
-                    return view('pdf.tapedetails', compact('result', 'tapedetails'));
-                    break;
-                case 'original_docs':
+                case 'tape':
+                    //$tapedetails = DB::table('tape_details')->where('component_id', $component_id)->first();
+                    return view('pdf.tape', compact('data'));
+                /*case 'original_docs':
                     $original_docs = DB::table('original_docs')->where('component_id', $component_id)->first();
-                    return view('pdf.originaldocs', compact('result', 'original_docs'));
-                    break;
-                case 'digital_copy':
-                    $digital_copy = DB::table('digital_copy')->where('component_id', $component_id)->first();
-                    return view('pdf.digitalcopy', compact('result', 'digital_copy'));
-                    break;
-                case 'score':
+                    return view('pdf.originaldocs', compact('result', 'original_docs'));*/
+                case 'digital_copy_audio':
+                    //$digital_copy = DB::table('digital_copy')->where('component_id', $component_id)->first();
+                    return view('pdf.digitalcopy_audio', compact('data'));
+                case 'digital_audio':
+                    return view('pdf.digitalaudio', compact('data'));
+                case 'digital_copy_photo':
+                    return view('pdf.digitalcopy_photo', compact('data'));
+                case 'digital_copy_vf':
+                    $type = $data->original_type;
+                    return view('pdf.digitalcopy_vf', compact('data', 'type'));
+                case 'film':
+                    return view('pdf.film', compact('data'));
+                case 'hardware':
+                    return view('pdf.hardware', compact('data'));
+                case 'photo':
+                    return view('pdf.photo', compact('data'));
+                case 'software':
+                    return view('pdf.software', compact('data'));
+                case 'video':
+                    return view('pdf.video', compact('data'));
+                /*case 'score':
                     $score = DB::table('score')->where('id', $component_id)->first();
 
                     break;
                 case 'documentation':
                     $documentation = DB::table('documentation')->where('id', $component_id)->get();
 
-                    return view('pdf.documentation', compact('result', 'documentation'));
-                    break;
+                    return view('pdf.documentation', compact('result', 'documentation'));*/
                 case 'dat':
-                    $dat = DB::table('dat')->where('component_id', $component_id)->first();
-                    return view('pdf.dat', compact('result', 'dat'));
-                    break;
-                case 'phonographicdisks':
-                    $phonographicdisks = DB::table('phonographicdisks')->where('component_id', $component_id)->first();
-                    return view('pdf.phonographic', compact('result', 'phonographicdisks'));
+                    //$dat = DB::table('dat')->where('component_id', $component_id)->first();
+                    return view('pdf.dat', compact('data'));
+                case 'phonographicdisk':
+                    //$phonographicdisk = DB::table('phonographicdisk')->where('component_id', $component_id)->first();
+                    return view('pdf.phonographic', compact('data'));
                 case 'audiocassette':
-                    $audiocassette = DB::table('audiocassette')->where('component_id', $component_id)->first();
-                    return view('pdf.audiocassette', compact('result', 'audiocassette'));
-                    break;
+                    //$audiocassette = DB::table('audiocassette')->where('component_id', $component_id)->first();
+                    return view('pdf.audiocassette', compact('data'));
+                case 'general_object':
+                    //$audiocassette = DB::table('audiocassette')->where('component_id', $component_id)->first();
+                    return view('pdf.general', compact('data'));
             }
         }
     }
@@ -1293,7 +1319,7 @@ class DPOController extends Controller
     public function pdf(Request $request ,$component_id){
     header("Content-type:application/pdf");
     $result = DB::table('components')->where('id',$component_id)->first();
-    return view('pdf.tapedetails');
+    return view('pdf.tape');
    }
 
     // NOTE FOR FUTURE LOCALIZATION:

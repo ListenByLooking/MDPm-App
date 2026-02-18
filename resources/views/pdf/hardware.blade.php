@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','DAT')
+@section('title','Hardware')
 @section('content')
 
     <style>
@@ -41,7 +41,7 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            <h2>DAT [ID: {{ $data->id }}]</h2>
+            <h2>Hardware [ID: {{ $data->id }}]</h2>
 
             <table class="object-table">
                 <tr>
@@ -50,23 +50,58 @@
                 </tr>
 
                 <tr>
-                    <td class="label">Original Signature</td>
-                    <td class="value">{{ $data->original_signature }}</td>
+                    <td class="label">Name</td>
+                    <td class="value">{{ $data->name }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand</td>
-                    <td class="value">{{ $data->brand }}</td>
+                    <td class="label">Manufacturer</td>
+                    <td class="value">{{ $data->manufacturer }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand of Box</td>
-                    <td class="value">{{ $data->brand_of_box }}</td>
+                    <td class="label">Model</td>
+                    <td class="value">{{ $data->model }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Samplerate</td>
-                    <td class="value">{{ $data->samplerate }}</td>
+                    <td class="label">Serial Number</td>
+                    <td class="value">{{ $data->serial }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Operating System</td>
+                    <td class="value">{{ $data->os }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Year</td>
+                    <td class="value">{{ $data->year }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">CPU</td>
+                    <td class="value">{{ $data->cpu }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">RAM</td>
+                    <td class="value">{{ $data->ram }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Storage</td>
+                    <td class="value">{{ $data->storage }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Description</td>
+                    <td class="value">{{ $data->description }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Display</td>
+                    <td class="value">{{ $data->display }}</td>
                 </tr>
 
                 <tr>

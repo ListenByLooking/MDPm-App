@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','DAT')
+@section('title','Photo')
 @section('content')
 
     <style>
@@ -41,7 +41,7 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            <h2>DAT [ID: {{ $data->id }}]</h2>
+            <h2>Photograph [ID: {{ $data->id }}]</h2>
 
             <table class="object-table">
                 <tr>
@@ -55,18 +55,53 @@
                 </tr>
 
                 <tr>
+                    <td class="label">Type of Support</td>
+                    <td class="value">{{ $data->type_of_support }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Format</td>
+                    <td class="value">{{ $data->format }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Title</td>
+                    <td class="value">{{ $data->title }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Author</td>
+                    <td class="value">{{ $data->author }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Year</td>
+                    <td class="value">{{ $data->year }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Support Material</td>
+                    <td class="value">{{ $data->support_material }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Color</td>
+                    <td class="value">{{ $data->color }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Aspect Ratio</td>
+                    <td class="value">{{ $data->ar }}</td>
+                </tr>
+
+                <tr>
                     <td class="label">Brand</td>
                     <td class="value">{{ $data->brand }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand of Box</td>
-                    <td class="value">{{ $data->brand_of_box }}</td>
-                </tr>
-
-                <tr>
-                    <td class="label">Samplerate</td>
-                    <td class="value">{{ $data->samplerate }}</td>
+                    <td class="label">Dimensions</td>
+                    <td class="value">{{ $data->dimensions }}</td>
                 </tr>
 
                 <tr>

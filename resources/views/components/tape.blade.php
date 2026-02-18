@@ -1,6 +1,6 @@
-<div class="col-12 components_div_right" id="tape_details">
+<div class="col-12 components_div_right" id="tape">
     <h2 class="text-center p-2 border-bottom">Open Reel Tape</h2>
-    <input type="hidden" name="form_name" value="tape_details">
+    <input type="hidden" name="form_name" value="tape">
     <input type="hidden" name="artwork_id" value="{{$id}}">
         <div class="row">
             <div class="col-4">
@@ -87,11 +87,11 @@
             </div>
             <div class="col-4">
                 <div class="form-group" style="display: flex; flex-direction: column; height: 100%;">
-                    <label for="sides">Number of Sides</label>
+                    <label for="num_of_sides">Number of Sides</label>
                     <div class="checkbox-container" style="margin-top: 5px; margin-left: 10px; margin-bottom: auto;">
-                        <input type="radio" id="sides1" name="sides" value="1" required />
+                        <input type="radio" id="sides1" name="num_of_sides" value="1" required />
                         <label for="sides1" style="margin-right: 10px; font-weight: normal;">1</label>
-                        <input type="radio" id="sides2" name="sides" value="2" required />
+                        <input type="radio" id="sides2" name="num_of_sides" value="2" required />
                         <label for="sides2" style="margin-right: 10px; font-weight: normal;">2</label>
                     </div>
                 </div>
@@ -160,9 +160,9 @@
             </div>
             <div class="col-4">
                 <div class="form-group">
-                    <label for="noise">Noise Reduction</label>
+                    <label for="noise_reduction">Noise Reduction</label>
                     <div class="input-group">
-                        <select id="noise" name="noise" class="noise form-control" required>
+                        <select id="noise_reduction" name="noise_reduction" class="noise form-control" required>
                         </select>
                         <button type="button" class="add-button btn btn-success" onclick="dpo.addOption('noise', this)">+</button>
                     </div>

@@ -11,7 +11,7 @@ $user = Auth::user();
     .input-group{ flex-wrap:unset}
     #digital_copy,
     #original_docs,
-    #tape_details,
+    #tape,
     #audiocassette,
     #dat,
     #phonographic{ display:none }
@@ -346,6 +346,76 @@ $user = Auth::user();
         }
     });
 
+        // When table reloads → refresh the second dropdown
+        $('#dpo-table').on('xhr.dt', function () {
+
+            const entryType = $('#entry_type').val();
+
+            if (!entryType) return;
+
+            const tables = ENTRY_TYPE_TABLES[entryType];
+
+            if (!tables) return;
+
+            dpo.populateIDs("selector_id", tables, false, true);
+        });
+
+        // Fires ONLY when page is restored from Back/Forward cache
+        window.addEventListener("pageshow", function (event) {
+            if (event.persisted) {
+
+                // 1. Reset both dropdowns
+                $('#entry_type').val('').trigger('change');
+                $('.selector_id').empty().append('<option value="" disabled selected>Select an element</option>').trigger('change');
+
+                // 2. Reload the table
+                $('#dpo-table').DataTable().ajax.reload(null, false);
+
+                $('#Component').val(null).change();
+                CKEDITOR.instances['ckeditor-classic'].setData("");
+                $('#Documentation_response').html('');
+                $('#Documentation').val(null).change();
+
+                const modals = ['Component_modal', 'Score_modal', 'Documentation_modal'];
+
+                modals.forEach(id => {
+                    const modalEl = document.getElementById(id);
+                    const modal = bootstrap.Modal.getInstance(modalEl);
+                    if (!modal) return;
+
+                    // Add no-transition BEFORE hide starts
+                    modalEl.classList.add('no-transition');
+
+                    // Also disable transitions on ANY existing backdrop
+                    document.querySelectorAll('.modal-backdrop').forEach(b => {
+                        b.classList.add('no-transition');
+                    });
+
+                    // Hide the modal
+                    modal.hide();
+
+                    // Bootstrap may create a NEW backdrop during hide,
+                    // so we wait a tick and disable transitions on that too.
+                    setTimeout(() => {
+                        document.querySelectorAll('.modal-backdrop').forEach(b => {
+                            b.classList.add('no-transition');
+                        });
+                    }, 10);
+
+                    // Cleanup after everything is removed
+                    setTimeout(() => {
+                        modalEl.classList.remove('no-transition');
+                        document.querySelectorAll('.modal-backdrop').forEach(b => {
+                            b.classList.remove('no-transition');
+                        });
+                    }, 200);
+                });
+
+                // 3. If the user had selected an entry type before going back,
+                //    repopulate the second dropdown
+                //refreshExistingDropdown();
+            }
+        });
 
     const doc_arr = [];
     const activity = {
@@ -510,7 +580,7 @@ $user = Auth::user();
                 ['brand', 'sample_frequency'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'openreeltape')
             {
-                $('#append_response_form').html($('#tape_details').html());
+                $('#append_response_form').html($('#tape').html());
                 ['brand', 'material', 'dimensions', 'channel_configuration', 'speed', 'equalization', 'noise'].forEach(field => dpo.getOption(field));
             }else if(input.value == 'phonographicdisk')
             {
@@ -798,78 +868,6 @@ $user = Auth::user();
                 //             }
                 //         }
             });
-
-            // When table reloads → refresh the second dropdown
-                $('#dpo-table').on('xhr.dt', function () {
-
-                        const entryType = $('#entry_type').val();
-
-                        if (!entryType) return;
-
-                        const tables = ENTRY_TYPE_TABLES[entryType];
-
-                        if (!tables) return;
-
-                        dpo.populateIDs("selector_id", tables, false, true);
-                });
-
-            // Fires ONLY when page is restored from Back/Forward cache
-            window.addEventListener("pageshow", function (event) {
-                if (event.persisted) {
-
-                    // 1. Reset both dropdowns
-                    $('#entry_type').val('').trigger('change');
-                    $('.selector_id').empty().append('<option value="" disabled selected>Select an element</option>').trigger('change');
-
-                    // 2. Reload the table
-                    $('#dpo-table').DataTable().ajax.reload(null, false);
-
-                    $('#Component').val(null).change();
-                    CKEDITOR.instances['ckeditor-classic'].setData("");
-                    $('#Documentation_response').html('');
-                    $('#Documentation').val(null).change();
-
-                    const modals = ['Component_modal', 'Score_modal', 'Documentation_modal'];
-
-                    modals.forEach(id => {
-                        const modalEl = document.getElementById(id);
-                        const modal = bootstrap.Modal.getInstance(modalEl);
-                        if (!modal) return;
-
-                        // Add no-transition BEFORE hide starts
-                        modalEl.classList.add('no-transition');
-
-                        // Also disable transitions on ANY existing backdrop
-                        document.querySelectorAll('.modal-backdrop').forEach(b => {
-                            b.classList.add('no-transition');
-                        });
-
-                        // Hide the modal
-                        modal.hide();
-
-                        // Bootstrap may create a NEW backdrop during hide,
-                        // so we wait a tick and disable transitions on that too.
-                        setTimeout(() => {
-                            document.querySelectorAll('.modal-backdrop').forEach(b => {
-                                b.classList.add('no-transition');
-                            });
-                        }, 10);
-
-                        // Cleanup after everything is removed
-                        setTimeout(() => {
-                            modalEl.classList.remove('no-transition');
-                            document.querySelectorAll('.modal-backdrop').forEach(b => {
-                                b.classList.remove('no-transition');
-                            });
-                        }, 200);
-                    });
-
-                    // 3. If the user had selected an entry type before going back,
-                    //    repopulate the second dropdown
-                    //refreshExistingDropdown();
-                }
-            });
-
         },
         addOption: function(option, clickedButton = null) {
 

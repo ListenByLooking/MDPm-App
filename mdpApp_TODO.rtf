@@ -1,0 +1,116 @@
+Cose da fare per PHP:
+
+DONE	      Artworks tutto attaccato dappertutto
+DONE	2025 C MDP-m App
+DONE	Designed and developed by CSC
+
+DONE	Logo del CSC in alto a destra al posto dell’immagine utente
+DONE	Artworks tirato giù
+
+DONE	Titolo centrale: MDP-m App
+
+DONE,sentire ale   Original Docs -> Original Item
+Nascondere progressive
+Nascondere type
+Nascondere generation
+Nascondere carter brand
+Campo anno a tendina come all’inizio
+
+Add dpo -> Components -> audioVisuals -> AudioVisual Type(s) -> Original Docs
+Formato: aggiungere bottone plus per entry menu a tendina
+Support material: aggiungere bottone plus …
+Sound: aggiungere bottone plus …
+AspectRatio: aggiungere bottone plus (numero con la virgola) …
+Film Brand: aggiungere bottone plus …
+Crater Brand: aggiungere bottone plus …
+Cover Material: aggiungere bottone plus …
+Cement Splices: verificare numero intero non negativo
+Restored CS: verificare numero intero non negativo
+Tape splices: //
+Restored TS: //
+Restore perforations: //
+Restore frames: //
+
+Colore/BW/Both: selector radio button
+
+DPO Type -> Type
+
+————————————————
+
+Artworks -> togliere anno,
+Add dpo -> aggiungere dialog con autore, anno
+
+DPO: id -> dpo
+
+Add dpo -> create new
+Aggiungere titolo es. DPO1
+Cambiare id del component che viene mantenuta anche dopo averlo duplicato
+
+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+-+
+
+Dentro Artwork: n DPOs, possibilità di aggiungerne altri.
+
+
+Dentro ogni DPO: Tabella con tutti i components, score e documentation e possibilità di aggiungere component, score e documentation.
+
+DPO1          cancella, duplica, view DPO
+DPO2          cancella, duplica, view DPO
+
+Quando duplico un dpo ha un nuovo id ma se duplico un component no
+
++Documentation: link devono essere cliccabile
+Dpo component diventa Class e score è sempre score
++Documentation rimane solo una con all’interno tutto il materiale (tipo documentation)
++Audio visual attaccato
+
+(Controllare id unici per tutto)
+Inserimento component audiovisual audio digitalcopy:
+Signature rimane
+Format -> container
+Codec -> encoding
+Bitdepth solo audio
+Bitdepht video -> duration (hh:mm:ss)
+Risoluzione -> channel configuration (elenco col +)
+AspectRatio -> Checksum (generico)
+Frame rate via
+Acquisition device -> elenco col +
+Original item -> elenco col + come tipo
+Original item id > link all’entry del database (col +)
+
+Dpo -> year, venue, city
+
+
+
+IMPLEMENTAZIONI MANCANTI
+
+-Classi di utenti per quelli che possono modificare o solo leggere
++Ogni cosa nel database deve avere user_id e quando è stata creata
+-Artwork icon?
+Tasti edit per tutto
+
++Dividere tabelle entry list col + per macro categorie (brand, material, lunghezza, durata, speed, channels)
+Artwork includere biblio come link
++Other -> general object
++Channel -> channel configuration
+
+-Export dall’app in xml per ora, successivamente un report in pdf
++Togliere form dai dialog dei component
++Film/video digital copy dialog title changing if film or video
++Campi date -> gg/mm/yyyy
++Add dpo: controllare se venue e city accetta stringhe con spazi
++score: togliere tutte le righe vuote è troppo restrittivo
++Dialog: decidere quali campi sono required e quali no
++Video resolution fa capo alla tabella menu resolution
+
+Check year vs date fields on sql
+For swal to work had to disable enter key behavior on modal, try to fix that
+Fix all swal so that they handle success, fail and unexpected error cases
+Dpocontroller and controllers in general, some handle try catch and some don’t…
+Ar column in sql -> aspect_ratio
+Fare code validation (html, css, php) su tutto…
+Controllare 'created_at' => date('Y-m-d H:i:s') contro 'created_at' => date('Y-m-d')
+Uniformare stringhe messaggi swal
+Red border on all forms when errors
+Add edit functions
+Add export functions
+Unify visual styles and strings

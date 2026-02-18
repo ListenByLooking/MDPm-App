@@ -1,6 +1,6 @@
 <div class="col-12 components_div_right" id="digitalaudio">
     <h2 class="text-center p-2 border-bottom" id="title" name="title">Digital Audio</h2>
-    <input type="hidden" name="form_name" value="digitalaudio">
+    <input type="hidden" name="form_name" value="digital_audio">
     <input type="hidden" name="artwork_id" value="{{ $id }}">
         <div class="row">
             <div class="col-4">

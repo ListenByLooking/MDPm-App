@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-@section('title','DAT')
+@section('title','Software')
 @section('content')
 
     <style>
@@ -41,7 +41,7 @@
     <div class="page-content">
         <div class="container-fluid">
 
-            <h2>DAT [ID: {{ $data->id }}]</h2>
+            <h2>Software [ID: {{ $data->id }}]</h2>
 
             <table class="object-table">
                 <tr>
@@ -50,23 +50,58 @@
                 </tr>
 
                 <tr>
-                    <td class="label">Original Signature</td>
-                    <td class="value">{{ $data->original_signature }}</td>
+                    <td class="label">Name</td>
+                    <td class="value">{{ $data->name }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand</td>
-                    <td class="value">{{ $data->brand }}</td>
+                    <td class="label">Developer</td>
+                    <td class="value">{{ $data->developer }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Brand of Box</td>
-                    <td class="value">{{ $data->brand_of_box }}</td>
+                    <td class="label">Version</td>
+                    <td class="value">{{ $data->version }}</td>
                 </tr>
 
                 <tr>
-                    <td class="label">Samplerate</td>
-                    <td class="value">{{ $data->samplerate }}</td>
+                    <td class="label">License</td>
+                    <td class="value">{{ $data->license }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Operating System</td>
+                    <td class="value">{{ $data->os }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Type</td>
+                    <td class="value">{{ $data->type }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Year</td>
+                    <td class="value">{{ $data->year }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Language</td>
+                    <td class="value">{{ $data->language }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Requirements</td>
+                    <td class="value">{{ $data->requirements }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Link</td>
+                    <td class="value">{{ $data->link }}</td>
+                </tr>
+
+                <tr>
+                    <td class="label">Library</td>
+                    <td class="value">{{ $data->library }}</td>
                 </tr>
 
                 <tr>
